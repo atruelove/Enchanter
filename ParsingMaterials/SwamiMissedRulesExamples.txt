@@ -1,0 +1,114 @@
+﻿Missed Rules
+
+############# BEGIN ## 157 ###########################
+ID= 22.1.1.2
+Summary= Array ( len )
+Description= This description applies if and only if the Array constructor is called with exactly one argument.
+1. Let numberOfArgs be the number of arguments passed to this function call.
+2. Assert: numberOfArgs = 1.
+3. If NewTarget is undefined, let newTarget be the active function object, else let newTarget be
+NewTarget.
+4. Let proto be ? GetPrototypeFromConstructor(newTarget, "%ArrayPrototype%").
+5. Let array be ! ArrayCreate(0, proto).
+6. If Type(len) is not Number, then
+	a. Let defineStatus be CreateDataProperty(array, "0", len).
+	b. Assert: defineStatus is true.
+	c. Let intLen be 1.
+7. Else,
+	a. Let intLen be ToUint32(len).
+	b. If intLen ≠ len, throw a RangeError exception.
+8. Perform ! Set(array, "length", intLen, true).
+9. Return array.
+
+#############  END  ## 157 ###########################
+
+function test_array( len ){
+	if (( ToUint32 ( len )!= len )){
+		 try{
+			var output = new Array ( len );
+			console.log("Bad Test/Failed Test");
+			 return;
+		}catch(e){
+			assert.strictEqual(true, eval(e instanceof RangeError));
+			console.log("Good Test");
+			return;
+		}
+	}
+		console.log("OK Test")
+}
+
+Notes:
+-Only caught caught conditional in 7.a.
+	-Did not catch that this rule is a single component of a larger rule that covers lines 6-7
+	-Line 6's conditional is ignored
+-Missed conditional in line 3
+
+
+
+
+
+############# BEGIN ## 174 ###########################
+ID= 22.1.3.5
+Summary= Array.prototype.every ( callbackfn [ , thisArg ] )
+Description= NOTE 1
+callbackfn should be a function that accepts three arguments and returns a value that is
+coercible to the Boolean value true or false. every calls callbackfn once for each element
+present in the array, in ascending order, until it finds one where callbackfn returns false. If
+such an element is found, every immediately returns false. Otherwise, if callbackfn
+returned true for all elements, every will return true. callbackfn is called only for
+elements of the array which actually exist; it is not called for missing elements of the array.
+If a thisArg parameter is provided, it will be used as the this value for each invocation of
+callbackfn. If it is not provided, undefined is used instead.
+callbackfn is called with three arguments: the value of the element, the index of the
+element, and the object being traversed.
+every does not directly mutate the object on which it is called but the object may be
+mutated by the calls to callbackfn.
+The range of elements processed by every is set before the first call to callbackfn.
+Elements which are appended to the array after the call to every begins will not be visited
+by callbackfn. If existing elements of the array are changed, their value as passed to
+callbackfn will be the value at the time every visits them; elements that are deleted after
+the call to every begins and before being visited are not visited. every acts like the "for
+all" quantifier in mathematics. In particular, for an empty array, it returns true.
+When the every method is called with one or two arguments, the following steps are taken:
+1. Let O be ? ToObject(this value).
+2. Let len be ? ToLength(? Get(O, "length")).
+3. If IsCallable(callbackfn) is false, throw a TypeError exception.
+4. If thisArg was supplied, let T be thisArg; else let T be undefined.
+5. Let k be 0.
+6. Repeat, while k < len
+a. Let Pk be ! ToString(k).
+b. Let kPresent be ? HasProperty(O, Pk).
+c. If kPresent is true, then
+i. Let kValue be ? Get(O, Pk).
+ii. Let testResult be ToBoolean(? Call(callbackfn, T, « kValue, k, O »)).
+iii. If testResult is false, return false.
+d. Increase k by 1.
+7. Return true.
+NOTE 2
+The every function is intentionally generic; it does not require that its this value be an
+Array object. Therefore it can be transferred to other kinds of objects for use as a method.
+
+#############  END  ## 174 ###########################
+
+function test_array_prototype_every(randominput, callbackfn  , thisArg  ){
+	if (( IsCallable ( callbackfn ) === false )){
+		 try{
+			var output = new Array(randominput).every( callbackfn  , thisArg  );
+			console.log("Bad Test/Failed Test");
+			 return;
+		}catch(e){
+			assert.strictEqual(true, eval(e instanceof TypeError));
+			console.log("Good Test");
+			return;
+		}
+	}
+		console.log("OK Test")
+}
+
+Notes:
+-Only caught conditional in line 3
+-Missed conditional in line 4
+-Missed while loop in line 6
+-Missed conditional in line 6.c
+-Missed conditional in line 6.c.iii
+	-missed these lines were part of the loop established in line 6

@@ -1,0 +1,10 @@
+This folder contains scripts to identify relevant (encode testable behavior) sections 
+of ECMA-262 JavaScript specification document using the IR-based OKAPI model.
+
+We reuse BLUiR source code for pre-processing the specifications and Java class files.
+We use Indri toolkit to run the OKAPI model.
+We use ground truth data available at available from www.cs.columbia.edu/~eaddy/concerntagger/  
+
+cmd to run: bash runOkapi.sh
+
+output will be displayed on the terminal 
