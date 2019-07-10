@@ -20,8 +20,23 @@
       <file leaf-file-name="NLTKParsing.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/NLTKParsing.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="859">
-              <caret line="91" column="17" selection-start-line="91" selection-start-column="17" selection-end-line="91" selection-end-column="17" />
+            <state relative-caret-position="260">
+              <caret line="221" lean-forward="true" selection-start-line="221" selection-end-line="221" />
+              <folding>
+                <element signature="e#0#11#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ParsingHTML.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../HTML_Extraction/ParsingHTML.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="185">
+              <caret line="15" column="22" selection-start-line="15" selection-start-column="17" selection-end-line="15" selection-end-column="22" />
+              <folding>
+                <element signature="e#0#29#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -38,7 +53,9 @@
       </file>
       <file leaf-file-name="generateTestTemplates.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../../../../Swami/LASER-UMASS-Swami-2f94ad8/src/generateTestTemplates.py">
-          <provider selected="true" editor-type-id="text-editor" />
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-204" />
+          </provider>
         </entry>
       </file>
       <file leaf-file-name="generateExecutableTests.py" pinned="false" current-in-tab="false">
@@ -58,6 +75,7 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>open</find>
+      <find>re.se</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -195,7 +213,7 @@
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Python Console" order="7" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32943678" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32943678" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Favorites" order="2" side_tool="true" />
@@ -221,6 +239,28 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/NLTKParsing.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1547">
+          <caret line="91" column="17" selection-start-line="91" selection-start-column="17" selection-end-line="91" selection-end-column="17" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../Swami/LASER-UMASS-Swami-2f94ad8/src/swami.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../Swami/LASER-UMASS-Swami-2f94ad8/src/extractRelevantSections.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../Swami/LASER-UMASS-Swami-2f94ad8/src/generateTestTemplates.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../Swami/LASER-UMASS-Swami-2f94ad8/src/generateExecutableTests.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/NLTKParsing.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1547">
@@ -306,25 +346,40 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../../../Undergraduate Research Assistant/LanguageAnalysis/LDA/LDA_Reviews.py" />
-    <entry file="file://$PROJECT_DIR$/NLTKParsing.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="859">
-          <caret line="91" column="17" selection-start-line="91" selection-start-column="17" selection-end-line="91" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../../../Swami/LASER-UMASS-Swami-2f94ad8/src/swami.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../../Swami/LASER-UMASS-Swami-2f94ad8/src/extractRelevantSections.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../../Swami/LASER-UMASS-Swami-2f94ad8/src/generateTestTemplates.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/../../../../Swami/LASER-UMASS-Swami-2f94ad8/src/generateExecutableTests.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/../ParsingHTML/ParsingHTML.py" />
+    <entry file="file://$PROJECT_DIR$/../../../../Swami/LASER-UMASS-Swami-2f94ad8/src/extractRelevantSections.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../Swami/LASER-UMASS-Swami-2f94ad8/src/generateTestTemplates.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-204" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../HTML_Extraction/ParsingHTML.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="185">
+          <caret line="15" column="22" selection-start-line="15" selection-start-column="17" selection-end-line="15" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#29#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/NLTKParsing.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="260">
+          <caret line="221" lean-forward="true" selection-start-line="221" selection-end-line="221" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
   </component>
 </project>

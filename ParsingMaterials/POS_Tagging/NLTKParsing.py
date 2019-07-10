@@ -1,67 +1,70 @@
 import nltk
+import re
 sentence = "The quick brown fox jumped over the lazy dog."
 # secFile = open("ECMA-262_v8_relevant_sections.txt", 'r', encoding="utf8")
 # outFile = open("SpeechTagResults2.txt", "w", encoding="utf8")
 nl = "\n"
-secFile = open("ECMA_Current_07-04-19.txt", 'r', encoding="utf8")
-outFileName = "ECMA_Current_SpeechTagResults_07-06-19.txt"
-# outFile = open(outFileName, "w", encoding="utf8")
-#
-# # count=0
-# for line in secFile:
-#     # if line[0].isnumeric() and (count < 10):
-#     emptyLine = ''.join(line.split())
-#     print("EmptyLine: ", emptyLine)
-#
-#     if not (line[0].isnumeric()) and (emptyLine != ""):
-#         print(line)
-#         outFile.write(line)
-#         outFile.write(nl)
-#         if (line[0] == '*'):
-#             line = line.replace("***", "")
-#             outFile.write("***")
-#         else:
-#             outFile.write("++++")
-#         # count = count + 1
-#         try:
-#             # lowLine = line.lower()
-#             # puncts='.?!'
-#             # for sym in puncts:
-#             #     lineClear = lowLine.replace(sym,' ')
-#             #
-#             # tokenized = nltk.word_tokenize(lineClear)
-#
-#             # tokenized = nltk.word_tokenize(lowLine)
-#             tokenized = nltk.word_tokenize(line)
-#             tagged = nltk.pos_tag(tokenized)
-#
-#             chunkGram = r"""Chunk: {<RB.?>*<VB.?>*<NNP>}"""
-#             chunkParser = nltk.RegexpParser(chunkGram)
-#
-#             chunked = chunkParser.parse(tagged)
-#             print(chunked)
-#
-#             parse_string = ' '.join(str(chunked).split())
-#             print(parse_string)
-#             outFile.write(parse_string)
-#             outFile.write(nl+nl)
-#             #chunked.draw()
-#
-#         except Exception as e:
-#             print(str(e))
-#     else:
-#         print(line)
-#         outFile.write(line)
-#         outFile.write(nl)
-#     # elif ("ID=" in line) or ("Summary=" in line):
-#     #     print(line)
-#     #     outFile.write(line)
-#     #     outFile.write(nl)
-#
-#
-#
-# secFile.close()
-# outFile.close()
+secFile = open("ECMA_Current_07-09-19_v2.txt", 'r', encoding="utf8")
+outFileName = "ECMA_Current_SpeechTagResults_07-10-19.txt"
+outFile = open(outFileName, "w", encoding="utf8")
+
+# count=0
+for line in secFile:
+    # if line[0].isnumeric() and (count < 10):
+    emptyLine = ''.join(line.split())
+    # print("EmptyLine: ", emptyLine)
+
+    # if not (line[0].isnumeric()) and (emptyLine != ""):
+    #     print(line)
+    #     outFile.write(line)
+    #     outFile.write(nl)
+    #     lineHeader = ""
+    if emptyLine != "":
+        if (line[0] == '*'):
+            outFile.write(line)
+            # outFile.write(nl)
+            lHead = re.search(r'\*.*?\*', line, re.M|re.I)
+            # print("lHEAD: ")
+            # print(lHead.group())
+            lineHeader = lHead.group()
+            # line = line.replace("***", "")
+            line = re.sub(r'\*.*?\*', "", line)
+            outFile.write(lineHeader)
+        # else:
+        #     outFile.write("++++")
+        # # count = count + 1
+            try:
+                tokenized = nltk.word_tokenize(line)
+                tagged = nltk.pos_tag(tokenized)
+
+                chunkGram = r"""Chunk: {<RB.?>*<VB.?>*<NNP>}"""
+                chunkParser = nltk.RegexpParser(chunkGram)
+
+                chunked = chunkParser.parse(tagged)
+                print(chunked)
+
+                parse_string = ' '.join(str(chunked).split())
+                print(parse_string)
+                outFile.write(parse_string)
+                outFile.write(nl)#+nl)
+                #chunked.draw()
+
+            except Exception as e:
+                print(str(e))
+        # else:
+        #     print(line)
+        #     outFile.write(line)
+        #     outFile.write(nl)
+        elif ("ID=" in line) or ("Summary=" in line):
+            print(line)
+            line = line.replace(nl, '')
+            outFile.write(line)
+            outFile.write(nl)
+
+
+
+secFile.close()
+outFile.close()
 
 indLines = []
 loopLines = []
@@ -73,33 +76,44 @@ plainLine = ""
 for line in outFile:
     nLine = line
     emptyLine = ''.join(line.split())
-    if (line[0] == '+'):
-        nLine = nLine.replace("++++", "")
+    # if (line[0] == '+'):
+    #     nLine = nLine.replace("++++", "")
+    #     nLine = nLine.replace('\n', '')
+    #     nLine = nLine.strip()
+    #     indLines.append(nLine)
+    #     # if plainLine != "":
+    #     #     plainIndLines.append(plainLine)
+    #     # plainLine = ""
+    if (line[0] == '*'):
+        POScheck = re.search(r'\*.*?\*\(S', nLine, re.M|re.I)
+        # nLine = nLine.replace("++++", "")
         nLine = nLine.replace('\n', '')
         nLine = nLine.strip()
-        indLines.append(nLine)
-        # if plainLine != "":
-        #     plainIndLines.append(plainLine)
-        # plainLine = ""
-    elif (line[0] == '*'):
-        nLine = nLine.replace("***", "")
-        nLine = nLine.replace('\n', '')
-        nLine = nLine.strip()
-        if nLine[0] == '(':
-            loopLines.append(nLine)
+        if POScheck:
+            indLines.append(nLine)
         else:
-            nLine = plainLine.replace("FUNC", "")
-            nLine = plainLine.replace("VAR", "")
-            plainLoopLines.append(nLine)
-        plainLine = ""
+            plainLine = nLine.replace("FUNC", "")
+            plainLine = plainLine.replace("VAR", "")
+            plainIndLines.append(plainLine)
+    # elif (line[0] == '*'):
+    #     nLine = nLine.replace("***", "")
+    #     nLine = nLine.replace('\n', '')
+    #     nLine = nLine.strip()
+    #     if nLine[0] == '(':
+    #         loopLines.append(nLine)
+    #     else:
+    #         nLine = plainLine.replace("FUNC", "")
+    #         nLine = plainLine.replace("VAR", "")
+    #         plainLoopLines.append(nLine)
+    #     plainLine = ""
     # elif line[0].isnumeric:
     #     plainLine = ""
-    elif not line[0].isnumeric() and (emptyLine != ""):
-        plainLine = line.replace("\n", "")
-        plainLine = plainLine.replace("FUNC", "")
-        plainLine = plainLine.replace("VAR", "")
-        plainLine = plainLine.strip()
-        plainIndLines.append(plainLine)
+    # elif not line[0].isnumeric() and (emptyLine != ""):
+    #     plainLine = line.replace("\n", "")
+    #     plainLine = plainLine.replace("FUNC", "")
+    #     plainLine = plainLine.replace("VAR", "")
+    #     plainLine = plainLine.strip()
+    #     plainIndLines.append(plainLine)
 
 outFile.close()
 
@@ -142,9 +156,9 @@ def processLines(lineList, plainList, patternFileName, tupleFileName):
                 if p == u:
                     match = True
                     patternFreq[j] += 1
-                    # print("p: ", p)
-                    # print("u: ", u)
-                    # print("Freq: ", patternFreq[j])
+                    print("p: ", p)
+                    print("u: ", u)
+                    print("Freq: ", patternFreq[j])
                 j += 1
             if not match:
                 uniqueIndPatterns.append(p)
@@ -187,8 +201,13 @@ def processLines(lineList, plainList, patternFileName, tupleFileName):
         examples = []
         ind = 0
         for l in lineList:
+            # print(u)
+            # print(l)
             pattern = reduceToPattern(l)
+            # print(pattern)
             if u == pattern:
+                print(u)
+                print(pattern)
                 # newEntry = ""
                 # splitLine = l.split('/')
                 examples.append(plainList[ind])
@@ -225,9 +244,9 @@ def processLines(lineList, plainList, patternFileName, tupleFileName):
     tupleFile.close()
 ### END OF FUNCTION BLOCK?
 
-for l in loopLines:
+for l in plainIndLines:
     print(l)
-print(len(loopLines))
+# print(len(loopLines))
 
-processLines(loopLines, plainLoopLines, "LoopPatterns.txt", "LoopPatternsAndExamples.txt")
+processLines(indLines, plainIndLines, "LinePatterns_07-10-19.txt", "PatternsAndExamples_07-10-19.txt")
 
