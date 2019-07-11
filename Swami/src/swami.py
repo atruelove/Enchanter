@@ -34,15 +34,17 @@ from generateTestTemplates import TestTemplate
 from generateExecutableTests import ExecutableTest
 from printprogress import printProgressBar
 from time import sleep
+import re
+from bs4 import BeautifulSoup
 
 class Swami(object):
 	def __init__(self, inputfilepath, abstractfunfilepath, outputdir, compiler):
 		self.input_spec = inputfilepath
 		self.abstractfunc_file_path = abstractfunfilepath
 		self.output_dir = outputdir 
-		self.templatefilepath = self.output_dir + "/ecma262_templates.js"
+		self.templatefilepath = self.output_dir + "\ecma262_templates.js"
 		self.rel_sec_extractor = RelevantSection()
-		self.relevant_spec = self.output_dir + "/" + self.input_spec.split("/")[-1].split(".")[0] + "_relevant_sections.txt"
+		self.relevant_spec = self.output_dir + "\\" + self.input_spec.split("\\")[-1].split(".")[0] + "_relevant_sections.txt"
 		self.relevant_spec_exists = os.path.isfile(self.relevant_spec)
 		self.test_template_generator = TestTemplate(self.relevant_spec, compiler)
 		self.executable_test_generator = ExecutableTest(self.templatefilepath, self.output_dir, compiler)
@@ -55,36 +57,137 @@ class Swami(object):
 	def extractRelevantSections(self, okapi=False):
 		print("Extracting relevant sections from: ", self.input_spec)
 		filepath = self.relevant_spec
-		print("begin extracting relevant sections .....................................")
-		rel_sec_file = open(filepath, "w")
-		extracted_sections = self.rel_sec_extractor.getRelevantSections(self.input_spec)
-		section_count = 0
-		numofsec = len(extracted_sections)
-		printProgressBar(0, numofsec, prefix = 'Writing Relevant Sections to the File Progress:', suffix = 'Complete', length = 50)
-		for header in sorted(extracted_sections):
-			section_count += 1
-			printProgressBar(section_count + 1, numofsec, prefix = 'Writing Relevant Sections to the File Progress:', suffix = 'Complete', length = 50)
-			sectionid = header.split()[0]
-			summary = " ".join(header.split()[1:])
-			body = extracted_sections[header]
-			rel_sec_file.write("############# BEGIN ## " + str(section_count) + " ###########################\n")
-			rel_sec_file.write("ID= " +  sectionid + "\n")
-			rel_sec_file.write("Summary= " +  summary + "\n")
-			rel_sec_file.write("Description= " + body + "\n") 
-			rel_sec_file.write("#############  END  ## " + str(section_count) + " ###########################\n")
-			if header not in self.extracted_sections:
-				self.extracted_sections[header] = body
-		rel_sec_file.close()
-		self.rel_sec_extractor.nlp.close()
-		print()
-		print("Total number of relevant sections extracted = ", len(extracted_sections))
-		print("Output is available in: ", filepath)
+		def funcReplace(match):
+			# print(match.group(0))
+			justFunc = match.group(0)
+			justFunc = re.sub(r'<.*?>', "", justFunc)
+			return "FUNC" + justFunc  # + "("
+
+		def toCaps(match):
+			return match.group(0).upper()
+
+		def cleanupText(strL):
+			strL = strL.replace("<var>", "VAR")
+			strL = strL.replace("</var>", "")
+			funcSearch = re.search(r'<a href="#sec.*?</emu-xref>\(', strL, re.M | re.I)
+			if funcSearch:
+				strL = re.sub(r'<a href="#sec.*?</emu-xref>\(', funcReplace, strL)
+			strL = strL.replace('\n', '')
+			strL = re.sub(r'<ol>', " ", strL)
+			strL = re.sub(r'</ol>', " ", strL)
+			strL = re.sub(r'</li>', " ", strL)
+			strL = re.sub(r'<.*?>', "", strL)
+			strL = re.sub(r'\[\[.*?\]\]', toCaps, strL)
+			strL = strL.replace("  ", " ")
+			return strL
+
+		def writeSubSections(cont, level):
+			for l in cont:
+				strL = str(l).lower()
+				headingStr = '*' + str(level) + '*'
+				if "<ol>" not in strL:
+					cleaned = cleanupText(strL)
+					print(headingStr, cleaned)
+					outFile.write(headingStr)
+					outFile.write(cleaned)
+					outFile.write("\n")
+				else:
+					preStr = strL.split("<ol>")[0]
+					cleaned = cleanupText(preStr)
+					print(headingStr, cleaned)
+					outFile.write(headingStr)
+					outFile.write(cleaned)
+					outFile.write("\n")
+					cont2 = l.find("ol").contents
+					writeSubSections(cont2, level + 1)
+
+		# inFile = open("ECMAScript2018LanguageSpecification.html", 'r', encoding="utf8")
+		inFile = open(self.input_spec, 'r', encoding="utf8")
+		outFile = open(filepath, 'w', encoding="utf8")
+		soup = BeautifulSoup(inFile, 'html.parser')
+		emu = soup.select('emu-clause')
+		relSecRaw = []
+		for e in emu:
+			# print(e)
+			eTxt = e.find('h1')
+			eTxt = eTxt.get_text()
+			eTxt = eTxt.strip()
+			funcCheck = re.search(r'\(.*\)$', eTxt, re.M | re.I)
+			if funcCheck:
+				print(eTxt)
+				relSecRaw.append(e)
+		noFunctions = 0
+		print(len(relSecRaw))
+		for s in relSecRaw:
+			print(s, '\n\n')
+			label = s.find("h1")
+			labelS = str(label)
+			labelComp = labelS.split("</span>")
+			lc2 = []
+			for ls in labelComp:
+				ls = re.sub(r'<.*?>', "", ls)
+				print(ls)
+				lc2.append(ls)
+			print(lc2)
+
+			summary = s.find('p')
+			summStr = str(summary)
+			summStr = re.sub(r'<.*?>', "", summStr)
+			summStr = summStr.replace("\n", "")
+			emuAlg = s.find_all("emu-alg")
+			if not emuAlg:
+				print("ERROR")
+			else:
+				noFunctions += 1
+				begin = "############# BEGIN ## " + str(noFunctions) + " ###########################\n"
+				end = "\n############# END ## " + str(noFunctions) + " ###########################\n"
+				outFile.write(begin)
+				outFile.write("ID= ")
+				outFile.write(lc2[0])
+				outFile.write("\n")
+				outFile.write("Summary= ")
+				outFile.write(lc2[1])
+				outFile.write("\n")
+				print(summStr)
+				outFile.write("Description= ")
+				outFile.write(summStr)
+				outFile.write("\n")
+				emuAlg = emuAlg[0]
+				ol = emuAlg.find("ol")
+				cont = ol.contents
+				print(cont)
+				writeSubSections(cont, 0)
+				outFile.write(end)
+		# print("begin extracting relevant sections .....................................")
+		# rel_sec_file = open(filepath, "w")
+		# extracted_sections = self.rel_sec_extractor.getRelevantSections(self.input_spec)
+		# section_count = 0
+		# numofsec = len(extracted_sections)
+		# printProgressBar(0, numofsec, prefix = 'Writing Relevant Sections to the File Progress:', suffix = 'Complete', length = 50)
+		# for header in sorted(extracted_sections):
+		# 	section_count += 1
+		# 	printProgressBar(section_count + 1, numofsec, prefix = 'Writing Relevant Sections to the File Progress:', suffix = 'Complete', length = 50)
+		# 	sectionid = header.split()[0]
+		# 	summary = " ".join(header.split()[1:])
+		# 	body = extracted_sections[header]
+		# 	rel_sec_file.write("############# BEGIN ## " + str(section_count) + " ###########################\n")
+		# 	rel_sec_file.write("ID= " +  sectionid + "\n")
+		# 	rel_sec_file.write("Summary= " +  summary + "\n")
+		# 	rel_sec_file.write("Description= " + body + "\n")
+		# 	rel_sec_file.write("#############  END  ## " + str(section_count) + " ###########################\n")
+		# 	if header not in self.extracted_sections:
+		# 		self.extracted_sections[header] = body
+		# rel_sec_file.close()
+		# self.rel_sec_extractor.nlp.close()
+		# print()
+		# print("Total number of relevant sections extracted = ", len(extracted_sections))
+		# print("Output is available in: ", filepath)
 	
 	# method to parse the extracted sections stored in a file 
 	# and load them in the dictonary
 	def readRelevantSections(self):
 		if self.relevant_spec_exists is True:	
-			rel_sec_file = open(self.relevant_spec)
+			rel_sec_file = open(self.relevant_spec, 'r', encoding="utf8")
 			startsec = False
 			for line in rel_sec_file:
 				if startsec is False and "############# BEGIN ##" in line:
@@ -127,7 +230,7 @@ class Swami(object):
 			tmp_template_file = open(tmp_file_name, "w")	
 			tmp_template_file.write(template)
 			tmp_template_file.close()
-			cmd = "~/node-10.7.0/node "  +  tmp_file_name + " 2> /dev/null"
+			cmd = "~\\node-10.7.0\\node "  +  tmp_file_name + " 2> \\dev\\null"
 			try:
 				if subprocess.check_call(cmd, shell=True) == 0:
 					template_file.write("\n\n")

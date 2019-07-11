@@ -31,6 +31,7 @@ import sys
 import re
 from time import sleep
 from printprogress import printProgressBar
+from bs4 import BeautifulSoup
 
 
 conditionalpattern1 = re.compile("If .* return .*")
@@ -42,7 +43,7 @@ DEBUG = False
 class RelevantSection(object):
 	def __init__(self):
 		self.relevant_sections = {}	# dictionary that stores the relevant sections extrated from specification document
-		self.nlp = StanfordCoreNLP(r'lib/stanford-corenlp-full-2018-02-27')
+		self.nlp = StanfordCoreNLP(r'lib\stanford-corenlp-full-2018-02-27')
 	
 	# method to tokenize a sentence and annotate it with POS tags 
 	def tokenize(self, sentence):
@@ -63,7 +64,51 @@ class RelevantSection(object):
 				if "NN" in pos_tokens[i][1] or "NNP" in pos_tokens[i][1] or "NNS" in pos_tokens[i][1]:
 					return True	
 		return relsec
-	
+
+	# def funcReplace(match):
+	# 	# print(match.group(0))
+	# 	justFunc = match.group(0)
+	# 	justFunc = re.sub(r'<.*?>', "", justFunc)
+	# 	return "FUNC" + justFunc  # + "("
+    #
+	# def toCaps(match):
+	# 	return match.group(0).upper()
+    #
+	# def cleanupText(strL):
+	# 	strL = strL.replace("<var>", "VAR")
+	# 	strL = strL.replace("</var>", "")
+	# 	funcSearch = re.search(r'<a href="#sec.*?</emu-xref>\(', strL, re.M | re.I)
+	# 	if funcSearch:
+	# 		strL = re.sub(r'<a href="#sec.*?</emu-xref>\(', funcReplace, strL)
+	# 	strL = strL.replace('\n', '')
+	# 	strL = re.sub(r'<ol>', " ", strL)
+	# 	strL = re.sub(r'</ol>', " ", strL)
+	# 	strL = re.sub(r'</li>', " ", strL)
+	# 	strL = re.sub(r'<.*?>', "", strL)
+	# 	strL = re.sub(r'\[\[.*?\]\]', toCaps, strL)
+	# 	strL = strL.replace("  ", " ")
+	# 	return strL
+
+	# def writeSubSections(cont, level):
+	# 	for l in cont:
+	# 		strL = str(l).lower()
+	# 		headingStr = '*' + str(level) + '*'
+	# 		if "<ol>" not in strL:
+	# 			cleaned = cleanupText(strL)
+	# 			print(headingStr, cleaned)
+	# 			outFile.write(headingStr)
+	# 			outFile.write(cleaned)
+	# 			outFile.write("\n")
+	# 		else:
+	# 			preStr = strL.split("<ol>")[0]
+	# 			cleaned = cleanupText(preStr)
+	# 			print(headingStr, cleaned)
+	# 			outFile.write(headingStr)
+	# 			outFile.write(cleaned)
+	# 			outFile.write("\n")
+	# 			cont2 = l.find("ol").contents
+	# 			writeSubSections(cont2, level + 1)
+
 	# main method for this file. It takes the path to the specification document 
 	# and returns a dictonary of extracted sections where key is the section title
 	# and value is the section body
@@ -84,15 +129,14 @@ class RelevantSection(object):
 		for line in spec_doc:
 			linecount += 1
 			printProgressBar(linecount + 1, doclen, prefix = 'Extracting Header Progress:', suffix = 'Complete', length = 50)
-			document += line 	
+			document += line
 			if len(line) > 1:
 				pos_tokens = self.tokenize(line.strip().replace("[", "").replace("]", ""))
 				isheader = self.checkIfRelevantHeader(line, pos_tokens)
 				if isheader is True:
 					header = line.strip()
 					headers.append(header)
-					continue	
-					
+					continue
 
 		# loop through the document (stored in memory) to extract the body correspoding to headers extracted
 		startsection = False
@@ -110,8 +154,111 @@ class RelevantSection(object):
 				continue
 			elif len(line) > 1:
 				body += line.strip() + "\n"
-		
+
 		return extracted_sections
+
+		# def funcReplace(match):
+		# 	# print(match.group(0))
+		# 	justFunc = match.group(0)
+		# 	justFunc = re.sub(r'<.*?>', "", justFunc)
+		# 	return "FUNC" + justFunc  # + "("
+		#
+		# def toCaps(match):
+		# 	return match.group(0).upper()
+		#
+		# def cleanupText(strL):
+		# 	strL = strL.replace("<var>", "VAR")
+		# 	strL = strL.replace("</var>", "")
+		# 	funcSearch = re.search(r'<a href="#sec.*?</emu-xref>\(', strL, re.M | re.I)
+		# 	if funcSearch:
+		# 		strL = re.sub(r'<a href="#sec.*?</emu-xref>\(', funcReplace, strL)
+		# 	strL = strL.replace('\n', '')
+		# 	strL = re.sub(r'<ol>', " ", strL)
+		# 	strL = re.sub(r'</ol>', " ", strL)
+		# 	strL = re.sub(r'</li>', " ", strL)
+		# 	strL = re.sub(r'<.*?>', "", strL)
+		# 	strL = re.sub(r'\[\[.*?\]\]', toCaps, strL)
+		# 	strL = strL.replace("  ", " ")
+		# 	return strL
+		#
+		# def writeSubSections(cont, level):
+		# 	for l in cont:
+		# 		strL = str(l).lower()
+		# 		headingStr = '*' + str(level) + '*'
+		# 		if "<ol>" not in strL:
+		# 			cleaned = cleanupText(strL)
+		# 			print(headingStr, cleaned)
+		# 			outFile.write(headingStr)
+		# 			outFile.write(cleaned)
+		# 			outFile.write("\n")
+		# 		else:
+		# 			preStr = strL.split("<ol>")[0]
+		# 			cleaned = cleanupText(preStr)
+		# 			print(headingStr, cleaned)
+		# 			outFile.write(headingStr)
+		# 			outFile.write(cleaned)
+		# 			outFile.write("\n")
+		# 			cont2 = l.find("ol").contents
+		# 			writeSubSections(cont2, level + 1)
+		#
+		# # inFile = open("ECMAScript2018LanguageSpecification.html", 'r', encoding="utf8")
+		# inFile = open(path_to_spec_doc, 'r', encoding="utf8")
+		# outFile = open("ECMA_Current_07-11-19_v2.txt", 'w', encoding="utf8")
+		# soup = BeautifulSoup(inFile, 'html.parser')
+		# emu = soup.select('emu-clause')
+		# relSecRaw = []
+		# for e in emu:
+		# 	# print(e)
+		# 	eTxt = e.find('h1')
+		# 	eTxt = eTxt.get_text()
+		# 	eTxt = eTxt.strip()
+		# 	funcCheck = re.search(r'\(.*\)$', eTxt, re.M | re.I)
+		# 	if funcCheck:
+		# 		print(eTxt)
+		# 		relSecRaw.append(e)
+		# noFunctions = 0
+		# print(len(relSecRaw))
+		# for s in relSecRaw:
+		# 	print(s, '\n\n')
+		# 	label = s.find("h1")
+		# 	labelS = str(label)
+		# 	labelComp = labelS.split("</span>")
+		# 	lc2 = []
+		# 	for ls in labelComp:
+		# 		ls = re.sub(r'<.*?>', "", ls)
+		# 		print(ls)
+		# 		lc2.append(ls)
+		# 	print(lc2)
+		#
+		# 	summary = s.find('p')
+		# 	summStr = str(summary)
+		# 	summStr = re.sub(r'<.*?>', "", summStr)
+		# 	summStr = summStr.replace("\n", "")
+		# 	emuAlg = s.find_all("emu-alg")
+		# 	if not emuAlg:
+		# 		print("ERROR")
+		# 	else:
+		# 		noFunctions += 1
+		# 		begin = "############# BEGIN ## " + str(noFunctions) + " ###########################\n"
+		# 		end = "\n############# END ## " + str(noFunctions) + " ###########################\n"
+		# 		outFile.write(begin)
+		# 		outFile.write("ID= ")
+		# 		outFile.write(lc2[0])
+		# 		outFile.write("\n")
+		# 		outFile.write("Summary= ")
+		# 		outFile.write(lc2[1])
+		# 		outFile.write("\n")
+		# 		print(summStr)
+		# 		outFile.write("Description= ")
+		# 		outFile.write(summStr)
+		# 		outFile.write("\n")
+		# 		emuAlg = emuAlg[0]
+		# 		ol = emuAlg.find("ol")
+		# 		cont = ol.contents
+		# 		print(cont)
+		# 		writeSubSections(cont, 0)
+		# 		outFile.write(end)
+
 
 	# method that uses patterns to determine if a section contains a boundary condition or exception
 	def isSectionRelevant(self, header, body):
