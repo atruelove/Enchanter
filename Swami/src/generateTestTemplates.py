@@ -21,6 +21,7 @@
 # SOFTWARE.
 # ==============================================================================
 
+import nltk
 import sys
 import re
 import os
@@ -32,6 +33,10 @@ returnpattern = re.compile("return .*")
 assignmentpattern = re.compile("Let .+\?*")
 relevantstmtpattern1 = re.compile("If .* return .*")
 relevantstmtpattern2 = re.compile("If .* the result is .*")
+letPOSPatterns = ["VB NNP VB . NNP ( NNP ) .", "VB NNP VB NNP . VB JJ NNP NNP NNP .", "VB NNP VB . NNP ( NNP , NNP ) .", "VB NNP VB DT DT NN .", "VB NNP VB CD .", "VB NNP VB NNP ( NNP ) .",
+				"VB NNP VB . JJ ( DT NN ) .", "VB NNP VB NNP .", "VB NNP VB . NNP ( . NNP ( NNP , `` NN '' ) ) .", "VB NNP VB . NNP ( DT NN ) .", "VB NNP VB DT JJ JJ NN .",
+				"VB NNP VB DT JJ NN NN .", "VB NNP VB DT NN IN NNP ."]
+multiStepIfPatterns = ["IN NNP VBZ JJ , RB", "IN NNP ( NNP ) VBZ JJ , RB", "IN NNP VBZ RB JJ , RB", "IN NNP VBZ VBN , RB"]
 
 class TestTemplate(object):
 	def __init__(self, relspecpath, compiler):
@@ -100,9 +105,17 @@ class TestTemplate(object):
 		if "is not less than" in text:
 			text = text.replace("is not less than", "> ");		
 		if "is greater than" in text:
-			text = text.replace("is greater than", "> ");		
+			text = text.replace("is greater than", "> ");
+		if "&gt;" in text:
+			text = text.replace("&gt;", "> ");
 		if "is less than" in text:
-			text = text.replace("is less than", "< ");		
+			text = text.replace("is less than", "< ");
+		if "&lt;" in text:
+			text = text.replace("&lt;", "<");
+		if "≤" in text:
+			text = text.replace("≤", "<=");
+		if "≥" in text:
+			text = text.replace("≥", ">=");
 		if "is negative" in text:
 			text = text.replace("is negative", "< 0");		
 		if "is positive" in text:
@@ -185,6 +198,8 @@ class TestTemplate(object):
 			text = text.replace(" is exactly", " === ");
 		if " is " in text:
 			text = text.replace(" is ", " === ");
+		text = re.sub(r', then$', " ,,then,,", text)
+
 
 		text = text.replace("≥", ">= ")
 		text = text.replace("-", "- ")
@@ -258,20 +273,82 @@ class TestTemplate(object):
 			callablefunction = "var output = randominput." + summary.strip().split(".")[-1].replace(" ", "") + ";"
 		return callablefunction
 	
+	def getPOSTags(self, nline):
+		line = re.sub(r'\*.*?\*', "", nline)
+		try:
+			tokenized = nltk.word_tokenize(line)
+			tagged = nltk.pos_tag(tokenized)
+
+			chunkGram = r"""Chunk: {<RB.?>*<VB.?>*<NNP>}"""
+			chunkParser = nltk.RegexpParser(chunkGram)
+
+			chunked = chunkParser.parse(tagged)
+
+			parse_string = ' '.join(str(chunked).split())
+			# print(parse_string)
+		# chunked.draw()
+
+		except Exception as e:
+			print(str(e))
+
+		splitLine = parse_string.split()
+		# print(splitLine)
+		nPattern = ""
+		for s in splitLine:
+			if '/' in s:
+				pos = s.split('/')[1]
+				if len(pos) > 1 and ')' in pos:
+					pos = pos.replace(')', '')
+				nPattern += (pos + " ")
+		nPattern = nPattern.strip()
+		return nPattern
 
 	# method to: (1) extract the assignment statement inside the body of the relevant section 
 	# and store the variable and corresponding value (or function call) inside the dictonary
 	# (2) extract the conditional statements and simplify them by substituting the variables (if exists) 
 	# with their values   
-	def extractAssignmentAndConditionals(self, header, body, methodsignature):
+	def extractAssignmentAndConditionals(self, header, body, methodsignature, bodyPOS, headingList):
 		sectionid = header.split()[0]
 		self.variable_dataset.clear()
 		numvars = 0
+		index = 0
+		POS = bodyPOS.split("\n")
 		for statement in body.split("\n"):
-			if len(statement) > 100:
+			if len(statement) > 100 or statement == "":
+				index += 1
 				continue
 			statement = statement.replace("\xa0", " ")
-			isassignment = re.search(assignmentpattern, statement.strip())
+			# isassignment = re.search(assignmentpattern, statement.strip())
+
+			isMultiStepIf = False
+			for m in multiStepIfPatterns:
+				if POS[index].strip() == m:
+					isMultiStepIf = True
+			if isMultiStepIf:
+				postags = self.nlp.pos_tag(statement)
+				match = False
+				for i in range(len(postags)):
+					if "NN" in postags[i][1]:
+						match = True
+						break
+				if not match:
+					index += 1
+					continue
+				updatedstatement = self.substituteVars(statement, sectionid)
+				tmpvars = numvars
+				while (updatedstatement != self.substituteVars(updatedstatement, sectionid) and tmpvars > 0):
+					updatedstatement = self.substituteVars(updatedstatement, sectionid)
+					tmpvars -= 1
+				if header not in self.template_content:
+					self.template_content[header] = [methodsignature]
+					self.template_content[header].append(updatedstatement)
+				else:
+					self.template_content[header].append(updatedstatement)
+
+			isassignment = False
+			for a in letPOSPatterns:
+				if POS[index].strip() == a:
+					isassignment=True
 			if isassignment:
 				postags = self.nlp.pos_tag(statement)
 				match = False
@@ -280,6 +357,7 @@ class TestTemplate(object):
 						match = True
 						break 
 				if not match:
+					index += 1
 					continue
 				var, value = self.getAssignment(statement)
 				var = " " + var + " "
@@ -312,7 +390,7 @@ class TestTemplate(object):
 
 			isinputoutput1 = re.search(relevantstmtpattern1, statement)
 			isinputoutput2 = re.search(relevantstmtpattern2, statement)
-			if isinputoutput1 or isinputoutput2:		
+			if isinputoutput1 or isinputoutput2:
 				postags = self.nlp.pos_tag(statement)
 				match = False
 				for i in range(len(postags)):
@@ -320,6 +398,7 @@ class TestTemplate(object):
 						match = True
 						break 
 				if not match:
+					index += 1
 					continue
 				updatedstatement = self.substituteVars(statement, sectionid)
 				tmpvars = numvars
@@ -330,7 +409,8 @@ class TestTemplate(object):
 					self.template_content[header] = [methodsignature]
 					self.template_content[header].append(updatedstatement)
 				else:
-					self.template_content[header].append(updatedstatement)	
+					self.template_content[header].append(updatedstatement)
+			index += 1
 	
 
 
@@ -417,7 +497,8 @@ class TestTemplate(object):
 			else:
 				lhs = text.split("===")[0].strip()
 				rhs = text.split("===")[1].strip()
-				text = "Object.is" + lhs + "," + rhs				
+				text = "Object.is" + lhs + "," + rhs
+		text = re.sub(r',\s*?,\s*?then\s*?,\s*?,', " ) { ", text)
 		return text
 
 
@@ -425,8 +506,12 @@ class TestTemplate(object):
 	# method to generate a compilable test template function using 
 	# the method call and natural language conditional statements identified 
 	# identified using above defined methods for a given relevant section
-	def generateCompilableTemplate(self, header):
-		testtemplate = self.template_content[header]
+	def generateCompilableTemplate(self, header, headingList):
+		# testtemplate = self.template_content[header]
+		testtemplate = self.template_content.get(header)
+		if testtemplate == None:
+			return
+
 		methodname = " ".join(header.split()[1:]).split("(")[0].strip()
 		templatecount = 0
 		templates = []
@@ -473,19 +558,36 @@ class TestTemplate(object):
 			else:
 				args = "randominput," + args
 
-		testfunction = "function test_" + testname + "("+ args + "){" 
+		testfunction = "function test_" + testname + "("+ args + "){"
+		hIndex = 0
+		hLast = headingList[hIndex]
 		for i in range(1, len(testtemplate)):
 			templatecount += 1
-			if "if " not in testtemplate[i]: 
+			if "if " not in testtemplate[i]:
+				hLast = headingList[hIndex]
+				hIndex += 1
 				continue
 			
 			# comment out following two lines to generate templates for more sections
 			# this was made possible by modifying existing patterns and adding more patterns
-			if "weak" in testfunction or "set_prototype" in testfunction or "regexp_prototype" in testfunction or "get_sharedarraybuffer" in testfunction or "get_map" in testfunction or "number_prototype_tofixed" in testfunction or "sharedarraybuffer" in testfunction or "array_prototype_concat" in testfunction or "array_prototype_push" in testfunction or "array_prototype_sort" in testfunction or "array_prototype_splice" in testfunction or "atomics_wait" in testfunction or "test_number_prototype_tostring" in testfunction or "test_string_raw" in testfunction:
-				continue 
+			# if "weak" in testfunction or "set_prototype" in testfunction or "regexp_prototype" in testfunction or "get_sharedarraybuffer" in testfunction or "get_map" in testfunction or "number_prototype_tofixed" in testfunction or "sharedarraybuffer" in testfunction or "array_prototype_concat" in testfunction or "array_prototype_push" in testfunction or "array_prototype_sort" in testfunction or "array_prototype_splice" in testfunction or "atomics_wait" in testfunction or "test_number_prototype_tostring" in testfunction or "test_string_raw" in testfunction:
+			# 	hLast = headingList[hIndex]
+			# 	hIndex += 1
+			# 	continue
 
-			test = ""
+			test = "" + ("\t" * headingList[hIndex])
+			if headingList[hIndex] != -1 and headingList[hIndex] < hLast:
+				test = test + "}\n"
+
 			testcondition = testtemplate[i]
+			thenCheck = re.search(r',\s*?,\s*?then\s*?,\s*?,', testcondition)
+			if thenCheck:
+				print(header)
+				print(testcondition)
+				test = self.convertTextToCode(testcondition)
+				print(test)
+				testfunction += "if " + test
+
 			if "return" in testcondition:
 				expectedinput = testcondition.split("return")[0].strip().split("if")[1].strip()
 				expectedinput = self.convertTextToCode(expectedinput)
@@ -498,7 +600,9 @@ class TestTemplate(object):
 					else:
 						test = "if (" + expectedinput + "){\n\t\t" + vardecl + "\n\t\t" + "assert.strictEqual(" + expectedoutput + ", output);\n\t\tconsole.log(\"Good Test\");\n\t\treturn;\n\t\t}"
 				
-				if test.count("(")!=test.count(")") or "performing" in test or "implementation" in test or "@@" in test or "«" in test or "[" in test or "either " in test or "finite " in test or "atomics_wait" in test or "concatenation" in test or "filler" in test or "searchLength" in test or "-searchStr" in test or " not " in test or "unit value of" in test: 
+				if test.count("(")!=test.count(")") or "performing" in test or "implementation" in test or "@@" in test or "«" in test or "[" in test or "either " in test or "finite " in test or "atomics_wait" in test or "concatenation" in test or "filler" in test or "searchLength" in test or "-searchStr" in test or " not " in test or "unit value of" in test:
+					hLast = headingList[hIndex]
+					hIndex += 1
 					continue
 				testfunction = testfunction + "\n\t" + test
 			if "throw" in testcondition:
@@ -510,8 +614,12 @@ class TestTemplate(object):
 				elif self.compiler == "node":
 					test = "if (" + expectedinput + "){\n\t\t try{\n\t\t\t" + vardecl + "\n\t\t\tconsole.log(\"Bad Test/Failed Test\");\n\t\t\t return;"  + "\n\t\t}catch(e){\n\t\t\t" + "assert.strictEqual(true, eval(e instanceof "  + expectedoutput + "));\n\t\t\tconsole.log(\"Good Test\");\n\t\t\treturn;\n\t\t}\n\t}" 
 				if test.count("(")!=test.count(")") or "performing" in test or "implementation" in test or "@@" in test or "«" in test or "[" in test or "either " in test or "finite " in test or  "atomics_wait" in test or "concatenation" in test or "filler" in test or "searchLength" in test or "-searchStr" in test or " not " in test or "unit value of" in test:
-					continue 
+					hLast = headingList[hIndex]
+					hIndex += 1
+					continue
 				testfunction = testfunction + "\n\t" + test
+			hLast = headingList[hIndex]
+			hIndex += 1
 		if self.compiler == "node":
 			testfunction = testfunction + "\n\t\tconsole.log(\"OK Test\")\n}"  
 		elif self.compiler == "rhino":	
@@ -526,12 +634,12 @@ class TestTemplate(object):
 	# in JavaScript such as abstract operations	
 	def isTestable(self, header, body):
 		if ": " in header or "@@" in header or "%" in header:
-				return False
-		if (int(header.split(".")[0]) < 20): 
-				return False
+			return False
+		if (int(header.split(".")[0]) < 20):
+			return False
 		if (")" in header and header.split(")")[1].strip() != ""):
-				return False
-		if "The abstract operation " in body:
+			return False
+		if "The abstract operation " in body:
 			if body.split("The abstract operation")[1].split()[0].strip() in header:
 				return False
 		return True
@@ -545,14 +653,47 @@ class TestTemplate(object):
 	# uses these to produce combilable test templates
 	def generateTestTemplates(self, extracted_sections):
 		numofsec = len(extracted_sections.keys())
-		printProgressBar(0, numofsec, prefix = 'Generating Test Templates Progress:', suffix = 'Complete', length = 50)
-		for idx, header in enumerate(sorted(extracted_sections)):
+		# printProgressBar(0, numofsec, prefix = 'Generating Test Templates Progress:', suffix = 'Complete', length = 50)
+		# for idx, header in enumerate(sorted(extracted_sections)):
+		for idx, header in enumerate(extracted_sections):
 			header = header.replace("\xa0", " ")
-			body = extracted_sections[header]
-			printProgressBar(idx+1, numofsec, prefix = 'Generating Test Templates Progress:', suffix = 'Complete', length = 50)
-			if self.isTestable(header, body) is False:
-					continue
-			method_signature = self.getMethodSignature(header)
-			self.extractAssignmentAndConditionals(header, body, method_signature)
-			self.generateCompilableTemplate(header)
+			body0 = extracted_sections[header]
+			bodyPOS = ""
+			body = ""
+			headingList = []
+			for l in body0.split('\n'):
+				line2 = l.replace("VAR", "")
+				line2 = line2.replace("FUNC", "")
+				if l != "":
+					l2 = ""
+					lT = l.split(' ')
+					for x in lT:
+						x2 = x
+						x2 = re.sub(r'\*.*?\*', '', x2)
+						if "FUNC" not in x2 and "VAR" not in x2:
+							x2 = x2.lower()
+						add = x2 + " "
+						l2 += (add)
+					l2 = l2.strip()
+					partOfSpeechLine = self.getPOSTags(l2)
+					bodyPOS += partOfSpeechLine + '\n'
+					toAppend = -1
+					headingSearch = re.search(r'\*.*?\*', line2, re.M | re.I)
+					if headingSearch:
+						heading = headingSearch.group()
+						heading = heading.replace('*', '')
+						headingNum = int(heading)
+						toAppend = headingNum
+					headingList.append(toAppend)
+					line2 = re.sub(r'\*.*?\*', '', line2).strip()
+					body += line2 + '\n'
+			if(body.split('\n')[-1].strip()==''):
+				headingList.append(-1)
+			# printProgressBar(idx+1, numofsec, prefix = 'Generating Test Templates Progress:', suffix = 'Complete', length = 50)
+			# if self.isTestable(header, body) is False:
+			# continue
+			if self.isTestable(header, body)==True:
+				method_signature = self.getMethodSignature(header)
+				self.extractAssignmentAndConditionals(header, body, method_signature, bodyPOS, headingList)
+				self.generateCompilableTemplate(header, headingList)
 		return self.test_templates	

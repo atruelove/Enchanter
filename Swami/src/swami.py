@@ -41,7 +41,7 @@ class Swami(object):
 	def __init__(self, inputfilepath, abstractfunfilepath, outputdir, compiler):
 		self.input_spec = inputfilepath
 		self.abstractfunc_file_path = abstractfunfilepath
-		self.output_dir = outputdir 
+		self.output_dir = outputdir
 		self.templatefilepath = self.output_dir + "\ecma262_templates.js"
 		self.rel_sec_extractor = RelevantSection()
 		self.relevant_spec = self.output_dir + "\\" + self.input_spec.split("\\")[-1].split(".")[0] + "_relevant_sections.txt"
@@ -63,8 +63,13 @@ class Swami(object):
 			justFunc = re.sub(r'<.*?>', "", justFunc)
 			return "FUNC" + justFunc  # + "("
 
-		def toCaps(match):
-			return match.group(0).upper()
+		def bracketVAR (match):
+			justVAR = match.group(0)
+			justVAR = justVAR.replace('[[', "[[VAR")
+			return justVAR  # + "("
+
+		# def toCaps(match):
+		# 	return match.group(0).upper()
 
 		def cleanupText(strL):
 			strL = strL.replace("<var>", "VAR")
@@ -77,13 +82,13 @@ class Swami(object):
 			strL = re.sub(r'</ol>', " ", strL)
 			strL = re.sub(r'</li>', " ", strL)
 			strL = re.sub(r'<.*?>', "", strL)
-			strL = re.sub(r'\[\[.*?\]\]', toCaps, strL)
+			strL = re.sub(r'\[\[.*?\]\]', bracketVAR, strL)
 			strL = strL.replace("  ", " ")
 			return strL
 
 		def writeSubSections(cont, level):
 			for l in cont:
-				strL = str(l).lower()
+				strL = str(l)#.lower()
 				headingStr = '*' + str(level) + '*'
 				if "<ol>" not in strL:
 					cleaned = cleanupText(strL)
@@ -140,7 +145,7 @@ class Swami(object):
 			else:
 				noFunctions += 1
 				begin = "############# BEGIN ## " + str(noFunctions) + " ###########################\n"
-				end = "\n############# END ## " + str(noFunctions) + " ###########################\n"
+				end = "\n#############  END  ## " + str(noFunctions) + " ###########################\n"
 				outFile.write(begin)
 				outFile.write("ID= ")
 				outFile.write(lc2[0])
@@ -199,13 +204,19 @@ class Swami(object):
 				elif "Summary= " in line:
 					header += " " + line.split("=")[1].strip() # + "\n"		
 				elif "Description= " in line:
+					continue
 					body += line.split("=")[1].strip() + "\n"
 				elif "#############  END  ## "in line:
 					if header not in self.extracted_sections:
 						self.extracted_sections[header] = body
 					startsec = False
 				elif startsec is True and len(line)>1:
-					body += line.strip() + "\n"		
+					# line2 = re.sub(r'\*.*?\*', '', line)
+					# line2 = line2.replace("VAR", "")
+					# line2 = line2.replace("FUNC", "")
+					# line2 = "1. " + line2
+					# body += line2.strip() + "\n"
+					body += line.strip() + "\n"
 	
 	# method to add the implemented Abstract Functions to the generated 
 	# test files
@@ -221,22 +232,22 @@ class Swami(object):
 	def generateTemplates(self, extracted_sections):
 		self.addAbstractFunctions()
 		templates = self.test_template_generator.generateTestTemplates(extracted_sections)
-		template_file = open(self.templatefilepath, "a")
+		template_file = open(self.templatefilepath, "a", encoding="utf8")
 		template_file.write("\n\n/*TEST TEMPLATES GENERATED AUTOMATICALLY*/\n\n")
 		count = 0
 		for header in sorted(templates, key=templates.get):
 			template = templates[header]
 			tmp_file_name = "tmp_template_file.js"
-			tmp_template_file = open(tmp_file_name, "w")	
+			tmp_template_file = open(tmp_file_name, "w", encoding="utf8")
 			tmp_template_file.write(template)
 			tmp_template_file.close()
 			cmd = "~\\node-10.7.0\\node "  +  tmp_file_name + " 2> \\dev\\null"
 			try:
-				if subprocess.check_call(cmd, shell=True) == 0:
-					template_file.write("\n\n")
-					template_file.write(template)	
-					template_file.write("\n")
-					count += 1
+				# if subprocess.check_call(cmd, shell=True) == 0:
+				template_file.write("\n\n")
+				template_file.write(template)
+				template_file.write("\n")
+				count += 1
 			except:
 				continue
 		template_file.close()
@@ -279,6 +290,10 @@ if __name__ == '__main__':
 		else:
 			print("Reading relevant sections from existing file...............")
 			test_generator.readRelevantSections()
+		# print(type(test_generator.extracted_sections))
+		# for e in test_generator.extracted_sections:
+		# 	print(e)
+		# 	print(test_generator.extracted_sections[e])
 		print("attempting to generate templates for ", len(test_generator.extracted_sections), " relevant sections")
 		test_generator.generateTemplates(test_generator.extracted_sections)
 	
