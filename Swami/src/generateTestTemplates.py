@@ -36,6 +36,9 @@ relevantstmtpattern2 = re.compile("If .* the result is .*")
 letPOSPatterns = ["VB NNP VB . NNP ( NNP ) .", "VB NNP VB NNP . VB JJ NNP NNP NNP .", "VB NNP VB . NNP ( NNP , NNP ) .", "VB NNP VB DT DT NN .", "VB NNP VB CD .", "VB NNP VB NNP ( NNP ) .",
 				"VB NNP VB . JJ ( DT NN ) .", "VB NNP VB NNP .", "VB NNP VB . NNP ( . NNP ( NNP , `` NN '' ) ) .", "VB NNP VB . NNP ( DT NN ) .", "VB NNP VB DT JJ JJ NN .",
 				"VB NNP VB DT JJ NN NN .", "VB NNP VB DT NN IN NNP ."]
+throwExceptionPOSPatterns = ["IN NNP ( NNP ) VBZ RB JJ , VB DT NN NN .", "IN NNP ( NNP ) VBZ JJ , VB DT NN NN .", "IN NNP VBZ JJ , VB DT NN NN .",
+							 "IN NNP VBZ RB VB DT JJ NN NNP NNP NNP JJ NN , VB DT NN NN ."]
+ifResultPOSPatterns = ["IN NNP VBZ JJ , NN JJ .", "IN NNP VBZ JJ , VB NNS .", "IN NNP ( NNP ) VBZ RB JJ , NN JJ .", "IN NNP VBZ JJ , JJ NNP .", "IN NNP VBZ DT NNP NN , VB . JJ ( NNP , NNP ) ."]
 multiStepIfPatterns = ["IN NNP VBZ JJ , RB", "IN NNP ( NNP ) VBZ JJ , RB", "IN NNP VBZ RB JJ , RB", "IN NNP VBZ VBN , RB"]
 
 class TestTemplate(object):
@@ -346,9 +349,11 @@ class TestTemplate(object):
 					self.template_content[header].append(updatedstatement)
 
 			isassignment = False
-			for a in letPOSPatterns:
-				if POS[index].strip() == a:
-					isassignment=True
+			if POS[index].strip() in letPOSPatterns:
+				isassignment = True
+			# for a in letPOSPatterns:
+			# 	if POS[index].strip() == a:
+			# 		isassignment=True
 			if isassignment:
 				postags = self.nlp.pos_tag(statement)
 				match = False
@@ -368,7 +373,10 @@ class TestTemplate(object):
 				self.variable_dataset[var,sectionid] = value
 				numvars += 1
 
-			isexception = re.search(exceptionpattern, statement)
+			# isexception = re.search(exceptionpattern, statement)
+			isexception = False
+			if POS[index].strip() in throwExceptionPOSPatterns:
+				isexception = True
 			if isexception:
 				postags = self.nlp.pos_tag(statement)
 				match = False
@@ -388,9 +396,13 @@ class TestTemplate(object):
 					else:
 						self.template_content[header].append(errstmt)
 
-			isinputoutput1 = re.search(relevantstmtpattern1, statement)
-			isinputoutput2 = re.search(relevantstmtpattern2, statement)
-			if isinputoutput1 or isinputoutput2:
+			# isinputoutput1 = re.search(relevantstmtpattern1, statement)
+			# isinputoutput2 = re.search(relevantstmtpattern2, statement)
+			# if isinputoutput1 or isinputoutput2:
+			isinputoutput = False
+			if POS[index].strip() in ifResultPOSPatterns:
+				isinputoutput = True
+			if isinputoutput:
 				postags = self.nlp.pos_tag(statement)
 				match = False
 				for i in range(len(postags)):
@@ -570,16 +582,20 @@ class TestTemplate(object):
 			
 			# comment out following two lines to generate templates for more sections
 			# this was made possible by modifying existing patterns and adding more patterns
-			# if "weak" in testfunction or "set_prototype" in testfunction or "regexp_prototype" in testfunction or "get_sharedarraybuffer" in testfunction or "get_map" in testfunction or "number_prototype_tofixed" in testfunction or "sharedarraybuffer" in testfunction or "array_prototype_concat" in testfunction or "array_prototype_push" in testfunction or "array_prototype_sort" in testfunction or "array_prototype_splice" in testfunction or "atomics_wait" in testfunction or "test_number_prototype_tostring" in testfunction or "test_string_raw" in testfunction:
-			# 	hLast = headingList[hIndex]
-			# 	hIndex += 1
-			# 	continue
+			if "weak" in testfunction or "set_prototype" in testfunction or "regexp_prototype" in testfunction or "get_sharedarraybuffer" in testfunction or "get_map" in testfunction or "number_prototype_tofixed" in testfunction or "sharedarraybuffer" in testfunction or "array_prototype_concat" in testfunction or "array_prototype_push" in testfunction or "array_prototype_sort" in testfunction or "array_prototype_splice" in testfunction or "atomics_wait" in testfunction or "test_number_prototype_tostring" in testfunction or "test_string_raw" in testfunction:
+				hLast = headingList[hIndex]
+				hIndex += 1
+				continue
+
+			testcondition = testtemplate[i]
+
+			## Still need to do some work with the multiline statements
+			## If you want to remove multiline material from the templates, uncomment the next line and comment out all the following lines until you get to the STOP line
+			# test = ""
 
 			test = "" + ("\t" * headingList[hIndex])
 			if headingList[hIndex] != -1 and headingList[hIndex] < hLast:
 				test = test + "}\n"
-
-			testcondition = testtemplate[i]
 			thenCheck = re.search(r',\s*?,\s*?then\s*?,\s*?,', testcondition)
 			if thenCheck:
 				print(header)
@@ -587,6 +603,8 @@ class TestTemplate(object):
 				test = self.convertTextToCode(testcondition)
 				print(test)
 				testfunction += "if " + test
+
+			## STOP
 
 			if "return" in testcondition:
 				expectedinput = testcondition.split("return")[0].strip().split("if")[1].strip()
