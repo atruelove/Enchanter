@@ -33,13 +33,16 @@ returnpattern = re.compile("return .*")
 assignmentpattern = re.compile("Let .+\?*")
 relevantstmtpattern1 = re.compile("If .* return .*")
 relevantstmtpattern2 = re.compile("If .* the result is .*")
-letPOSPatterns = ["VB NNP VB . NNP ( NNP ) .", "VB NNP VB NNP . VB JJ NNP NNP NNP .", "VB NNP VB . NNP ( NNP , NNP ) .", "VB NNP VB DT DT NN .", "VB NNP VB CD .", "VB NNP VB NNP ( NNP ) .",
-				"VB NNP VB . JJ ( DT NN ) .", "VB NNP VB NNP .", "VB NNP VB . NNP ( . NNP ( NNP , `` NN '' ) ) .", "VB NNP VB . NNP ( DT NN ) .", "VB NNP VB DT JJ JJ NN .",
-				"VB NNP VB DT JJ NN NN .", "VB NNP VB DT NN IN NNP ."]
-throwExceptionPOSPatterns = ["IN NNP ( NNP ) VBZ RB JJ , VB DT NN NN .", "IN NNP ( NNP ) VBZ JJ , VB DT NN NN .", "IN NNP VBZ JJ , VB DT NN NN .",
-							 "IN NNP VBZ RB VB DT JJ NN NNP NNP NNP JJ NN , VB DT NN NN ."]
-ifResultPOSPatterns = ["IN NNP VBZ JJ , NN JJ .", "IN NNP VBZ JJ , VB NNS .", "IN NNP ( NNP ) VBZ RB JJ , NN JJ .", "IN NNP VBZ JJ , JJ NNP .", "IN NNP VBZ DT NNP NN , VB . JJ ( NNP , NNP ) ."]
-multiStepIfPatterns = ["IN NNP VBZ JJ , RB", "IN NNP ( NNP ) VBZ JJ , RB", "IN NNP VBZ RB JJ , RB", "IN NNP VBZ VBN , RB"]
+# letPOSPatterns = ["VB NNP VB . NNP ( NNP ) .", "VB NNP VB NNP . VB JJ NNP NNP NNP .", "VB NNP VB . NNP ( NNP , NNP ) .", "VB NNP VB DT DT NN .", "VB NNP VB CD .", "VB NNP VB NNP ( NNP ) .",
+# 				"VB NNP VB . JJ ( DT NN ) .", "VB NNP VB NNP .", "VB NNP VB . NNP ( . NNP ( NNP , `` NN '' ) ) .", "VB NNP VB . NNP ( DT NN ) .", "VB NNP VB DT JJ JJ NN .",
+# 				"VB NNP VB DT JJ NN NN .", "VB NNP VB DT NN IN NNP ."]
+# throwExceptionPOSPatterns = ["IN NNP ( NNP ) VBZ RB JJ , VB DT NN NN .", "IN NNP ( NNP ) VBZ JJ , VB DT NN NN .", "IN NNP VBZ JJ , VB DT NN NN .",
+# 							 "IN NNP VBZ RB VB DT JJ NN NNP NNP NNP JJ NN , VB DT NN NN ."]
+# ifResultPOSPatterns = ["IN NNP VBZ JJ , NN JJ .", "IN NNP VBZ JJ , VB NNS .", "IN NNP ( NNP ) VBZ RB JJ , NN JJ .", "IN NNP VBZ JJ , JJ NNP .", "IN NNP VBZ DT NNP NN , VB . JJ ( NNP , NNP ) ."]
+# multiStepIfPatterns = ["IN NNP VBZ JJ , RB", "IN NNP ( NNP ) VBZ JJ , RB", "IN NNP VBZ RB JJ , RB", "IN NNP VBZ VBN , RB"]
+letPOSPatterns = ["VB", "NNP", "VB", "."]
+ifResultPOSPatterns = ["IN", "NNP", "."]
+multiStepIfPatterns = ["IN", "NNP", ",", "RB"]
 
 class TestTemplate(object):
 	def __init__(self, relspecpath, compiler):
@@ -202,6 +205,7 @@ class TestTemplate(object):
 		if " is " in text:
 			text = text.replace(" is ", " === ");
 		text = re.sub(r', then$', " ,,then,,", text)
+		text = text.replace(" exception", "")
 
 
 		text = text.replace("≥", ">= ")
@@ -321,12 +325,48 @@ class TestTemplate(object):
 				index += 1
 				continue
 			statement = statement.replace("\xa0", " ")
+			POSElements = POS[index].split()
 			# isassignment = re.search(assignmentpattern, statement.strip())
 
+			isassignment = False
+			# if POS[index].strip() in letPOSPatterns:
+			# 	isassignment = True
+			isassignment = False
+			if len(POSElements) >= len(letPOSPatterns):
+				mCheck = True
+				for i in range(0,3):
+					if (POSElements[i] != letPOSPatterns[i]):
+						mCheck = False
+				if (POSElements[-1] != letPOSPatterns[-1]):
+					mCheck = False
+				isassignment = mCheck
+			if isassignment:
+				postags = self.nlp.pos_tag(statement)
+				match = False
+				for i in range(len(postags)):
+					if "NN" in postags[i][1]:
+						match = True
+						break 
+				if not match:
+					index += 1
+					continue
+				var, value = self.getAssignment(statement)
+				var = " " + var + " "
+				if "." in value and ".length" not in value:
+					value = value.split(".")[0]
+				if "the number of elements in" in value:
+					value = value.replace("the number of elements in", "").strip() + ".length"
+				self.variable_dataset[var,sectionid] = value
+				numvars += 1
+
 			isMultiStepIf = False
-			for m in multiStepIfPatterns:
-				if POS[index].strip() == m:
-					isMultiStepIf = True
+			if len(POSElements) >= len(multiStepIfPatterns):
+				if POSElements[0] == multiStepIfPatterns[0] and POSElements[1] == multiStepIfPatterns[1]:
+					if POSElements[-1] == multiStepIfPatterns[-1] and POSElements[-2] == multiStepIfPatterns[-2]:
+						isMultiStepIf = True
+			# for m in multiStepIfPatterns:
+			# 	if POS[index].strip() == m:
+			# 		isMultiStepIf = True
 			if isMultiStepIf:
 				postags = self.nlp.pos_tag(statement)
 				match = False
@@ -348,59 +388,39 @@ class TestTemplate(object):
 				else:
 					self.template_content[header].append(updatedstatement)
 
-			isassignment = False
-			if POS[index].strip() in letPOSPatterns:
-				isassignment = True
-			# for a in letPOSPatterns:
-			# 	if POS[index].strip() == a:
-			# 		isassignment=True
-			if isassignment:
-				postags = self.nlp.pos_tag(statement)
-				match = False
-				for i in range(len(postags)):
-					if "NN" in postags[i][1]:
-						match = True
-						break 
-				if not match:
-					index += 1
-					continue
-				var, value = self.getAssignment(statement)
-				var = " " + var + " "
-				if "." in value and ".length" not in value:
-					value = value.split(".")[0]
-				if "the number of elements in" in value:
-					value = value.replace("the number of elements in", "").strip() + ".length"
-				self.variable_dataset[var,sectionid] = value
-				numvars += 1
-
+			# This entire block seems to be unncessary. The pattern caught here is caught elsewhere, and gives the
+			# same output by adding a single line into substituteVars()
 			# isexception = re.search(exceptionpattern, statement)
-			isexception = False
-			if POS[index].strip() in throwExceptionPOSPatterns:
-				isexception = True
-			if isexception:
-				postags = self.nlp.pos_tag(statement)
-				match = False
-				for i in range(len(postags)):
-					if "NN" in postags[i][1]:
-						match = True
-						break 
-				if match and "exception." in statement:
-					errstmt = self.substituteVars(statement.split("exception.")[0], sectionid)
-					tmpvars = numvars
-					while(errstmt != self.substituteVars(errstmt, sectionid) and tmpvars>0):
-						errstmt = self.substituteVars(errstmt, sectionid) 
-						tmpvars -= 1;
-					if header not in self.template_content:
-						self.template_content[header] = [methodsignature]
-						self.template_content[header].append(errstmt)
-					else:
-						self.template_content[header].append(errstmt)
+			# isexception = False
+			# if POS[index].strip() in throwExceptionPOSPatterns:
+			# 	isexception = True
+			# if isexception:
+			# 	postags = self.nlp.pos_tag(statement)
+			# 	match = False
+			# 	for i in range(len(postags)):
+			# 		if "NN" in postags[i][1]:
+			# 			match = True
+			# 			break
+			# 	if match and "exception." in statement:
+			# 		errstmt = self.substituteVars(statement.split("exception.")[0], sectionid)
+			# 		tmpvars = numvars
+			# 		while(errstmt != self.substituteVars(errstmt, sectionid) and tmpvars>0):
+			# 			errstmt = self.substituteVars(errstmt, sectionid)
+			# 			tmpvars -= 1;
+			# 		if header not in self.template_content:
+			# 			self.template_content[header] = [methodsignature]
+			# 			self.template_content[header].append(errstmt)
+			# 		else:
+			# 			self.template_content[header].append(errstmt)
+			# 	continue
 
 			# isinputoutput1 = re.search(relevantstmtpattern1, statement)
 			# isinputoutput2 = re.search(relevantstmtpattern2, statement)
 			# if isinputoutput1 or isinputoutput2:
 			isinputoutput = False
-			if POS[index].strip() in ifResultPOSPatterns:
+			# if POS[index].strip() in ifResultPOSPatterns:
+			# 	isinputoutput = True
+			if len(POSElements) >= len(ifResultPOSPatterns) and POSElements[0] == ifResultPOSPatterns[0] and POSElements[1] == ifResultPOSPatterns[1] and POSElements[-1] == ifResultPOSPatterns[-1]:
 				isinputoutput = True
 			if isinputoutput:
 				postags = self.nlp.pos_tag(statement)
@@ -591,18 +611,18 @@ class TestTemplate(object):
 
 			## Still need to do some work with the multiline statements
 			## If you want to remove multiline material from the templates, uncomment the next line and comment out all the following lines until you get to the STOP line
-			# test = ""
+			test = ""
 
-			test = "" + ("\t" * headingList[hIndex])
-			if headingList[hIndex] != -1 and headingList[hIndex] < hLast:
-				test = test + "}\n"
-			thenCheck = re.search(r',\s*?,\s*?then\s*?,\s*?,', testcondition)
-			if thenCheck:
-				print(header)
-				print(testcondition)
-				test = self.convertTextToCode(testcondition)
-				print(test)
-				testfunction += "if " + test
+			# test = "" + ("\t" * headingList[hIndex])
+			# if headingList[hIndex] != -1 and headingList[hIndex] < hLast:
+			# 	test = test + "}\n"
+			# thenCheck = re.search(r',\s*?,\s*?then\s*?,\s*?,', testcondition)
+			# if thenCheck:
+			# 	print(header)
+			# 	print(testcondition)
+			# 	test = self.convertTextToCode(testcondition)
+			# 	print(test)
+			# 	testfunction += "if " + test + "\n"
 
 			## STOP
 
