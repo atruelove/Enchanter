@@ -32,3 +32,12 @@ IN NNP VBZ JJ , VB NNS .
 IN NNP ( NNP ) VBZ RB JJ , NN JJ .
 IN NNP VBZ JJ , JJ NNP .
 IN NNP VBZ DT NNP NN , VB . JJ ( NNP , NNP ) .
+
+if..let...else..let
+IN NNP VBZ RB JJ , VB NNP VB JJ ( NNP ) : RB , VB NNP VB . NNP ( NNP ) .
+IN NNP CC NN : CD , VB NNP VB VBN ( ( NNP NNP NNP ) , CD ) : JJ VB NNP VB VBN ( NNP , NNP ) .
+IN NNP VBZ JJ , VB NNP VB NNP : JJ VB NNP VB . NNP ( NNP ) .
+
+foreach
+
+repeat

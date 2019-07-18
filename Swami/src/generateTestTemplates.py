@@ -43,7 +43,8 @@ relevantstmtpattern2 = re.compile("If .* the result is .*")
 letPOSPatterns = ["VB", "NNP", "VB", "."]
 ifResultPOSPatterns = ["IN", "NNP", "."]
 multiStepIfPatterns = ["IN", "NNP", ",", "RB"]
-
+elsePattern = ["RB ,"]
+whilePattern = ["NN" "," "IN"]
 class TestTemplate(object):
 	def __init__(self, relspecpath, compiler):
 		self.template_content = {}
@@ -211,9 +212,9 @@ class TestTemplate(object):
 		text = text.replace("≥", ">= ")
 		text = text.replace("-", "- ")
 		text = text.strip().replace("(", " ( ").replace(")", " ) ").replace(",", " , ").replace("+", " + ").replace(">", " > ").replace(".length", " .length").replace(">=", " >= ").replace("<", " < ").replace("<=", " <= ").replace("≤", " ≤ ") + " "
-		for (variable,sid) in self.variable_dataset:
-			if variable in text and sid==sectionid and variable not in self.variable_dataset[(variable,sid)]:
-				text = text.replace(variable, self.variable_dataset[(variable,sid)])
+		# for (variable,sid) in self.variable_dataset:
+		# 	if variable in text and sid==sectionid and variable not in self.variable_dataset[(variable,sid)]:
+		# 		text = text.replace(variable, self.variable_dataset[(variable,sid)])
 
 		return text
 
@@ -321,6 +322,7 @@ class TestTemplate(object):
 		index = 0
 		POS = bodyPOS.split("\n")
 		for statement in body.split("\n"):
+			statementAdded = False
 			if len(statement) > 100 or statement == "":
 				index += 1
 				continue
@@ -351,12 +353,15 @@ class TestTemplate(object):
 					index += 1
 					continue
 				var, value = self.getAssignment(statement)
-				var = " " + var + " "
+				# var = " " + var + " "
 				if "." in value and ".length" not in value:
 					value = value.split(".")[0]
 				if "the number of elements in" in value:
 					value = value.replace("the number of elements in", "").strip() + ".length"
 				self.variable_dataset[var,sectionid] = value
+				updatedstatement = "--ASSIGNMENT-- " + str(var) + " = " + str(value)
+				# print(updatedstatement)
+				statementAdded = True
 				numvars += 1
 
 			isMultiStepIf = False
@@ -368,6 +373,7 @@ class TestTemplate(object):
 			# 	if POS[index].strip() == m:
 			# 		isMultiStepIf = True
 			if isMultiStepIf:
+				statementAdded = True
 				postags = self.nlp.pos_tag(statement)
 				match = False
 				for i in range(len(postags)):
@@ -378,15 +384,27 @@ class TestTemplate(object):
 					index += 1
 					continue
 				updatedstatement = self.substituteVars(statement, sectionid)
-				tmpvars = numvars
-				while (updatedstatement != self.substituteVars(updatedstatement, sectionid) and tmpvars > 0):
-					updatedstatement = self.substituteVars(updatedstatement, sectionid)
-					tmpvars -= 1
-				if header not in self.template_content:
-					self.template_content[header] = [methodsignature]
-					self.template_content[header].append(updatedstatement)
-				else:
-					self.template_content[header].append(updatedstatement)
+				# tmpvars = numvars
+				# while (updatedstatement != self.substituteVars(updatedstatement, sectionid) and tmpvars > 0):
+				# 	updatedstatement = self.substituteVars(updatedstatement, sectionid)
+				# 	tmpvars -= 1
+				# if header not in self.template_content:
+				# 	self.template_content[header] = [methodsignature]
+				# self.template_content[header].append(updatedstatement)
+
+			isElse = False
+			if POS[index] == "RB ,":
+				isElse = True
+			if isElse:
+				statementAdded = True
+				updatedstatement = self.substituteVars("else", sectionid)
+				# tmpvars = numvars
+				# while (updatedstatement != self.substituteVars(updatedstatement, sectionid) and tmpvars > 0):
+				# 	updatedstatement = self.substituteVars(updatedstatement, sectionid)
+				# 	tmpvars -= 1
+				# if header not in self.template_content:
+				# 	self.template_content[header] = [methodsignature]
+				# self.template_content[header].append(updatedstatement)
 
 			# This entire block seems to be unncessary. The pattern caught here is caught elsewhere, and gives the
 			# same output by adding a single line into substituteVars()
@@ -423,6 +441,7 @@ class TestTemplate(object):
 			if len(POSElements) >= len(ifResultPOSPatterns) and POSElements[0] == ifResultPOSPatterns[0] and POSElements[1] == ifResultPOSPatterns[1] and POSElements[-1] == ifResultPOSPatterns[-1]:
 				isinputoutput = True
 			if isinputoutput:
+				statementAdded = True
 				postags = self.nlp.pos_tag(statement)
 				match = False
 				for i in range(len(postags)):
@@ -434,14 +453,28 @@ class TestTemplate(object):
 					continue
 				updatedstatement = self.substituteVars(statement, sectionid)
 				tmpvars = numvars
-				while(updatedstatement != self.substituteVars(updatedstatement, sectionid) and tmpvars > 0):
-					updatedstatement = self.substituteVars(updatedstatement, sectionid)
-					tmpvars -= 1
+				# while(updatedstatement != self.substituteVars(updatedstatement, sectionid) and tmpvars > 0):
+				# 	updatedstatement = self.substituteVars(updatedstatement, sectionid)
+				# 	tmpvars -= 1
+				# if header not in self.template_content:
+				# 	self.template_content[header] = [methodsignature]
+				# self.template_content[header].append(updatedstatement)
+			if statementAdded:
+				# tmpvars = numvars
+				# while (updatedstatement != self.substituteVars(updatedstatement, sectionid) and tmpvars > 0):
+				# 	updatedstatement = self.substituteVars(updatedstatement, sectionid)
+				# 	tmpvars -= 1
 				if header not in self.template_content:
 					self.template_content[header] = [methodsignature]
-					self.template_content[header].append(updatedstatement)
-				else:
-					self.template_content[header].append(updatedstatement)
+				statementAddition = "***" + str(headingList[index]) + "***"
+				updatedstatement = updatedstatement + statementAddition
+				self.template_content[header].append(updatedstatement)
+				# print(updatedstatement)
+			else:
+				if header not in self.template_content:
+					self.template_content[header] = [methodsignature]
+				extraStatement = "***" + str(headingList[index]) + "***"
+				self.template_content[header].append(extraStatement)
 			index += 1
 	
 
@@ -591,78 +624,137 @@ class TestTemplate(object):
 				args = "randominput," + args
 
 		testfunction = "function test_" + testname + "("+ args + "){"
+		emptyTemplate = True
+		for i in range(1, len(testtemplate)):
+			testLine = testtemplate[i]
+			testLine = re.sub(r'\*\*\*[0-9]*?\*\*\*', "", testLine)
+			if testLine != "":
+				emptyTemplate = False
+		if emptyTemplate:
+			return
 		hIndex = 0
 		hLast = headingList[hIndex]
+		bracketOpen = False
+		hlst = []
 		for i in range(1, len(testtemplate)):
 			templatecount += 1
-			if "if " not in testtemplate[i]:
-				hLast = headingList[hIndex]
+			test = ""
+			testcondition = testtemplate[i]
+			isAssignment = False
+
+			headingSearch = re.search(r'\*\*\*[0-9]*?\*\*\*', testcondition, re.M|re.I)
+			# if headingSearch:
+			headingStr = headingSearch.group()
+			headingStr = headingStr.replace("*", "")
+			headingNo = int(headingStr)
+			testcondition = re.sub(r'\*\*\*[0-9]*?\*\*\*', "", testcondition)
+
+			lineTab = "\n\t"
+			addTab = 0
+
+			while addTab < headingNo:
+				lineTab += "\t"
+				addTab += 1
+
+
+			if bracketOpen and headingNo <= hlst[-1]:
+				# print(testcondition)
+				testfunction += test + lineTab + "}" + lineTab
+				del hlst[-1]
+				if not hlst:
+					bracketOpen = False
+
+			if testcondition.strip() == "else":
+				bracketOpen = True
+				hlst.append(headingNo)
+				test = "else {"
+				# testfunction += lineTab + str(headingNo) + " " + test
+			testfunction += lineTab + test
+
+			if "--ASSIGNMENT--" in testcondition.strip().split():
+				if "=" in testcondition.strip():
+					test = testcondition.strip()
+					test = test.replace("--ASSIGNMENT--", "").strip()
+					test = self.convertTextToCode(test)
+					# testfunction += lineTab + str(headingNo) + " " + test
+					testfunction += lineTab + "var " + test
+					isAssignment = True
+
+			if "if " not in testtemplate[i] and not isAssignment:
+				# hLast = headingList[hIndex]
 				hIndex += 1
 				continue
 			
 			# comment out following two lines to generate templates for more sections
 			# this was made possible by modifying existing patterns and adding more patterns
 			if "weak" in testfunction or "set_prototype" in testfunction or "regexp_prototype" in testfunction or "get_sharedarraybuffer" in testfunction or "get_map" in testfunction or "number_prototype_tofixed" in testfunction or "sharedarraybuffer" in testfunction or "array_prototype_concat" in testfunction or "array_prototype_push" in testfunction or "array_prototype_sort" in testfunction or "array_prototype_splice" in testfunction or "atomics_wait" in testfunction or "test_number_prototype_tostring" in testfunction or "test_string_raw" in testfunction:
-				hLast = headingList[hIndex]
+				# hLast = headingList[hIndex]
 				hIndex += 1
 				continue
 
-			testcondition = testtemplate[i]
+			# testcondition = testtemplate[i]
+			# test = ""
 
 			## Still need to do some work with the multiline statements
-			## If you want to remove multiline material from the templates, uncomment the next line and comment out all the following lines until you get to the STOP line
-			test = ""
+			## If you want to remove multiline material from the templates, comment out all the following lines until you get to the STOP line
 
 			# test = "" + ("\t" * headingList[hIndex])
 			# if headingList[hIndex] != -1 and headingList[hIndex] < hLast:
 			# 	test = test + "}\n"
-			# thenCheck = re.search(r',\s*?,\s*?then\s*?,\s*?,', testcondition)
-			# if thenCheck:
-			# 	print(header)
-			# 	print(testcondition)
-			# 	test = self.convertTextToCode(testcondition)
-			# 	print(test)
-			# 	testfunction += "if " + test + "\n"
+			thenCheck = re.search(r',\s*?,\s*?then\s*?,\s*?,', testcondition)
+			if thenCheck:
+				# print(header)
+				# print(testcondition)
+				bracketOpen = True
+				hlst.append(headingNo)
+				test = self.convertTextToCode(testcondition)
+				# print(test)
+				# testfunction += lineTab + str(headingNo) + " " + "if " + test
+				testfunction += lineTab + "if " + test
 
 			## STOP
 
-			if "return" in testcondition:
+			if "return" in testcondition and not isAssignment:
+				# print(testcondition)
 				expectedinput = testcondition.split("return")[0].strip().split("if")[1].strip()
 				expectedinput = self.convertTextToCode(expectedinput)
 				expectedoutput = self.convertTextToCode(testcondition.split("return")[1].strip())
 				if self.compiler == "rhino":
-					test = "if (" + expectedinput + "){\n\t\t" + vardecl + "\n\t\t" + "new TestCase(\"" + testname + "\", \"" + testname + "\", " + expectedoutput + ", output);\n\t\ttest();\n\t\treturn;\n\t\t}"
+					test = "if (" + expectedinput + "){" + lineTab + "\t" + vardecl + lineTab + "\t" + "new TestCase(\"" + testname + "\", \"" + testname + "\", " + expectedoutput + ", output);" + lineTab + "\ttest();" + lineTab + "\treturn;" + lineTab + "\t}"
 				elif self.compiler == "node":
 					if "NaN" == expectedoutput.strip():
-						test = "if (" + expectedinput + "){\n\t\t" + vardecl + "\n\t\t" + "assert.strictEqual(isNaN(output), true);\n\t\tconsole.log(\"Good Test\");\n\t\treturn;\n\t\t}"
+						test = "if (" + expectedinput + "){" + lineTab + "\t" + vardecl + lineTab + "\t" + "assert.strictEqual(isNaN(output), true);" + lineTab + "\tconsole.log(\"Good Test\");" + lineTab + "\treturn;" + lineTab + "\t}"
 					else:
-						test = "if (" + expectedinput + "){\n\t\t" + vardecl + "\n\t\t" + "assert.strictEqual(" + expectedoutput + ", output);\n\t\tconsole.log(\"Good Test\");\n\t\treturn;\n\t\t}"
+						test = "if (" + expectedinput + "){" + lineTab + "\t" + vardecl + "" + lineTab + "\t" + "assert.strictEqual(" + expectedoutput + ", output);" + lineTab + "\tconsole.log(\"Good Test\");" + lineTab + "\treturn;" + lineTab + "\t}"
 				
 				if test.count("(")!=test.count(")") or "performing" in test or "implementation" in test or "@@" in test or "«" in test or "[" in test or "either " in test or "finite " in test or "atomics_wait" in test or "concatenation" in test or "filler" in test or "searchLength" in test or "-searchStr" in test or " not " in test or "unit value of" in test:
-					hLast = headingList[hIndex]
+					# hLast = headingList[hIndex]
 					hIndex += 1
 					continue
-				testfunction = testfunction + "\n\t" + test
-			if "throw" in testcondition:
+				testfunction = testfunction + lineTab + test
+			if "throw" in testcondition and not isAssignment:
 				expectedinput = testcondition.split("throw")[0].split("if")[1].strip()
 				expectedinput = self.convertTextToCode(expectedinput)
 				expectedoutput = self.convertTextToCode(testcondition.split("throw")[1].strip())
 				if self.compiler == "rhino":
-					test = "if (" + expectedinput + "){\n\t\t try{\n\t\t\t" + vardecl + "\n\t\t\t return;"  + "\n\t\t}catch(e){\n\t\t\t" + "new TestCase(\"" + testname + "\", \"" + testname + "\", true, eval(e instanceof "  + expectedoutput + "));\n\t\t\ttest();\n\t\t\treturn;\n\t\t}\n\t}" 
+					test = "if (" + expectedinput + "){" + lineTab + "\t try{" + lineTab + "\t\t" + vardecl + lineTab + "\t\t return;"  + lineTab + "\t}catch(e){" + lineTab + "\t\t" + "new TestCase(\"" + testname + "\", \"" + testname + "\", true, eval(e instanceof "  + expectedoutput + "));" + lineTab + "\t\ttest();" + lineTab + "\t\treturn;" + lineTab + "\t}" + lineTab + "}"
 				elif self.compiler == "node":
-					test = "if (" + expectedinput + "){\n\t\t try{\n\t\t\t" + vardecl + "\n\t\t\tconsole.log(\"Bad Test/Failed Test\");\n\t\t\t return;"  + "\n\t\t}catch(e){\n\t\t\t" + "assert.strictEqual(true, eval(e instanceof "  + expectedoutput + "));\n\t\t\tconsole.log(\"Good Test\");\n\t\t\treturn;\n\t\t}\n\t}" 
+					test = "if (" + expectedinput + "){" + lineTab + "\t try{" + lineTab + "\t\t" + vardecl + lineTab + "\t\tconsole.log(\"Bad Test/Failed Test\");" + lineTab + "\t\t return;"  + lineTab + "\t}catch(e){" + lineTab + "\t\t" + "assert.strictEqual(true, eval(e instanceof "  + expectedoutput + "));" + lineTab + "\t\tconsole.log(\"Good Test\");" + lineTab + "\t\treturn;" + lineTab + "\t}" + lineTab + "}"
 				if test.count("(")!=test.count(")") or "performing" in test or "implementation" in test or "@@" in test or "«" in test or "[" in test or "either " in test or "finite " in test or  "atomics_wait" in test or "concatenation" in test or "filler" in test or "searchLength" in test or "-searchStr" in test or " not " in test or "unit value of" in test:
-					hLast = headingList[hIndex]
+					# hLast = headingList[hIndex]
 					hIndex += 1
 					continue
-				testfunction = testfunction + "\n\t" + test
-			hLast = headingList[hIndex]
+				testfunction = testfunction + lineTab + test
+			# hLast = headingList[hIndex]
 			hIndex += 1
 		if self.compiler == "node":
 			testfunction = testfunction + "\n\t\tconsole.log(\"OK Test\")\n}"  
 		elif self.compiler == "rhino":	
 			testfunction = testfunction + "\n}"  
 		templates.append(testfunction)
+		# tIndex = 1
+		# for t in range(1, len(templates)):
+		# 	print(tIndex, ": ", templates[t])
 		template = ''.join(templates)
 		if len(testtemplate) > 1 and "if" in template and "unknown" not in template.split("){")[0] and  "NewTarget" not in template:
 			self.test_templates[header] = template

@@ -109,67 +109,304 @@ function SameValueZero(x,y){
 
 
 function test_advancestringindex(randominput,S,index,unicode){
+	
+	
+	
+	
 	if (( unicode === false )){
 		var output = new String(randominput).AdvanceStringIndex(S,index,unicode);
 		assert.strictEqual(index + 1, output);
 		console.log("Good Test");
 		return;
 		}
-	if (( index + 1 >= the number of code units in S )){
+	
+	var length =number of code units in S
+	
+	if (( index + 1 >=  length )){
 		var output = new String(randominput).AdvanceStringIndex(S,index,unicode);
 		assert.strictEqual(index + 1, output);
 		console.log("Good Test");
 		return;
 		}
-	if (( numeric value of code unit at index index within S < 0xD800 ||the numeric value of code unit at index index within S > 0xDBFF )){
+	
+	var first =numeric value ofcode unit at index index within S
+	
+	if (( first < 0xD800 || first > 0xDBFF )){
 		var output = new String(randominput).AdvanceStringIndex(S,index,unicode);
 		assert.strictEqual(index + 1, output);
 		console.log("Good Test");
 		return;
 		}
-	if (( numeric value of code unit at index index + 1 within S < 0xDC00 ||the numeric value of code unit at index index + 1 within S > 0xDFFF )){
+	
+	var second =numeric value ofcode unit at index index+1 within S
+	
+	if (( second < 0xDC00 || second > 0xDFFF )){
 		var output = new String(randominput).AdvanceStringIndex(S,index,unicode);
 		assert.strictEqual(index + 1, output);
 		console.log("Good Test");
 		return;
 		}
+	
 		console.log("OK Test")
 }
 
 
 function test_array( len ){
-	if (( ToUint32 ( len )!= len )){
-		 try{
-			var output = new Array ( len );
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof RangeError));
-			console.log("Good Test");
-			return;
+	
+	var numberOfArgs =number of arguments passed to this function call
+	
+	
+	var proto = GetPrototypeFromConstructor(newTarget, "%ArrayPrototype%")
+	
+	var array = ArrayCreate(0, proto)
+	
+	if  ( typeof ( len ) != "number"  ) { 
+		
+		var defineStatus = CreateDataProperty(array, "0", len)
+		
+		
+		var intLen = 1
+	}
+	
+	else {
+		
+		var intLen = ToUint32(len)
+		
+		if (( intLen!= len )){
+			 try{
+				var output = new Array ( len );
+				console.log("Bad Test/Failed Test");
+				 return;
+			}catch(e){
+				assert.strictEqual(true, eval(e instanceof RangeError));
+				console.log("Good Test");
+				return;
+			}
 		}
 	}
+	
+	
+	
 		console.log("OK Test")
 }
 
 
 function test_array_from(items,mapfn,thisArg){
-	if (( IsCallable ( mapfn ) === false )){
-		 try{
-			var output = Array.from(items,mapfn,thisArg);
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof TypeError));
-			console.log("Good Test");
-			return;
+	
+	var C =randominput
+	
+	else {
+		
+		if (( IsCallable ( mapfn ) === false )){
+			 try{
+				var output = Array.from(items,mapfn,thisArg);
+				console.log("Bad Test/Failed Test");
+				 return;
+			}catch(e){
+				assert.strictEqual(true, eval(e instanceof TypeError));
+				console.log("Good Test");
+				return;
+			}
 		}
+		
+		
+		var mapping = true
 	}
+	
+	
+	var usingIterator = GetMethod(items, @@iterator)
+	
+	if  ( usingIterator != undefined  ) { 
+		
+		if  ( IsConstructor ( C ) === true  ) { 
+			
+			var A = Construct(C)
+		}
+		
+		else {
+			
+			var A = ArrayCreate(0)
+		}
+		
+		
+		var iteratorRecord = GetIterator(items, sync, usingIterator)
+		
+		var k = 0
+		
+			
+			if  ( k >=  253- 1  ) { 
+				
+				var error = ThrowCompletion(a newly created TypeError object)
+				
+			}
+			
+			
+			var Pk = ToString(k)
+			
+			var next = IteratorStep(iteratorRecord)
+				
+				
+			
+			var nextValue = IteratorValue(next)
+			
+			if  ( mapping === true  ) { 
+				
+				var mappedValue = Call(mapfn, T, « nextValue, k »)
+				
+				if (( mappedValue === an abrupt completion )){
+					var output = Array.from(items,mapfn,thisArg);
+					assert.strictEqual(? IteratorClose ( iteratorRecord , mappedValue ), output);
+					console.log("Good Test");
+					return;
+					}
+				
+				var mappedValue = mappedValue
+			}
+			
+			
+			
+			var defineStatus = CreateDataPropertyOrThrow(A, Pk, mappedValue)
+			
+			if (( defineStatus === an abrupt completion )){
+				var output = Array.from(items,mapfn,thisArg);
+				assert.strictEqual(? IteratorClose ( iteratorRecord , defineStatus ), output);
+				console.log("Good Test");
+				return;
+				}
+			
+	}
+	
+	
+	
+	var arrayLike = ToObject(items)
+	
+	var len = ToLength( Get(arrayLike, "length"))
+	
+	if  ( IsConstructor ( C ) === true  ) { 
+		
+		var A = Construct(C, « len »)
+	}
+	
+	else {
+		
+		var A = ArrayCreate(len)
+	}
+	
+	
+	var k = 0
+	
+		
+		var Pk = ToString(k)
+		
+		var kValue = Get(arrayLike, Pk)
+		
+		if  ( mapping === true  ) { 
+			
+			var mappedValue = Call(mapfn, T, « kValue, k »)
+		}
+		
+		
+		
+		
+	
+	
+		console.log("OK Test")
+}
+
+
+function test_array_of(items){
+	
+	var len =actual number of arguments passed to this function
+	
+	var items =List of arguments passed to this function
+	
+	var C =randominput
+	
+	if  ( IsConstructor ( C ) === true  ) { 
+		
+		var A = Construct(C, « len »)
+	}
+	
+	else {
+		
+		var A = ArrayCreate(len)
+	}
+	
+	
+	var k = 0
+	
+		
+		var kValue = items[k]
+		
+		var Pk = ToString(k)
+		
+		
+	
+	
+		console.log("OK Test")
+}
+
+
+function test_array_prototype_copywithin(randominput, target, start  , end  ){
+	
+	var O = ToObject(randominput)
+	
+	var len = ToLength( Get(O, "length"))
+	
+	var relativeTarget = ToInteger(target)
+	
+	var relativeStart = ToInteger(start)
+	
+	
+	var count = min(final-from, len-to)
+	
+	if  ( from < to && to < from + count  ) { 
+		
+		var direction = -1
+		
+		var from = from + count - 1
+		
+		var to = to + count - 1
+	}
+	
+	else {
+		
+		var direction = 1
+	}
+	
+	
+		
+		var fromKey = ToString(from)
+		
+		var toKey = ToString(to)
+		
+		var fromPresent = HasProperty(O, fromKey)
+		
+		if  ( fromPresent === true  ) { 
+			
+			var fromVal = Get(O, fromKey)
+			
+		}
+		
+		
+			
+		
+		var from = from + direction
+		
+		var to = to + direction
+		
+		var count = count - 1
+	
 		console.log("OK Test")
 }
 
 
 function test_array_prototype_every(randominput, callbackfn  , thisArg  ){
+	
+	var O = ToObject(randominput)
+	
+	var len = ToLength( Get(O, "length"))
+	
 	if (( IsCallable ( callbackfn ) === false )){
 		 try{
 			var output = new Array(randominput).every( callbackfn  , thisArg  );
@@ -181,11 +418,41 @@ function test_array_prototype_every(randominput, callbackfn  , thisArg  ){
 			return;
 		}
 	}
+	
+	
+	var k = 0
+	
+		
+		var Pk = ToString(k)
+		
+		var kPresent = HasProperty(O, Pk)
+		
+		if  ( kPresent === true  ) { 
+			
+			var kValue = Get(O, Pk)
+			
+			var testResult = ToBoolean( Call(callbackfn, T, « kValue, k, O »))
+			
+			if (( testResult === false )){
+				var output = new Array(randominput).every( callbackfn  , thisArg  );
+				assert.strictEqual(false, output);
+				console.log("Good Test");
+				return;
+				}
+		}
+		
+		
+	
 		console.log("OK Test")
 }
 
 
 function test_array_prototype_filter(randominput, callbackfn  , thisArg  ){
+	
+	var O = ToObject(randominput)
+	
+	var len = ToLength( Get(O, "length"))
+	
 	if (( IsCallable ( callbackfn ) === false )){
 		 try{
 			var output = new Array(randominput).filter( callbackfn  , thisArg  );
@@ -197,11 +464,39 @@ function test_array_prototype_filter(randominput, callbackfn  , thisArg  ){
 			return;
 		}
 	}
+	
+	
+	var A = ArraySpeciesCreate(O, 0)
+	
+	var k = 0
+	
+		
+		var Pk = ToString(k)
+		
+		var kPresent = HasProperty(O, Pk)
+		
+		if  ( kPresent === true  ) { 
+			
+			var kValue = Get(O, Pk)
+			
+			var selected = ToBoolean( Call(callbackfn, T, « kValue, k, O »))
+			
+				
+				
+		}
+		
+		
+	
 		console.log("OK Test")
 }
 
 
 function test_array_prototype_find(randominput, predicate  , thisArg  ){
+	
+	var O = ToObject(randominput)
+	
+	var len = ToLength( Get(O, "length"))
+	
 	if (( IsCallable ( predicate ) === false )){
 		 try{
 			var output = new Array(randominput).find( predicate  , thisArg  );
@@ -213,11 +508,35 @@ function test_array_prototype_find(randominput, predicate  , thisArg  ){
 			return;
 		}
 	}
+	
+	
+	var k = 0
+	
+		
+		var Pk = ToString(k)
+		
+		var kValue = Get(O, Pk)
+		
+		var testResult = ToBoolean( Call(predicate, T, « kValue, k, O »))
+		
+		if (( testResult === true )){
+			var output = new Array(randominput).find( predicate  , thisArg  );
+			assert.strictEqual(kValue, output);
+			console.log("Good Test");
+			return;
+			}
+		
+	
 		console.log("OK Test")
 }
 
 
 function test_array_prototype_findindex(randominput, predicate  , thisArg  ){
+	
+	var O = ToObject(randominput)
+	
+	var len = ToLength( Get(O, "length"))
+	
 	if (( IsCallable ( predicate ) === false )){
 		 try{
 			var output = new Array(randominput).findIndex( predicate  , thisArg  );
@@ -229,11 +548,35 @@ function test_array_prototype_findindex(randominput, predicate  , thisArg  ){
 			return;
 		}
 	}
+	
+	
+	var k = 0
+	
+		
+		var Pk = ToString(k)
+		
+		var kValue = Get(O, Pk)
+		
+		var testResult = ToBoolean( Call(predicate, T, « kValue, k, O »))
+		
+		if (( testResult === true )){
+			var output = new Array(randominput).findIndex( predicate  , thisArg  );
+			assert.strictEqual(k, output);
+			console.log("Good Test");
+			return;
+			}
+		
+	
 		console.log("OK Test")
 }
 
 
 function test_array_prototype_foreach(randominput, callbackfn  , thisArg  ){
+	
+	var O = ToObject(randominput)
+	
+	var len = ToLength( Get(O, "length"))
+	
 	if (( IsCallable ( callbackfn ) === false )){
 		 try{
 			var output = new Array(randominput).forEach( callbackfn  , thisArg  );
@@ -245,56 +588,172 @@ function test_array_prototype_foreach(randominput, callbackfn  , thisArg  ){
 			return;
 		}
 	}
+	
+	
+	var k = 0
+	
+		
+		var Pk = ToString(k)
+		
+		var kPresent = HasProperty(O, Pk)
+		
+		if  ( kPresent === true  ) { 
+			
+			var kValue = Get(O, Pk)
+			
+		}
+		
+		
+	
 		console.log("OK Test")
 }
 
 
 function test_array_prototype_includes(randominput, searchElement  , fromIndex  ){
-	if (( ToLength ( Get ( ToObject ( randominput ) , "length" ) ) === 0 )){
+	
+	var O = ToObject(randominput)
+	
+	var len = ToLength( Get(O, "length"))
+	
+	if (( len === 0 )){
 		var output = new Array(randominput).includes( searchElement  , fromIndex  );
 		assert.strictEqual(false, output);
 		console.log("Good Test");
 		return;
 		}
-	if (( SameValueZero ( searchElement , Get ( ToObject ( randominput ) , ToString ( ToLength ( Get ( ToObject ( randominput ) , "length" ) ) + ToInteger ( fromIndex ) ) ) ) === true )){
-		var output = new Array(randominput).includes( searchElement  , fromIndex  );
-		assert.strictEqual(true, output);
-		console.log("Good Test");
-		return;
-		}
+	
+	var n = ToInteger(fromIndex)
+	
+	if  ( n >=  0  ) { 
+		
+		var k = n
+	}
+	
+	
+		
+		var k = len + n
+		
+	
+		
+		var elementK =Get(O, ToString(k))
+		
+		if (( SameValueZero ( searchElement , elementK ) === true )){
+			var output = new Array(randominput).includes( searchElement  , fromIndex  );
+			assert.strictEqual(true, output);
+			console.log("Good Test");
+			return;
+			}
+		
+	
 		console.log("OK Test")
 }
 
 
 function test_array_prototype_indexof(randominput, searchElement  , fromIndex  ){
-	if (( ToLength ( Get ( ToObject ( randominput ) , "length" ) ) === 0 )){
+	
+	var O = ToObject(randominput)
+	
+	var len = ToLength( Get(O, "length"))
+	
+	if (( len === 0 )){
 		var output = new Array(randominput).indexOf( searchElement  , fromIndex  );
 		assert.strictEqual(- 1, output);
 		console.log("Good Test");
 		return;
 		}
-	if (( ToInteger ( fromIndex ) >= ToLength ( Get ( ToObject ( randominput ) , "length" ) ) )){
+	
+	var n = ToInteger(fromIndex)
+	
+	if (( n >=  len )){
 		var output = new Array(randominput).indexOf( searchElement  , fromIndex  );
 		assert.strictEqual(- 1, output);
 		console.log("Good Test");
 		return;
 		}
+	
+	if  ( n >=  0  ) { 
+		
+	}
+	
+	
+		
+		var k = len + n
+		
+	
+		
+		var kPresent = HasProperty(O, ToString(k))
+		
+		if  ( kPresent === true  ) { 
+			
+			var elementK = Get(O, ToString(k))
+			
+			var same =performing Strict Equality Comparison searchElement === elementK
+			
+			if (( same === true )){
+				var output = new Array(randominput).indexOf( searchElement  , fromIndex  );
+				assert.strictEqual(k, output);
+				console.log("Good Test");
+				return;
+				}
+		}
+		
+		
+	
 		console.log("OK Test")
 }
 
 
 function test_array_prototype_lastindexof(randominput, searchElement  , fromIndex  ){
-	if (( ToLength ( Get ( ToObject ( randominput ) , "length" ) ) === 0 )){
+	
+	var O = ToObject(randominput)
+	
+	var len = ToLength( Get(O, "length"))
+	
+	if (( len === 0 )){
 		var output = new Array(randominput).lastIndexOf( searchElement  , fromIndex  );
 		assert.strictEqual(- 1, output);
 		console.log("Good Test");
 		return;
 		}
+	
+	
+	if  ( n >=  0  ) { 
+		
+	}
+	
+	
+		
+		var k = len + n
+	
+		
+		var kPresent = HasProperty(O, ToString(k))
+		
+		if  ( kPresent === true  ) { 
+			
+			var elementK = Get(O, ToString(k))
+			
+			var same =performing Strict Equality Comparison searchElement === elementK
+			
+			if (( same === true )){
+				var output = new Array(randominput).lastIndexOf( searchElement  , fromIndex  );
+				assert.strictEqual(k, output);
+				console.log("Good Test");
+				return;
+				}
+		}
+		
+		
+	
 		console.log("OK Test")
 }
 
 
 function test_array_prototype_map(randominput, callbackfn  , thisArg  ){
+	
+	var O = ToObject(randominput)
+	
+	var len = ToLength( Get(O, "length"))
+	
 	if (( IsCallable ( callbackfn ) === false )){
 		 try{
 			var output = new Array(randominput).map( callbackfn  , thisArg  );
@@ -306,11 +765,62 @@ function test_array_prototype_map(randominput, callbackfn  , thisArg  ){
 			return;
 		}
 	}
+	
+	
+	var A = ArraySpeciesCreate(O, len)
+	
+	var k = 0
+	
+		
+		var Pk = ToString(k)
+		
+		var kPresent = HasProperty(O, Pk)
+		
+		if  ( kPresent === true  ) { 
+			
+			var kValue = Get(O, Pk)
+			
+			var mappedValue = Call(callbackfn, T, « kValue, k, O »)
+			
+		}
+		
+		
+	
+		console.log("OK Test")
+}
+
+
+function test_array_prototype_pop(randominput, ){
+	
+	var O = ToObject(randominput)
+	
+	var len = ToLength( Get(O, "length"))
+	
+	if  ( len === zero  ) { 
+		
+		
+	}
+	
+	
+		
+		var newLen = len-1
+		
+		var index = ToString(newLen)
+		
+		var element = Get(O, index)
+		
+		
+		
 		console.log("OK Test")
 }
 
 
 function test_array_prototype_reduce(randominput, callbackfn  , initialValue  ){
+	
+	var O = ToObject(randominput)
+	
+	var len = ToLength( Get(O, "length"))
+	
 	if (( IsCallable ( callbackfn ) === false )){
 		 try{
 			var output = new Array(randominput).reduce( callbackfn  , initialValue  );
@@ -322,7 +832,8 @@ function test_array_prototype_reduce(randominput, callbackfn  , initialValue  ){
 			return;
 		}
 	}
-	if (( ToLength ( Get ( ToObject ( randominput ) , "length" ) ) === 0 && initialValue != present )){
+	
+	if (( len === 0 && initialValue != present )){
 		 try{
 			var output = new Array(randominput).reduce( callbackfn  , initialValue  );
 			console.log("Bad Test/Failed Test");
@@ -333,22 +844,65 @@ function test_array_prototype_reduce(randominput, callbackfn  , initialValue  ){
 			return;
 		}
 	}
-	if (( HasProperty ( ToObject ( randominput ) , ToString ( 0 ) ) === false )){
-		 try{
-			var output = new Array(randominput).reduce( callbackfn  , initialValue  );
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof TypeError));
-			console.log("Good Test");
-			return;
-		}
+	
+	var k = 0
+	
+	var accumulator = undefined
+	
+	if  ( initialValue === present  ) { 
+		
 	}
+	
+	
+		
+		var kPresent = false
+		
+			
+			var Pk = ToString(k)
+			
+			var kPresent = HasProperty(O, Pk)
+			
+			if  ( kPresent === true  ) { 
+				
+			}
+			
+			
+		
+		if (( kPresent === false )){
+			 try{
+				var output = new Array(randominput).reduce( callbackfn  , initialValue  );
+				console.log("Bad Test/Failed Test");
+				 return;
+			}catch(e){
+				assert.strictEqual(true, eval(e instanceof TypeError));
+				console.log("Good Test");
+				return;
+			}
+		}
+	
+		
+		var Pk = ToString(k)
+		
+		var kPresent = HasProperty(O, Pk)
+		
+		if  ( kPresent === true  ) { 
+			
+			var kValue = Get(O, Pk)
+			
+		}
+		
+		
+	
 		console.log("OK Test")
 }
 
 
 function test_array_prototype_reduceright(randominput, callbackfn  , initialValue  ){
+	
+	var O = ToObject(randominput)
+	
+	var len = ToLength( Get(O, "length"))
+	
 	if (( IsCallable ( callbackfn ) === false )){
 		 try{
 			var output = new Array(randominput).reduceRight( callbackfn  , initialValue  );
@@ -360,7 +914,8 @@ function test_array_prototype_reduceright(randominput, callbackfn  , initialValu
 			return;
 		}
 	}
-	if (( ToLength ( Get ( ToObject ( randominput ) , "length" ) ) === 0 && initialValue != present )){
+	
+	if (( len === 0 && initialValue != present )){
 		 try{
 			var output = new Array(randominput).reduceRight( callbackfn  , initialValue  );
 			console.log("Bad Test/Failed Test");
@@ -371,27 +926,138 @@ function test_array_prototype_reduceright(randominput, callbackfn  , initialValu
 			return;
 		}
 	}
-	if (( HasProperty ( ToObject ( randominput ) , ToString ( len- 1 ) ) === false )){
-		 try{
-			var output = new Array(randominput).reduceRight( callbackfn  , initialValue  );
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof TypeError));
-			console.log("Good Test");
-			return;
-		}
+	
+	var k = len-1
+	
+	var accumulator = undefined
+	
+	if  ( initialValue === present  ) { 
+		
 	}
+	
+	
+		
+		var kPresent = false
+		
+			
+			var Pk = ToString(k)
+			
+			var kPresent = HasProperty(O, Pk)
+			
+			if  ( kPresent === true  ) { 
+				
+			}
+			
+			
+		
+		if (( kPresent === false )){
+			 try{
+				var output = new Array(randominput).reduceRight( callbackfn  , initialValue  );
+				console.log("Bad Test/Failed Test");
+				 return;
+			}catch(e){
+				assert.strictEqual(true, eval(e instanceof TypeError));
+				console.log("Good Test");
+				return;
+			}
+		}
+	
+		
+		var Pk = ToString(k)
+		
+		var kPresent = HasProperty(O, Pk)
+		
+		if  ( kPresent === true  ) { 
+			
+			var kValue = Get(O, Pk)
+			
+		}
+		
+		
+	
 		console.log("OK Test")
 }
 
 
 function test_array_prototype_shift(randominput, ){
+	
+	var O = ToObject(randominput)
+	
+	var len = ToLength( Get(O, "length"))
+	
+	if  ( len === zero  ) { 
+		
+		
+	}
+	
+	
+	var first = Get(O, "0")
+	
+	var k = 1
+	
+		
+		var from = ToString(k)
+		
+		var to = ToString(k-1)
+		
+		var fromPresent = HasProperty(O, from)
+		
+		if  ( fromPresent === true  ) { 
+			
+			var fromVal = Get(O, from)
+			
+		}
+		
+		
+			
+		
+	
+	
+	
+		console.log("OK Test")
+}
+
+
+function test_array_prototype_slice(randominput, start, end ){
+	
+	var O = ToObject(randominput)
+	
+	var len = ToLength( Get(O, "length"))
+	
+	var relativeStart = ToInteger(start)
+	
+	
+	var count = max(final - k, 0)
+	
+	var A = ArraySpeciesCreate(O, count)
+	
+	var n = 0
+	
+		
+		var Pk = ToString(k)
+		
+		var kPresent = HasProperty(O, Pk)
+		
+		if  ( kPresent === true  ) { 
+			
+			var kValue = Get(O, Pk)
+			
+		}
+		
+		
+		
+	
+	
 		console.log("OK Test")
 }
 
 
 function test_array_prototype_some(randominput, callbackfn  , thisArg  ){
+	
+	var O = ToObject(randominput)
+	
+	var len = ToLength( Get(O, "length"))
+	
 	if (( IsCallable ( callbackfn ) === false )){
 		 try{
 			var output = new Array(randominput).some( callbackfn  , thisArg  );
@@ -403,45 +1069,140 @@ function test_array_prototype_some(randominput, callbackfn  , thisArg  ){
 			return;
 		}
 	}
+	
+	
+	var k = 0
+	
+		
+		var Pk = ToString(k)
+		
+		var kPresent = HasProperty(O, Pk)
+		
+		if  ( kPresent === true  ) { 
+			
+			var kValue = Get(O, Pk)
+			
+			var testResult = ToBoolean( Call(callbackfn, T, « kValue, k, O »))
+			
+			if (( testResult === true )){
+				var output = new Array(randominput).some( callbackfn  , thisArg  );
+				assert.strictEqual(true, output);
+				console.log("Good Test");
+				return;
+				}
+		}
+		
+		
+	
+		console.log("OK Test")
+}
+
+
+function test_array_prototype_tolocalestring(randominput,reserved1,reserved2){
+	
+	var array = ToObject(randominput)
+	
+	var len = ToLength( Get(array, "length"))
+	
+	var R =""
+	
+	var k = 0
+	
+		
+		if  ( k > 0  ) { 
+			
+		}
+		
+		
+		var nextElement = Get(array, ToString(k))
+		
+		if  ( nextElement != undefined || null  ) { 
+			
+			var S = ToString( Invoke(nextElement, "toLocaleString"))
+			
+		}
+		
+		
+	
 		console.log("OK Test")
 }
 
 
 function test_array_prototype_unshift(randominput, items ){
-	if (( ToLength ( Get ( ToObject ( randominput ) , "length" ) ) + number of actual arguments > 253- 1 )){
-		 try{
-			var output = new Array(randominput).unshift( items );
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof TypeError));
-			console.log("Good Test");
-			return;
+	
+	var O = ToObject(randominput)
+	
+	var len = ToLength( Get(O, "length"))
+	
+	var argCount =number of actual arguments
+		
+		if (( len + argCount > 253- 1 )){
+			 try{
+				var output = new Array(randominput).unshift( items );
+				console.log("Bad Test/Failed Test");
+				 return;
+			}catch(e){
+				assert.strictEqual(true, eval(e instanceof TypeError));
+				console.log("Good Test");
+				return;
+			}
 		}
-	}
+		
+		var k = len
+		
+			
+			var from = ToString(k-1)
+			
+			var to = ToString(k+argCount-1)
+			
+			var fromPresent = HasProperty(O, from)
+			
+			if  ( fromPresent === true  ) { 
+				
+				var fromValue = Get(O, from)
+				
+			}
+			
+			
+				
+			
+		
+		var j = 0
+		
+			
+			
+			
+	
+	
 		console.log("OK Test")
 }
 
 
 function test_arraybuffer_isview(arg){
+	
 	if (( typeof ( arg ) != "object" )){
 		var output = ArrayBuffer.isView(arg);
 		assert.strictEqual(false, output);
 		console.log("Good Test");
 		return;
 		}
+	
 	if (( arg instanceof ArrayBuffer === true )){
 		var output = ArrayBuffer.isView(arg);
 		assert.strictEqual(true, output);
 		console.log("Good Test");
 		return;
 		}
+	
 		console.log("OK Test")
 }
 
 
 function test_arraybuffer_prototype_slice(randominput,start,end){
-	if (( typeof (randominput ) != "object" )){
+	
+	var O =randominput
+	
+	if (( typeof ( O ) != "object" )){
 		 try{
 			var output = randominput.slice(start,end);
 			console.log("Bad Test/Failed Test");
@@ -452,7 +1213,8 @@ function test_arraybuffer_prototype_slice(randominput,start,end){
 			return;
 		}
 	}
-	if (( randominput instanceof ArrayBuffer === false )){
+	
+	if (( O instanceof ArrayBuffer === false )){
 		 try{
 			var output = randominput.slice(start,end);
 			console.log("Bad Test/Failed Test");
@@ -463,7 +1225,8 @@ function test_arraybuffer_prototype_slice(randominput,start,end){
 			return;
 		}
 	}
-	if (( IsSharedArrayBuffer (randominput ) === true )){
+	
+	if (( IsSharedArrayBuffer ( O ) === true )){
 		 try{
 			var output = randominput.slice(start,end);
 			console.log("Bad Test/Failed Test");
@@ -474,7 +1237,8 @@ function test_arraybuffer_prototype_slice(randominput,start,end){
 			return;
 		}
 	}
-	if (( IsDetachedBuffer (randominput ) === true )){
+	
+	if (( IsDetachedBuffer ( O ) === true )){
 		 try{
 			var output = randominput.slice(start,end);
 			console.log("Bad Test/Failed Test");
@@ -485,7 +1249,19 @@ function test_arraybuffer_prototype_slice(randominput,start,end){
 			return;
 		}
 	}
-	if (( IsDetachedBuffer ( randominput ) === true )){
+	
+	var len = O
+	
+	var relativeStart = ToInteger(start)
+	
+	
+	var newLen = max(final-first, 0)
+	
+	var ctor = SpeciesConstructor(O, %ArrayBuffer%)
+	
+	var new = Construct(ctor, « newLen »)
+	
+	if (( new instanceof ArrayBuffer === false )){
 		 try{
 			var output = randominput.slice(start,end);
 			console.log("Bad Test/Failed Test");
@@ -496,11 +1272,92 @@ function test_arraybuffer_prototype_slice(randominput,start,end){
 			return;
 		}
 	}
+	
+	if (( IsSharedArrayBuffer ( new ) === true )){
+		 try{
+			var output = randominput.slice(start,end);
+			console.log("Bad Test/Failed Test");
+			 return;
+		}catch(e){
+			assert.strictEqual(true, eval(e instanceof TypeError));
+			console.log("Good Test");
+			return;
+		}
+	}
+	
+	if (( IsDetachedBuffer ( new ) === true )){
+		 try{
+			var output = randominput.slice(start,end);
+			console.log("Bad Test/Failed Test");
+			 return;
+		}catch(e){
+			assert.strictEqual(true, eval(e instanceof TypeError));
+			console.log("Good Test");
+			return;
+		}
+	}
+	
+	if (( SameValue ( new , O ) === true )){
+		 try{
+			var output = randominput.slice(start,end);
+			console.log("Bad Test/Failed Test");
+			 return;
+		}catch(e){
+			assert.strictEqual(true, eval(e instanceof TypeError));
+			console.log("Good Test");
+			return;
+		}
+	}
+	
+	
+	
+	if (( IsDetachedBuffer ( O ) === true )){
+		 try{
+			var output = randominput.slice(start,end);
+			console.log("Bad Test/Failed Test");
+			 return;
+		}catch(e){
+			assert.strictEqual(true, eval(e instanceof TypeError));
+			console.log("Good Test");
+			return;
+		}
+	}
+	
+	var fromBuf = O
+	
+	var toBuf = new
+	
+	
+		console.log("OK Test")
+}
+
+
+function test_atomicreadmodifywrite( typedArray, index, value, op ){
+	
+	var buffer = ValidateSharedIntegerTypedArray(typedArray)
+	
+	var i = ValidateAtomicAccess(typedArray, index)
+	
+	var v = ToInteger(value)
+	
+	var arrayTypeName = typedArray
+	
+	var elementType =String value ofElement Type value in Table 56 for arrayTypeName
+	
+	var offset = typedArray
+	
+	var indexedPosition = (i × elementSize) + offset
+	
 		console.log("OK Test")
 }
 
 
 function test_clonearraybuffer(srcBuffer,srcByteOffset,srcLength,cloneConstructor){
+	
+	
+	
+	var targetBuffer = AllocateArrayBuffer(cloneConstructor, srcLength)
+	
 	if (( IsDetachedBuffer ( srcBuffer ) === true )){
 		 try{
 			var output = ArrayBuffer.CloneArrayBuffer(srcBuffer,srcByteOffset,srcLength,cloneConstructor);
@@ -512,11 +1369,18 @@ function test_clonearraybuffer(srcBuffer,srcByteOffset,srcLength,cloneConstructo
 			return;
 		}
 	}
+	
+	var srcBlock = srcBuffer
+	
+	var targetBlock = targetBuffer
+	
+	
 		console.log("OK Test")
 }
 
 
 function test_createmapiterator(randominput,map,kind){
+	
 	if (( typeof ( map ) != "object" )){
 		 try{
 			var output = randominput.CreateMapIterator(map,kind);
@@ -528,6 +1392,7 @@ function test_createmapiterator(randominput,map,kind){
 			return;
 		}
 	}
+	
 	if (( map instanceof Map === false )){
 		 try{
 			var output = randominput.CreateMapIterator(map,kind);
@@ -539,11 +1404,16 @@ function test_createmapiterator(randominput,map,kind){
 			return;
 		}
 	}
+	
+	
+	
+	
 		console.log("OK Test")
 }
 
 
 function test_createsetiterator(randominput,set,kind){
+	
 	if (( typeof ( set ) != "object" )){
 		 try{
 			var output = randominput.CreateSetIterator(set,kind);
@@ -555,249 +1425,370 @@ function test_createsetiterator(randominput,set,kind){
 			return;
 		}
 	}
+	
+	
+	
+	
+	
 		console.log("OK Test")
 }
 
 
 function test_date_prototype_getdate(randominput){
-	if (Object.is( thisTimeValue ( randominput ),NaN )){
+	
+	var t = thisTimeValue(randominput)
+	
+	if (Object.is( t,NaN )){
 		var output = new Date(randominput).getDate();
 		assert.strictEqual(isNaN(output), true);
 		console.log("Good Test");
 		return;
 		}
+	
 		console.log("OK Test")
 }
 
 
 function test_date_prototype_getday(randominput){
-	if (Object.is( thisTimeValue ( randominput ),NaN )){
+	
+	var t = thisTimeValue(randominput)
+	
+	if (Object.is( t,NaN )){
 		var output = new Date(randominput).getDay();
 		assert.strictEqual(isNaN(output), true);
 		console.log("Good Test");
 		return;
 		}
+	
 		console.log("OK Test")
 }
 
 
 function test_date_prototype_getfullyear(randominput){
-	if (Object.is( thisTimeValue ( randominput ),NaN )){
+	
+	var t = thisTimeValue(randominput)
+	
+	if (Object.is( t,NaN )){
 		var output = new Date(randominput).getFullYear();
 		assert.strictEqual(isNaN(output), true);
 		console.log("Good Test");
 		return;
 		}
+	
 		console.log("OK Test")
 }
 
 
 function test_date_prototype_gethours(randominput){
-	if (Object.is( thisTimeValue ( randominput ),NaN )){
+	
+	var t = thisTimeValue(randominput)
+	
+	if (Object.is( t,NaN )){
 		var output = new Date(randominput).getHours();
 		assert.strictEqual(isNaN(output), true);
 		console.log("Good Test");
 		return;
 		}
+	
 		console.log("OK Test")
 }
 
 
 function test_date_prototype_getmilliseconds(randominput){
-	if (Object.is( thisTimeValue ( randominput ),NaN )){
+	
+	var t = thisTimeValue(randominput)
+	
+	if (Object.is( t,NaN )){
 		var output = new Date(randominput).getMilliseconds();
 		assert.strictEqual(isNaN(output), true);
 		console.log("Good Test");
 		return;
 		}
+	
 		console.log("OK Test")
 }
 
 
 function test_date_prototype_getminutes(randominput){
-	if (Object.is( thisTimeValue ( randominput ),NaN )){
+	
+	var t = thisTimeValue(randominput)
+	
+	if (Object.is( t,NaN )){
 		var output = new Date(randominput).getMinutes();
 		assert.strictEqual(isNaN(output), true);
 		console.log("Good Test");
 		return;
 		}
+	
 		console.log("OK Test")
 }
 
 
 function test_date_prototype_getmonth(randominput){
-	if (Object.is( thisTimeValue ( randominput ),NaN )){
+	
+	var t = thisTimeValue(randominput)
+	
+	if (Object.is( t,NaN )){
 		var output = new Date(randominput).getMonth();
 		assert.strictEqual(isNaN(output), true);
 		console.log("Good Test");
 		return;
 		}
+	
 		console.log("OK Test")
 }
 
 
 function test_date_prototype_getseconds(randominput){
-	if (Object.is( thisTimeValue ( randominput ),NaN )){
+	
+	var t = thisTimeValue(randominput)
+	
+	if (Object.is( t,NaN )){
 		var output = new Date(randominput).getSeconds();
 		assert.strictEqual(isNaN(output), true);
 		console.log("Good Test");
 		return;
 		}
+	
 		console.log("OK Test")
 }
 
 
 function test_date_prototype_gettimezoneoffset(randominput){
-	if (Object.is( thisTimeValue ( randominput ),NaN )){
+	
+	var t = thisTimeValue(randominput)
+	
+	if (Object.is( t,NaN )){
 		var output = new Date(randominput).getTimezoneOffset();
 		assert.strictEqual(isNaN(output), true);
 		console.log("Good Test");
 		return;
 		}
+	
 		console.log("OK Test")
 }
 
 
 function test_date_prototype_getutcdate(randominput){
-	if (Object.is( thisTimeValue ( randominput ),NaN )){
+	
+	var t = thisTimeValue(randominput)
+	
+	if (Object.is( t,NaN )){
 		var output = new Date(randominput).getUTCDate();
 		assert.strictEqual(isNaN(output), true);
 		console.log("Good Test");
 		return;
 		}
+	
 		console.log("OK Test")
 }
 
 
 function test_date_prototype_getutcday(randominput){
-	if (Object.is( thisTimeValue ( randominput ),NaN )){
+	
+	var t = thisTimeValue(randominput)
+	
+	if (Object.is( t,NaN )){
 		var output = new Date(randominput).getUTCDay();
 		assert.strictEqual(isNaN(output), true);
 		console.log("Good Test");
 		return;
 		}
+	
 		console.log("OK Test")
 }
 
 
 function test_date_prototype_getutcfullyear(randominput){
-	if (Object.is( thisTimeValue ( randominput ),NaN )){
+	
+	var t = thisTimeValue(randominput)
+	
+	if (Object.is( t,NaN )){
 		var output = new Date(randominput).getUTCFullYear();
 		assert.strictEqual(isNaN(output), true);
 		console.log("Good Test");
 		return;
 		}
+	
 		console.log("OK Test")
 }
 
 
 function test_date_prototype_getutchours(randominput){
-	if (Object.is( thisTimeValue ( randominput ),NaN )){
+	
+	var t = thisTimeValue(randominput)
+	
+	if (Object.is( t,NaN )){
 		var output = new Date(randominput).getUTCHours();
 		assert.strictEqual(isNaN(output), true);
 		console.log("Good Test");
 		return;
 		}
+	
 		console.log("OK Test")
 }
 
 
 function test_date_prototype_getutcmilliseconds(randominput){
-	if (Object.is( thisTimeValue ( randominput ),NaN )){
+	
+	var t = thisTimeValue(randominput)
+	
+	if (Object.is( t,NaN )){
 		var output = new Date(randominput).getUTCMilliseconds();
 		assert.strictEqual(isNaN(output), true);
 		console.log("Good Test");
 		return;
 		}
+	
 		console.log("OK Test")
 }
 
 
 function test_date_prototype_getutcminutes(randominput){
-	if (Object.is( thisTimeValue ( randominput ),NaN )){
+	
+	var t = thisTimeValue(randominput)
+	
+	if (Object.is( t,NaN )){
 		var output = new Date(randominput).getUTCMinutes();
 		assert.strictEqual(isNaN(output), true);
 		console.log("Good Test");
 		return;
 		}
+	
 		console.log("OK Test")
 }
 
 
 function test_date_prototype_getutcmonth(randominput){
-	if (Object.is( thisTimeValue ( randominput ),NaN )){
+	
+	var t = thisTimeValue(randominput)
+	
+	if (Object.is( t,NaN )){
 		var output = new Date(randominput).getUTCMonth();
 		assert.strictEqual(isNaN(output), true);
 		console.log("Good Test");
 		return;
 		}
+	
 		console.log("OK Test")
 }
 
 
 function test_date_prototype_getutcseconds(randominput){
-	if (Object.is( thisTimeValue ( randominput ),NaN )){
+	
+	var t = thisTimeValue(randominput)
+	
+	if (Object.is( t,NaN )){
 		var output = new Date(randominput).getUTCSeconds();
 		assert.strictEqual(isNaN(output), true);
 		console.log("Good Test");
 		return;
 		}
+	
 		console.log("OK Test")
 }
 
 
 function test_date_prototype_todatestring(randominput){
-	if (Object.is( thisTimeValue ( this Date object ),NaN )){
+	
+	var O = this Date object
+	
+	var tv = thisTimeValue(O)
+	
+	if (Object.is( tv,NaN )){
 		var output = new Date(randominput).toDateString();
 		assert.strictEqual("Invalid Date", output);
 		console.log("Good Test");
 		return;
 		}
+	
+	var t = LocalTime(tv)
+	
 		console.log("OK Test")
 }
 
 
 function test_date_prototype_totimestring(randominput){
-	if (Object.is( thisTimeValue ( this Date object ),NaN )){
+	
+	var O = this Date object
+	
+	var tv = thisTimeValue(O)
+	
+	if (Object.is( tv,NaN )){
 		var output = new Date(randominput).toTimeString();
 		assert.strictEqual("Invalid Date", output);
 		console.log("Good Test");
 		return;
 		}
+	
+	var t = LocalTime(tv)
+	
 		console.log("OK Test")
 }
 
 
 function test_date_prototype_toutcstring(randominput){
-	if (Object.is( thisTimeValue ( this Date object ),NaN )){
+	
+	var O = this Date object
+	
+	var tv = thisTimeValue(O)
+	
+	if (Object.is( tv,NaN )){
 		var output = new Date(randominput).toUTCString();
 		assert.strictEqual("Invalid Date", output);
 		console.log("Good Test");
 		return;
 		}
+	
+	var weekday =Name ofentry in Table 46 withNumber WeekDay(tv)
+	
+	var month =Name ofentry in Table 47 withNumber MonthFromTime(tv)
 		console.log("OK Test")
 }
 
 
-function test_map(randominput,iterable){
-	if (( Get ( IteratorValue ( IteratorStep ( GetIterator ( iterable ) ) ) , "0" ) === an abrupt completion )){
-		var output = randominput.Map(iterable);
-		assert.strictEqual(? IteratorClose ( GetIterator ( iterable ) , Get ( IteratorValue ( IteratorStep ( GetIterator ( iterable ) ) ) , "0" ) ), output);
-		console.log("Good Test");
-		return;
-		}
-	if (( Get ( IteratorValue ( IteratorStep ( GetIterator ( iterable ) ) ) , "1" ) === an abrupt completion )){
-		var output = randominput.Map(iterable);
-		assert.strictEqual(? IteratorClose ( GetIterator ( iterable ) , Get ( IteratorValue ( IteratorStep ( GetIterator ( iterable ) ) ) , "1" ) ), output);
-		console.log("Good Test");
-		return;
-		}
+function test_getmodifysetvalueinbuffer(randominput,arrayBuffer,byteIndex,type,value,op,isLittleEndian){
+	
+	
+	
+	
+	var block = arrayBuffer
+	
+	var rawBytes = NumberToRawBytes(type, value, isLittleEndian)
+	
+	var execution =[[CandidateExecution]] field ofsurrounding agent's Agent Record
+	
+	var rawBytesRead = a List of length elementSize of nondeterministically chosen byte values
+	
+	
+		console.log("OK Test")
+}
+
+
+function test_getvaluefrombuffer( arrayBuffer, byteIndex, type, isTypedArray, order  , isLittleEndian  ){
+	
+	
+	
+	var block = arrayBuffer
+	
+	if  ( IsSharedArrayBuffer ( arrayBuffer ) === true  ) { 
+		
+		var execution =[[CandidateExecution]] field ofsurrounding agent's Agent Record
+		
+		var rawValue = a List of length elementSize of nondeterministically chosen byte values
+		
+	}
+	
+	
 		console.log("OK Test")
 }
 
 
 function test_map_prototype_clear(randominput){
-	if (( typeof (randominput ) != "object" )){
+	
+	var M =randominput
+	
+	if (( typeof ( M ) != "object" )){
 		 try{
 			var output = randominput.clear();
 			console.log("Bad Test/Failed Test");
@@ -808,7 +1799,8 @@ function test_map_prototype_clear(randominput){
 			return;
 		}
 	}
-	if (( randominput instanceof Map === false )){
+	
+	if (( M instanceof Map === false )){
 		 try{
 			var output = randominput.clear();
 			console.log("Bad Test/Failed Test");
@@ -819,12 +1811,20 @@ function test_map_prototype_clear(randominput){
 			return;
 		}
 	}
+	
+	
+		
+		
+	
 		console.log("OK Test")
 }
 
 
 function test_map_prototype_delete(randominput,key){
-	if (( typeof (randominput ) != "object" )){
+	
+	var M =randominput
+	
+	if (( typeof ( M ) != "object" )){
 		 try{
 			var output = randominput.delete(key);
 			console.log("Bad Test/Failed Test");
@@ -835,7 +1835,8 @@ function test_map_prototype_delete(randominput,key){
 			return;
 		}
 	}
-	if (( randominput instanceof Map === false )){
+	
+	if (( M instanceof Map === false )){
 		 try{
 			var output = randominput.delete(key);
 			console.log("Bad Test/Failed Test");
@@ -846,12 +1847,25 @@ function test_map_prototype_delete(randominput,key){
 			return;
 		}
 	}
+	
+	
+		
+		if  ( p.[[Key]] != empty && SameValueZero ( p.[[Key]] , key ) === true  ) { 
+			
+			
+			
+	}
+	
+	
 		console.log("OK Test")
 }
 
 
 function test_map_prototype_foreach(randominput,callbackfn,thisArg){
-	if (( typeof (randominput ) != "object" )){
+	
+	var M =randominput
+	
+	if (( typeof ( M ) != "object" )){
 		 try{
 			var output = randominput.forEach(callbackfn,thisArg);
 			console.log("Bad Test/Failed Test");
@@ -862,7 +1876,8 @@ function test_map_prototype_foreach(randominput,callbackfn,thisArg){
 			return;
 		}
 	}
-	if (( randominput instanceof Map === false )){
+	
+	if (( M instanceof Map === false )){
 		 try{
 			var output = randominput.forEach(callbackfn,thisArg);
 			console.log("Bad Test/Failed Test");
@@ -873,6 +1888,7 @@ function test_map_prototype_foreach(randominput,callbackfn,thisArg){
 			return;
 		}
 	}
+	
 	if (( IsCallable ( callbackfn ) === false )){
 		 try{
 			var output = randominput.forEach(callbackfn,thisArg);
@@ -884,12 +1900,23 @@ function test_map_prototype_foreach(randominput,callbackfn,thisArg){
 			return;
 		}
 	}
+	
+	
+		
+		if  ( e.[[Key]] != empty  ) { 
+			
+	}
+	
+	
 		console.log("OK Test")
 }
 
 
 function test_map_prototype_get(randominput,key){
-	if (( typeof (randominput ) != "object" )){
+	
+	var M =randominput
+	
+	if (( typeof ( M ) != "object" )){
 		 try{
 			var output = randominput.get(key);
 			console.log("Bad Test/Failed Test");
@@ -900,7 +1927,8 @@ function test_map_prototype_get(randominput,key){
 			return;
 		}
 	}
-	if (( randominput instanceof Map === false )){
+	
+	if (( M instanceof Map === false )){
 		 try{
 			var output = randominput.get(key);
 			console.log("Bad Test/Failed Test");
@@ -911,12 +1939,19 @@ function test_map_prototype_get(randominput,key){
 			return;
 		}
 	}
+	
+	
+		
+	
 		console.log("OK Test")
 }
 
 
 function test_map_prototype_has(randominput,key){
-	if (( typeof (randominput ) != "object" )){
+	
+	var M =randominput
+	
+	if (( typeof ( M ) != "object" )){
 		 try{
 			var output = randominput.has(key);
 			console.log("Bad Test/Failed Test");
@@ -927,7 +1962,8 @@ function test_map_prototype_has(randominput,key){
 			return;
 		}
 	}
-	if (( randominput instanceof Map === false )){
+	
+	if (( M instanceof Map === false )){
 		 try{
 			var output = randominput.has(key);
 			console.log("Bad Test/Failed Test");
@@ -938,12 +1974,19 @@ function test_map_prototype_has(randominput,key){
 			return;
 		}
 	}
+	
+	
+		
+	
 		console.log("OK Test")
 }
 
 
 function test_map_prototype_set(randominput,key,value){
-	if (( typeof (randominput ) != "object" )){
+	
+	var M =randominput
+	
+	if (( typeof ( M ) != "object" )){
 		 try{
 			var output = randominput.set(key,value);
 			console.log("Bad Test/Failed Test");
@@ -954,7 +1997,8 @@ function test_map_prototype_set(randominput,key,value){
 			return;
 		}
 	}
-	if (( randominput instanceof Map === false )){
+	
+	if (( M instanceof Map === false )){
 		 try{
 			var output = randominput.set(key,value);
 			console.log("Bad Test/Failed Test");
@@ -965,31 +2009,56 @@ function test_map_prototype_set(randominput,key,value){
 			return;
 		}
 	}
+	
+	
+		
+		if  ( p.[[Key]] != empty && SameValueZero ( p.[[Key]] , key ) === true  ) { 
+			
+			
+	}
+	
+	
+	
+	var p =Record { [[Key]]: key, [[Value]]: value }
+	
+	
 		console.log("OK Test")
 }
 
 
 function test_math_fround(x){
+	
 	if (Object.is( x,NaN )){
 		var output = Math.fround(x);
 		assert.strictEqual(isNaN(output), true);
 		console.log("Good Test");
 		return;
 		}
+	
 	if ((Object.is( x,+ 0) && Object.is(x,+ 0) &&  x === - 0  &&  x === + Infinity  &&  x === - Infinity )){
 		var output = Math.fround(x);
 		assert.strictEqual(x, output);
 		console.log("Good Test");
 		return;
 		}
+	
+	var x64 =converting x32 to a value in IEEE 754-2008 binary64 format
+	
 		console.log("OK Test")
 }
 
 
 function test_math_imul(x,y){
-	if (( ( ToUint32 ( x ) ×ToUint32 ( y ) ) modulo 232 >=  231 )){
+	
+	var a = ToUint32(x)
+	
+	var b = ToUint32(y)
+	
+	var product = (a × b) modulo 232
+	
+	if (( product >=  231 )){
 		var output = Math.imul(x,y);
-		assert.strictEqual(( ToUint32 ( x ) ×ToUint32 ( y ) ) modulo 232- 232; else, output);
+		assert.strictEqual(product - 232; else, output);
 		console.log("Good Test");
 		return;
 		}
@@ -998,93 +2067,126 @@ function test_math_imul(x,y){
 
 
 function test_number_isfinite(number){
+	
 	if (( typeof ( number ) != "number" )){
 		var output = Number.isFinite(number);
 		assert.strictEqual(false, output);
 		console.log("Good Test");
 		return;
 		}
+	
 	if ((Object.is( number,NaN) &&  number === + Infinity  &&  number ===- Infinity )){
 		var output = Number.isFinite(number);
 		assert.strictEqual(false, output);
 		console.log("Good Test");
 		return;
 		}
+	
 		console.log("OK Test")
 }
 
 
 function test_number_isinteger(number){
+	
 	if (( typeof ( number ) != "number" )){
 		var output = Number.isInteger(number);
 		assert.strictEqual(false, output);
 		console.log("Good Test");
 		return;
 		}
+	
 	if ((Object.is( number,NaN) &&  number === + Infinity  &&  number ===- Infinity )){
 		var output = Number.isInteger(number);
 		assert.strictEqual(false, output);
 		console.log("Good Test");
 		return;
 		}
-	if (( ToInteger ( number ) != number )){
+	
+	var integer = ToInteger(number)
+	
+	if (( integer != number )){
 		var output = Number.isInteger(number);
 		assert.strictEqual(false, output);
 		console.log("Good Test");
 		return;
 		}
+	
 		console.log("OK Test")
 }
 
 
 function test_number_isnan(number){
+	
 	if (( typeof ( number ) != "number" )){
 		var output = Number.isNaN(number);
 		assert.strictEqual(false, output);
 		console.log("Good Test");
 		return;
 		}
+	
 	if (Object.is( number,NaN )){
 		var output = Number.isNaN(number);
 		assert.strictEqual(true, output);
 		console.log("Good Test");
 		return;
 		}
+	
 		console.log("OK Test")
 }
 
 
 function test_number_issafeinteger(number){
+	
 	if (( typeof ( number ) != "number" )){
 		var output = Number.isSafeInteger(number);
 		assert.strictEqual(false, output);
 		console.log("Good Test");
 		return;
 		}
+	
 	if ((Object.is( number,NaN) &&  number === + Infinity  &&  number ===- Infinity )){
 		var output = Number.isSafeInteger(number);
 		assert.strictEqual(false, output);
 		console.log("Good Test");
 		return;
 		}
-	if (( ToInteger ( number ) != number )){
+	
+	var integer = ToInteger(number)
+	
+	if (( integer != number )){
 		var output = Number.isSafeInteger(number);
 		assert.strictEqual(false, output);
 		console.log("Good Test");
 		return;
 		}
+	
+	
 		console.log("OK Test")
 }
 
 
 function test_number_prototype_toexponential(randominput,fractionDigits){
-	if (Object.is( thisNumberValue ( randominput ),NaN )){
+	
+	var x = thisNumberValue(randominput)
+	
+	var f = ToInteger(fractionDigits)
+	
+	
+	if (Object.is( x,NaN )){
 		var output = Number(randominput).toExponential(fractionDigits);
 		assert.strictEqual("NaN", output);
 		console.log("Good Test");
 		return;
 		}
-	if (( ToInteger ( fractionDigits ) < 0 ||ToInteger ( fractionDigits ) > 100 )){
+	
+	var s =""
+	
+	if  ( x = + Infinity  ) { 
+		
+	}
+	
+	
+	if (( f < 0 || f > 100 )){
 		 try{
 			var output = Number(randominput).toExponential(fractionDigits);
 			console.log("Bad Test/Failed Test");
@@ -1095,24 +2197,70 @@ function test_number_prototype_toexponential(randominput,fractionDigits){
 			return;
 		}
 	}
+	
+	if  ( x = 0  ) { 
+		
+		var m =String value consisting of f+1 occurrences ofcode unit 0x0030 (DIGIT ZERO)
+	}
+	
+	
+		
+		if  ( fractionDigits != undefined  ) { 
+		}
+		
+		
+		
+		var a =first element of m, and let b
+		
+		var m =string-concatenation of a, "
+		
+		var c = "+"
+		
+		var d = "0"
+	else {
+		
+		
+			
+			var c = "-"
+	}
+	
+	
+	var m =string-concatenation of m, "e", c, and d
+	
 		console.log("OK Test")
 }
 
 
 function test_number_prototype_toprecision(randominput,precision){
+	
+	var x = thisNumberValue(randominput)
+	
 	if (( precision === undefined )){
 		var output = Number(randominput).toPrecision(precision);
-		assert.strictEqual(ToString ( thisNumberValue ( randominput ) ), output);
+		assert.strictEqual(ToString ( x ), output);
 		console.log("Good Test");
 		return;
 		}
-	if (Object.is( thisNumberValue ( randominput ),NaN )){
+	
+	var p = ToInteger(precision)
+	
+	if (Object.is( x,NaN )){
 		var output = Number(randominput).toPrecision(precision);
 		assert.strictEqual("NaN", output);
 		console.log("Good Test");
 		return;
 		}
-	if (( ToInteger ( precision ) < 1 ||ToInteger ( precision ) > 100 )){
+	
+	var s =""
+		
+		var s =code unit 0x002D (HYPHEN-MINUS)
+	
+	if  ( x = + Infinity  ) { 
+		
+	}
+	
+	
+	if (( p < 1 || p > 100 )){
 		 try{
 			var output = Number(randominput).toPrecision(precision);
 			console.log("Bad Test/Failed Test");
@@ -1123,39 +2271,171 @@ function test_number_prototype_toprecision(randominput,precision){
 			return;
 		}
 	}
+	
+	if  ( x = 0  ) { 
+		
+		var m =String value consisting of p occurrences ofcode unit 0x0030 (DIGIT ZERO)
+	}
+	
+	
+		
+		if  ( e < - 6 || e >=  p  ) { 
+			
+			
+			if  ( p!= 1  ) { 
+				
+				var a =first element of m, and let b
+				
+				var m =string-concatenation of a, "
+				
+				var c =code unit 0x002B (PLUS SIGN)
+			}
+			
+			
+				
+				var c =code unit 0x002D (HYPHEN-MINUS)
+			
+	}
+	
+	
+	
+	
+		console.log("OK Test")
+}
+
+
+function test_numbertorawbytes(type,value,isLittleEndian){
+	
+	if  ( type === "Float32"  ) { 
+	}
+	
+	
+	else {
+		
+		var n =Number value ofElement Size specied in Table 56 for Element Type type
+		
+		var intValue = convOp(value)
+		
+		if  ( intValue >=  0  ) { 
+		}
+		
+		else {
+	}
+	
+	
 		console.log("OK Test")
 }
 
 
 function test_rawbytestonumber(type,rawBytes,isLittleEndian){
-	if (Object.is( value,an IEEE 754- 2008 binary32 NaN value )){
-		var output = Number.RawBytesToNumber(type,rawBytes,isLittleEndian);
-		assert.strictEqual(NaN "number" value, output);
-		console.log("Good Test");
-		return;
-		}
-	if (Object.is( value,an IEEE 754- 2008 binary64 NaN value )){
-		var output = Number.RawBytesToNumber(type,rawBytes,isLittleEndian);
-		assert.strictEqual(NaN "number" value, output);
-		console.log("Good Test");
-		return;
-		}
+	
+	
+	if  ( type === "Float32"  ) { 
+		
+		if (Object.is( value,an IEEE 754- 2008 binary32 NaN value )){
+			var output = Number.RawBytesToNumber(type,rawBytes,isLittleEndian);
+			assert.strictEqual(NaN "number" value, output);
+			console.log("Good Test");
+			return;
+			}
+		
+	}
+	
+	
+	if  ( type === "Float64"  ) { 
+		
+		if (Object.is( value,an IEEE 754- 2008 binary64 NaN value )){
+			var output = Number.RawBytesToNumber(type,rawBytes,isLittleEndian);
+			assert.strictEqual(NaN "number" value, output);
+			console.log("Good Test");
+			return;
+			}
+		
+	}
+	
+	
+	else {
+	}
+	
+	
 		console.log("OK Test")
 }
 
 
 function test_regexp(randominput,pattern,flags){
-	if (( SameValue ( active function object , Get ( pattern , "constructor" ) ) === true )){
-		var output = new RegExp(randominput).RegExp(pattern,flags);
-		assert.strictEqual(pattern, output);
-		console.log("Good Test");
-		return;
+	
+	var patternIsRegExp = IsRegExp(pattern)
+	
+		
+		var newTarget =active function object
+		
+		if  ( patternIsRegExp === true && flags === undefined  ) { 
+			
+			var patternConstructor = Get(pattern, "constructor")
+			
+			if (( SameValue ( newTarget , patternConstructor ) === true )){
+				var output = new RegExp(randominput).RegExp(pattern,flags);
+				assert.strictEqual(pattern, output);
+				console.log("Good Test");
+				return;
+				}
+	}
+	
+	
+	
+	if  ( typeof ( pattern ) === "object" && pattern has [[RegExpMatcher]] internal slot  ) { 
+		
+		var P = pattern
+		
+		
+	}
+	
+	
+		
+		var P = Get(pattern, "source")
+		
+		if  ( flags === undefined  ) { 
+			
+			var F = Get(pattern, "flags")
 		}
+		
+		
+	else {
+		
+		var P = pattern
+		
+		var F = flags
+	}
+	
+	
+	var O = RegExpAlloc(newTarget)
+	
+		console.log("OK Test")
+}
+
+
+function test_setvalueinbuffer( arrayBuffer, byteIndex, type, value, isTypedArray, order  , isLittleEndian  ){
+	
+	
+	
+	
+	var block = arrayBuffer
+	
+	var rawBytes = NumberToRawBytes(type, value, isLittleEndian)
+	
+	if  ( IsSharedArrayBuffer ( arrayBuffer ) === true  ) { 
+		
+		var execution =[[CandidateExecution]] field ofsurrounding agent's Agent Record
+	}
+	
+	
+	
 		console.log("OK Test")
 }
 
 
 function test_setviewvalue(randominput,view,requestIndex,isLittleEndian,type,value){
+	
 	if (( typeof ( view ) != "object" )){
 		 try{
 			var output = randominput.SetViewValue(view,requestIndex,isLittleEndian,type,value);
@@ -1167,7 +2447,17 @@ function test_setviewvalue(randominput,view,requestIndex,isLittleEndian,type,val
 			return;
 		}
 	}
-	if (( IsDetachedBuffer ( view ) === true )){
+	
+	
+	
+	var getIndex = ToIndex(requestIndex)
+	
+	var numberValue = ToNumber(value)
+	
+	
+	var buffer = view
+	
+	if (( IsDetachedBuffer ( buffer ) === true )){
 		 try{
 			var output = randominput.SetViewValue(view,requestIndex,isLittleEndian,type,value);
 			console.log("Bad Test/Failed Test");
@@ -1178,7 +2468,12 @@ function test_setviewvalue(randominput,view,requestIndex,isLittleEndian,type,val
 			return;
 		}
 	}
-	if (( ToIndex ( requestIndex ) + elementSize > view )){
+	
+	var viewOffset = view
+	
+	var viewSize = view
+	
+	if (( getIndex + elementSize > viewSize )){
 		 try{
 			var output = randominput.SetViewValue(view,requestIndex,isLittleEndian,type,value);
 			console.log("Bad Test/Failed Test");
@@ -1189,12 +2484,67 @@ function test_setviewvalue(randominput,view,requestIndex,isLittleEndian,type,val
 			return;
 		}
 	}
+	
+	var bufferIndex = getIndex + viewOffset
+	
+		console.log("OK Test")
+}
+
+
+function test_string_fromcodepoint(randominput,codePoints){
+	
+	
+	var length = codePoints.length
+	
+	
+	var nextIndex = 0
+	
+		
+		var next = codePoints[nextIndex]
+		
+		var nextCP = ToNumber(next)
+		
+		if (( SameValue ( nextCP , ToInteger ( nextCP ) ) === false )){
+			 try{
+				var output = new String(randominput).fromCodePoint(codePoints);
+				console.log("Bad Test/Failed Test");
+				 return;
+			}catch(e){
+				assert.strictEqual(true, eval(e instanceof RangeError));
+				console.log("Good Test");
+				return;
+			}
+		}
+		
+		if (( nextCP < 0 || nextCP > 0x10FFFF )){
+			 try{
+				var output = new String(randominput).fromCodePoint(codePoints);
+				console.log("Bad Test/Failed Test");
+				 return;
+			}catch(e){
+				assert.strictEqual(true, eval(e instanceof RangeError));
+				console.log("Good Test");
+				return;
+			}
+		}
+		
+		
+		var nextIndex = nextIndex + 1
 		console.log("OK Test")
 }
 
 
 function test_string_prototype_charat(randominput,pos){
-	if (( ToInteger ( pos ) < 0 ||ToInteger ( pos ) >= the length ofToString ( RequireObjectCoercible ( randominput ) ) )){
+	
+	var O = RequireObjectCoercible(randominput)
+	
+	var S = ToString(O)
+	
+	var position = ToInteger(pos)
+	
+	var size =length of S
+	
+	if (( position < 0 || position >=  size )){
 		var output = new String(randominput).charAt(pos);
 		assert.strictEqual("", output);
 		console.log("Good Test");
@@ -1205,7 +2555,16 @@ function test_string_prototype_charat(randominput,pos){
 
 
 function test_string_prototype_charcodeat(randominput,pos){
-	if (( ToInteger ( pos ) < 0 ||ToInteger ( pos ) >= the length ofToString ( RequireObjectCoercible ( randominput ) ) )){
+	
+	var O = RequireObjectCoercible(randominput)
+	
+	var S = ToString(O)
+	
+	var position = ToInteger(pos)
+	
+	var size =length of S
+	
+	if (( position < 0 || position >=  size )){
 		var output = new String(randominput).charCodeAt(pos);
 		assert.strictEqual(isNaN(output), true);
 		console.log("Good Test");
@@ -1216,30 +2575,53 @@ function test_string_prototype_charcodeat(randominput,pos){
 
 
 function test_string_prototype_codepointat(randominput,pos){
-	if (( ToInteger ( pos ) < 0 ||ToInteger ( pos ) >= the length ofToString ( RequireObjectCoercible ( randominput ) ) )){
+	
+	var O = RequireObjectCoercible(randominput)
+	
+	var S = ToString(O)
+	
+	var position = ToInteger(pos)
+	
+	var size =length of S
+	
+	if (( position < 0 || position >=  size )){
 		var output = new String(randominput).codePointAt(pos);
 		assert.strictEqual(undefined, output);
 		console.log("Good Test");
 		return;
 		}
-	if (( numeric value of code unit at indexToInteger ( pos ) within StringToString ( RequireObjectCoercible ( randominput ) ) < 0xD800 ||the numeric value of code unit at indexToInteger ( pos ) within StringToString ( RequireObjectCoercible ( randominput ) ) > 0xDBFF ||ToInteger ( pos ) + 1 =the length ofToString ( RequireObjectCoercible ( randominput ) ) )){
+	
+	var first =numeric value ofcode unit at index position withinString S
+	
+	if (( first < 0xD800 || first > 0xDBFF || position + 1 = size )){
 		var output = new String(randominput).codePointAt(pos);
-		assert.strictEqual(the numeric value of code unit at indexToInteger ( pos ) within StringToString ( RequireObjectCoercible ( randominput ) ), output);
+		assert.strictEqual(first, output);
 		console.log("Good Test");
 		return;
 		}
-	if (( numeric value of code unit at indexToInteger ( pos ) + 1 within StringToString ( RequireObjectCoercible ( randominput ) ) < 0xDC00 ||the numeric value of code unit at indexToInteger ( pos ) + 1 within StringToString ( RequireObjectCoercible ( randominput ) ) > 0xDFFF )){
+	
+	var second =numeric value ofcode unit at index position+1 withinString S
+	
+	if (( second < 0xDC00 || second > 0xDFFF )){
 		var output = new String(randominput).codePointAt(pos);
-		assert.strictEqual(the numeric value of code unit at indexToInteger ( pos ) within StringToString ( RequireObjectCoercible ( randominput ) ), output);
+		assert.strictEqual(first, output);
 		console.log("Good Test");
 		return;
 		}
+	
 		console.log("OK Test")
 }
 
 
 function test_string_prototype_endswith(randominput,searchString,endPosition){
-	if (( IsRegExp ( searchString ) === true )){
+	
+	var O = RequireObjectCoercible(randominput)
+	
+	var S = ToString(O)
+	
+	var isRegExp = IsRegExp(searchString)
+	
+	if (( isRegExp === true )){
 		 try{
 			var output = new String(randominput).endsWith(searchString,endPosition);
 			console.log("Bad Test/Failed Test");
@@ -1250,18 +2632,38 @@ function test_string_prototype_endswith(randominput,searchString,endPosition){
 			return;
 		}
 	}
-	if (( Math.min ( Math.max ( pos , 0 ) , length ofToString ( RequireObjectCoercible ( randominput ) ) ) - length ofToString ( searchString ) < 0 )){
+	
+	var searchStr = ToString(searchString)
+	
+	var len =length of S
+	
+	
+	var end = min(max(pos, 0), len)
+	
+	var searchLength =length of searchStr
+	
+	var start = end - searchLength
+	
+	if (( start < 0 )){
 		var output = new String(randominput).endsWith(searchString,endPosition);
 		assert.strictEqual(false, output);
 		console.log("Good Test");
 		return;
 		}
+	
 		console.log("OK Test")
 }
 
 
 function test_string_prototype_includes(randominput,searchString,position){
-	if (( IsRegExp ( searchString ) === true )){
+	
+	var O = RequireObjectCoercible(randominput)
+	
+	var S = ToString(O)
+	
+	var isRegExp = IsRegExp(searchString)
+	
+	if (( isRegExp === true )){
 		 try{
 			var output = new String(randominput).includes(searchString,position);
 			console.log("Bad Test/Failed Test");
@@ -1272,12 +2674,53 @@ function test_string_prototype_includes(randominput,searchString,position){
 			return;
 		}
 	}
+	
+	var searchStr = ToString(searchString)
+	
+	var pos = ToInteger(position)
+	
+	var len =length of S
+	
+	var start = min(max(pos, 0), len)
+	
+	var searchLen =length of searchStr
+		console.log("OK Test")
+}
+
+
+function test_string_prototype_match(randominput,regexp){
+	
+	var O = RequireObjectCoercible(randominput)
+	
+	if  ( regexp === neither undefined nor null  ) { 
+		
+		var matcher = GetMethod(regexp, @@match)
+		
+		if  ( matcher != undefined  ) { 
+			
+	}
+	
+	
+	var S = ToString(O)
+	}
+	
+	
+	var rx = RegExpCreate(regexp, undefined)
+	
 		console.log("OK Test")
 }
 
 
 function test_string_prototype_normalize(randominput,form){
-	if (( ToString ( form ) != one of "NFC" , "NFD" , "NFKC" , or "NFKD" )){
+	
+	var O = RequireObjectCoercible(randominput)
+	
+	var S = ToString(O)
+	
+	
+	var f = ToString(form)
+	
+	if (( f != one of "NFC" , "NFD" , "NFKC" , or "NFKD" )){
 		 try{
 			var output = new String(randominput).normalize(form);
 			console.log("Bad Test/Failed Test");
@@ -1288,34 +2731,70 @@ function test_string_prototype_normalize(randominput,form){
 			return;
 		}
 	}
+	
 		console.log("OK Test")
 }
 
 
 function test_string_prototype_padend(randominput,maxLength,fillString){
-	if (( ToLength ( maxLength ) < length ofToString ( RequireObjectCoercible ( randominput ) ) )){
+	
+	var O = RequireObjectCoercible(randominput)
+	
+	var S = ToString(O)
+	
+	var intMaxLength = ToLength(maxLength)
+	
+	var stringLength =length of S
+	
+	if (( intMaxLength < stringLength )){
 		var output = new String(randominput).padEnd(maxLength,fillString);
-		assert.strictEqual(ToString ( RequireObjectCoercible ( randominput ) ), output);
+		assert.strictEqual(S, output);
 		console.log("Good Test");
 		return;
 		}
+	
+	
+	
+	var fillLen = intMaxLength - stringLength
+	
 		console.log("OK Test")
 }
 
 
 function test_string_prototype_padstart(randominput,maxLength,fillString){
-	if (( ToLength ( maxLength ) < length ofToString ( RequireObjectCoercible ( randominput ) ) )){
+	
+	var O = RequireObjectCoercible(randominput)
+	
+	var S = ToString(O)
+	
+	var intMaxLength = ToLength(maxLength)
+	
+	var stringLength =length of S
+	
+	if (( intMaxLength < stringLength )){
 		var output = new String(randominput).padStart(maxLength,fillString);
-		assert.strictEqual(ToString ( RequireObjectCoercible ( randominput ) ), output);
+		assert.strictEqual(S, output);
 		console.log("Good Test");
 		return;
 		}
+	
+	
+	
+	var fillLen = intMaxLength - stringLength
+	
 		console.log("OK Test")
 }
 
 
 function test_string_prototype_repeat(randominput,count){
-	if (( ToInteger ( count ) < 0 )){
+	
+	var O = RequireObjectCoercible(randominput)
+	
+	var S = ToString(O)
+	
+	var n = ToInteger(count)
+	
+	if (( n < 0 )){
 		 try{
 			var output = new String(randominput).repeat(count);
 			console.log("Bad Test/Failed Test");
@@ -1326,7 +2805,8 @@ function test_string_prototype_repeat(randominput,count){
 			return;
 		}
 	}
-	if (( ToInteger ( count ) === + Infinity )){
+	
+	if (( n === + Infinity )){
 		 try{
 			var output = new String(randominput).repeat(count);
 			console.log("Bad Test/Failed Test");
@@ -1337,35 +2817,171 @@ function test_string_prototype_repeat(randominput,count){
 			return;
 		}
 	}
+	
+		console.log("OK Test")
+}
+
+
+function test_string_prototype_replace(randominput,searchValue,replaceValue){
+	
+	var O = RequireObjectCoercible(randominput)
+	
+	if  ( searchValue === neither undefined nor null  ) { 
+		
+		var replacer = GetMethod(searchValue, @@replace)
+		
+		if  ( replacer != undefined  ) { 
+			
+	}
+	
+	
+	}
+	
+	
+	
+	var functionalReplace = IsCallable(replaceValue)
+	
+	if  ( functionalReplace === false  ) { 
+		
+		var replaceValue = ToString(replaceValue)
+	}
+	
+	
+	if  ( functionalReplace === true  ) { 
+		
+		var replValue = Call(replaceValue, undefined, « matched, pos, string »)
+		
+		var replStr = ToString(replValue)
+	}
+	
+	else {
+		
+		var captures = a new empty List
+		
+		var replStr = GetSubstitution(matched, string, pos, captures, undefined, replaceValue)
+	}
+	
+	
+	var tailPos = pos +number of code units in matched
+	
+		console.log("OK Test")
+}
+
+
+function test_string_prototype_search(randominput,regexp){
+	
+	var O = RequireObjectCoercible(randominput)
+	
+	if  ( regexp === neither undefined nor null  ) { 
+		
+		var searcher = GetMethod(regexp, @@search)
+		
+		if  ( searcher != undefined  ) { 
+			
+	}
+	
+	
+	}
+	
+	
+	var rx = RegExpCreate(regexp, undefined)
+	
 		console.log("OK Test")
 }
 
 
 function test_string_prototype_split(randominput,separator,limit){
+	
+	var O = RequireObjectCoercible(randominput)
+	
+	if  ( separator === neither undefined nor null  ) { 
+		
+		var splitter = GetMethod(separator, @@split)
+		
+		if  ( splitter != undefined  ) { 
+			
+	}
+	
+	
+	var S = ToString(O)
+	}
+	
+	
+	var A = ArrayCreate(0)
+	
+	var lengthA = 0
+	
+	
+	var s =length of S
+	
+	var p = 0
+	
+	var R = ToString(separator)
+	
 	if (( lim = 0 )){
 		var output = new String(randominput).split(separator,limit);
-		assert.strictEqual(ArrayCreate ( 0 ), output);
+		assert.strictEqual(A, output);
 		console.log("Good Test");
 		return;
 		}
-	if (( SplitMatch ( ToString ( RequireObjectCoercible ( randominput ) ) , 0 , ToString ( separator ) ) != false )){
-		var output = new String(randominput).split(separator,limit);
-		assert.strictEqual(ArrayCreate ( 0 ), output);
-		console.log("Good Test");
-		return;
-		}
-	if (( 0= lim )){
-		var output = new String(randominput).split(separator,limit);
-		assert.strictEqual(ArrayCreate ( 0 ), output);
-		console.log("Good Test");
-		return;
-		}
+	
+	if  ( separator === undefined  ) { 
+		
+		
+	}
+	
+	
+	if  ( s = 0  ) { 
+		
+		var z = SplitMatch(S, 0, R)
+		
+		if (( z != false )){
+			var output = new String(randominput).split(separator,limit);
+			assert.strictEqual(A, output);
+			console.log("Good Test");
+			return;
+			}
+		
+		
+	}
+	
+	
+	var q = p
+	
+		
+		var e = SplitMatch(S, q, R)
+		
+		
+			
+			
+				
+				
+				
+				if (( lengthA = lim )){
+					var output = new String(randominput).split(separator,limit);
+					assert.strictEqual(A, output);
+					console.log("Good Test");
+					return;
+					}
+				
+				var p = e
+				
+				var q = p
+	
+	
 		console.log("OK Test")
 }
 
 
 function test_string_prototype_startswith(randominput,searchString,position){
-	if (( IsRegExp ( searchString ) === true )){
+	
+	var O = RequireObjectCoercible(randominput)
+	
+	var S = ToString(O)
+	
+	var isRegExp = IsRegExp(searchString)
+	
+	if (( isRegExp === true )){
 		 try{
 			var output = new String(randominput).startsWith(searchString,position);
 			console.log("Bad Test/Failed Test");
@@ -1376,116 +2992,45 @@ function test_string_prototype_startswith(randominput,searchString,position){
 			return;
 		}
 	}
-	if (( length ofToString ( searchString ) + Math.min ( Math.max ( ToInteger ( position ) , 0 ) , length ofToString ( RequireObjectCoercible ( randominput ) ) ) > length ofToString ( RequireObjectCoercible ( randominput ) ) )){
-		var output = new String(randominput).startsWith(searchString,position);
-		assert.strictEqual(false, output);
-		console.log("Good Test");
-		return;
-		}
+	
+	var searchStr = ToString(searchString)
+	
+	var pos = ToInteger(position)
+	
+	var len =length of S
+	
+	var start = min(max(pos, 0), len)
+	
+	var searchLength =length of searchStr
+	
+	
 		console.log("OK Test")
 }
 
 
-function test_typedarray( buffer  , byteOffset  , length   ){
-	if (( ToIndex ( byteOffset ) modulothe "number" value of Element Size value in Table 56 for constructorName≠ 0 )){
-		 try{
-			var output = new TypedArray ( buffer  , byteOffset  , length   );
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof RangeError));
-			console.log("Good Test");
-			return;
-		}
+function test_typedarraycreate( constructor, argumentList ){
+	
+	var newTypedArray = Construct(constructor, argumentList)
+	
+	
+	if  ( argumentList === List of single "number"  ) { 
+		
 	}
-	if (( IsDetachedBuffer ( buffer ) === true )){
-		 try{
-			var output = new TypedArray ( buffer  , byteOffset  , length   );
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof TypeError));
-			console.log("Good Test");
-			return;
-		}
-	}
-	if (( buffermodulothe "number" value of Element Size value in Table 56 for constructorName≠ 0 )){
-		 try{
-			var output = new TypedArray ( buffer  , byteOffset  , length   );
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof RangeError));
-			console.log("Good Test");
-			return;
-		}
-	}
-	if (( buffer- ToIndex ( byteOffset ) < 0 )){
-		 try{
-			var output = new TypedArray ( buffer  , byteOffset  , length   );
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof RangeError));
-			console.log("Good Test");
-			return;
-		}
-	}
-	if (( ToIndex ( byteOffset ) + ToIndex ( length ) ×the "number" value of Element Size value in Table 56 for constructorName > buffer )){
-		 try{
-			var output = new TypedArray ( buffer  , byteOffset  , length   );
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof RangeError));
-			console.log("Good Test");
-			return;
-		}
-	}
-		console.log("OK Test")
-}
-
-
-function test_typedarray( typedArray ){
-	if (( IsDetachedBuffer ( typedArray ) === true )){
-		 try{
-			var output = new TypedArray ( typedArray );
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof TypeError));
-			console.log("Good Test");
-			return;
-		}
-	}
-	if (( IsDetachedBuffer ( typedArray ) === true )){
-		 try{
-			var output = new TypedArray ( typedArray );
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof TypeError));
-			console.log("Good Test");
-			return;
-		}
-	}
-	if (( IsDetachedBuffer ( typedArray ) === true )){
-		 try{
-			var output = new TypedArray ( typedArray );
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof TypeError));
-			console.log("Good Test");
-			return;
-		}
-	}
+	
+	
 		console.log("OK Test")
 }
 
 
 function test_validateatomicaccess( typedArray, requestIndex ){
-	if (( ToIndex ( requestIndex ) >= typedArray )){
+	
+	
+	var accessIndex = ToIndex(requestIndex)
+	
+	var length = typedArray
+	
+	
+	if (( accessIndex >=  length )){
 		 try{
 			var output = new ValidateAtomicAccess ( typedArray, requestIndex );
 			console.log("Bad Test/Failed Test");
@@ -1496,11 +3041,14 @@ function test_validateatomicaccess( typedArray, requestIndex ){
 			return;
 		}
 	}
+	
 		console.log("OK Test")
 }
 
 
 function test_validatesharedintegertypedarray( typedArray  , onlyInt32  ){
+	
+	
 	if (( typeof ( typedArray ) != "object" )){
 		 try{
 			var output = new ValidateSharedIntegerTypedArray ( typedArray  , onlyInt32  );
@@ -1512,7 +3060,33 @@ function test_validatesharedintegertypedarray( typedArray  , onlyInt32  ){
 			return;
 		}
 	}
-	if (( typedArray != "Int32Array" )){
+	
+	
+	var typeName = typedArray
+	
+	if  ( onlyInt32 === true  ) { 
+		
+		if (( typeName != "Int32Array" )){
+			 try{
+				var output = new ValidateSharedIntegerTypedArray ( typedArray  , onlyInt32  );
+				console.log("Bad Test/Failed Test");
+				 return;
+			}catch(e){
+				assert.strictEqual(true, eval(e instanceof TypeError));
+				console.log("Good Test");
+				return;
+			}
+		}
+	}
+	
+	else {
+	}
+	
+	
+	
+	var buffer = typedArray
+	
+	if (( IsSharedArrayBuffer ( buffer ) === false )){
 		 try{
 			var output = new ValidateSharedIntegerTypedArray ( typedArray  , onlyInt32  );
 			console.log("Bad Test/Failed Test");
@@ -1523,16 +3097,6 @@ function test_validatesharedintegertypedarray( typedArray  , onlyInt32  ){
 			return;
 		}
 	}
-	if (( IsSharedArrayBuffer ( typedArray ) === false )){
-		 try{
-			var output = new ValidateSharedIntegerTypedArray ( typedArray  , onlyInt32  );
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof TypeError));
-			console.log("Good Test");
-			return;
-		}
-	}
+	
 		console.log("OK Test")
 }
