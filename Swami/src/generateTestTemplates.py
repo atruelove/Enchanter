@@ -44,7 +44,7 @@ letPOSPatterns = ["VB", "NNP", "VB", "."]
 ifResultPOSPatterns = ["IN", "NNP", "."]
 multiStepIfPatterns = ["IN", "NNP", ",", "RB"]
 elsePattern = ["RB ,"]
-whilePattern = ["NN" "," "IN"]
+whilePattern = ["NN", ",", "IN", "NNP"]
 class TestTemplate(object):
 	def __init__(self, relspecpath, compiler):
 		self.template_content = {}
@@ -406,6 +406,19 @@ class TestTemplate(object):
 				# 	self.template_content[header] = [methodsignature]
 				# self.template_content[header].append(updatedstatement)
 
+			isWhile = False
+			if len(POSElements) >= len(whilePattern):
+				if POSElements[0] == whilePattern[0] and POSElements[1] == whilePattern[1] and POSElements[2] == whilePattern[2] and POSElements[3] == whilePattern[3]:
+					isWhile = True
+			if isWhile:
+				print(statement)
+				statementAdded = True
+				statement = statement.replace("repeat, ", "")
+				statement = statement.replace("Repeat, ", "")
+				statement = statement.replace("while", "while ( ")
+				statement = statement + " ) "
+				updatedstatement = self.substituteVars(statement, sectionid)
+
 			# This entire block seems to be unncessary. The pattern caught here is caught elsewhere, and gives the
 			# same output by adding a single line into substituteVars()
 			# isexception = re.search(exceptionpattern, statement)
@@ -640,7 +653,7 @@ class TestTemplate(object):
 			templatecount += 1
 			test = ""
 			testcondition = testtemplate[i]
-			isAssignment = False
+			isOther = False
 
 			headingSearch = re.search(r'\*\*\*[0-9]*?\*\*\*', testcondition, re.M|re.I)
 			# if headingSearch:
@@ -671,6 +684,14 @@ class TestTemplate(object):
 				# testfunction += lineTab + str(headingNo) + " " + test
 			testfunction += lineTab + test
 
+			if "while" in testcondition.strip():
+				print(testcondition)
+				bracketOpen = True
+				isOther = True
+				hlst.append(headingNo)
+				test = self.convertTextToCode(testcondition)
+				testfunction += lineTab + test + " { "
+
 			if "--ASSIGNMENT--" in testcondition.strip().split():
 				if "=" in testcondition.strip():
 					test = testcondition.strip()
@@ -678,9 +699,9 @@ class TestTemplate(object):
 					test = self.convertTextToCode(test)
 					# testfunction += lineTab + str(headingNo) + " " + test
 					testfunction += lineTab + "var " + test
-					isAssignment = True
+					isOther = True
 
-			if "if " not in testtemplate[i] and not isAssignment:
+			if "if " not in testtemplate[i] and not isOther:
 				# hLast = headingList[hIndex]
 				hIndex += 1
 				continue
@@ -714,7 +735,7 @@ class TestTemplate(object):
 
 			## STOP
 
-			if "return" in testcondition and not isAssignment:
+			if "return" in testcondition and not isOther:
 				# print(testcondition)
 				expectedinput = testcondition.split("return")[0].strip().split("if")[1].strip()
 				expectedinput = self.convertTextToCode(expectedinput)
@@ -732,7 +753,7 @@ class TestTemplate(object):
 					hIndex += 1
 					continue
 				testfunction = testfunction + lineTab + test
-			if "throw" in testcondition and not isAssignment:
+			if "throw" in testcondition and not isOther:
 				expectedinput = testcondition.split("throw")[0].split("if")[1].strip()
 				expectedinput = self.convertTextToCode(expectedinput)
 				expectedoutput = self.convertTextToCode(testcondition.split("throw")[1].strip())

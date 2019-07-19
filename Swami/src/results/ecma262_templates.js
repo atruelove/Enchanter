@@ -295,6 +295,7 @@ function test_array_from(items,mapfn,thisArg){
 	
 	var k = 0
 	
+	while ( k < len ) { 
 		
 		var Pk = ToString(k)
 		
@@ -308,6 +309,8 @@ function test_array_from(items,mapfn,thisArg){
 		
 		
 		
+	}
+	
 	
 	
 		console.log("OK Test")
@@ -335,12 +338,15 @@ function test_array_of(items){
 	
 	var k = 0
 	
+	while ( k < len ) { 
 		
 		var kValue = items[k]
 		
 		var Pk = ToString(k)
 		
 		
+	}
+	
 	
 	
 		console.log("OK Test")
@@ -375,6 +381,7 @@ function test_array_prototype_copywithin(randominput, target, start  , end  ){
 	}
 	
 	
+	while ( count > 0 ) { 
 		
 		var fromKey = ToString(from)
 		
@@ -396,6 +403,8 @@ function test_array_prototype_copywithin(randominput, target, start  , end  ){
 		var to = to + direction
 		
 		var count = count - 1
+	}
+	
 	
 		console.log("OK Test")
 }
@@ -422,6 +431,7 @@ function test_array_prototype_every(randominput, callbackfn  , thisArg  ){
 	
 	var k = 0
 	
+	while ( k < len ) { 
 		
 		var Pk = ToString(k)
 		
@@ -442,6 +452,8 @@ function test_array_prototype_every(randominput, callbackfn  , thisArg  ){
 		}
 		
 		
+	}
+	
 	
 		console.log("OK Test")
 }
@@ -470,6 +482,7 @@ function test_array_prototype_filter(randominput, callbackfn  , thisArg  ){
 	
 	var k = 0
 	
+	while ( k < len ) { 
 		
 		var Pk = ToString(k)
 		
@@ -486,6 +499,8 @@ function test_array_prototype_filter(randominput, callbackfn  , thisArg  ){
 		}
 		
 		
+	}
+	
 	
 		console.log("OK Test")
 }
@@ -512,6 +527,7 @@ function test_array_prototype_find(randominput, predicate  , thisArg  ){
 	
 	var k = 0
 	
+	while ( k < len ) { 
 		
 		var Pk = ToString(k)
 		
@@ -526,6 +542,8 @@ function test_array_prototype_find(randominput, predicate  , thisArg  ){
 			return;
 			}
 		
+	}
+	
 	
 		console.log("OK Test")
 }
@@ -552,6 +570,7 @@ function test_array_prototype_findindex(randominput, predicate  , thisArg  ){
 	
 	var k = 0
 	
+	while ( k < len ) { 
 		
 		var Pk = ToString(k)
 		
@@ -566,6 +585,8 @@ function test_array_prototype_findindex(randominput, predicate  , thisArg  ){
 			return;
 			}
 		
+	}
+	
 	
 		console.log("OK Test")
 }
@@ -592,6 +613,7 @@ function test_array_prototype_foreach(randominput, callbackfn  , thisArg  ){
 	
 	var k = 0
 	
+	while ( k < len ) { 
 		
 		var Pk = ToString(k)
 		
@@ -604,6 +626,8 @@ function test_array_prototype_foreach(randominput, callbackfn  , thisArg  ){
 		}
 		
 		
+	}
+	
 	
 		console.log("OK Test")
 }
@@ -634,6 +658,7 @@ function test_array_prototype_includes(randominput, searchElement  , fromIndex  
 		var k = len + n
 		
 	
+	while ( k < len ) { 
 		
 		var elementK =Get(O, ToString(k))
 		
@@ -644,6 +669,8 @@ function test_array_prototype_includes(randominput, searchElement  , fromIndex  
 			return;
 			}
 		
+	}
+	
 	
 		console.log("OK Test")
 }
@@ -680,6 +707,7 @@ function test_array_prototype_indexof(randominput, searchElement  , fromIndex  )
 		var k = len + n
 		
 	
+	while ( k < len ) { 
 		
 		var kPresent = HasProperty(O, ToString(k))
 		
@@ -698,6 +726,8 @@ function test_array_prototype_indexof(randominput, searchElement  , fromIndex  )
 		}
 		
 		
+	}
+	
 	
 		console.log("OK Test")
 }
@@ -725,6 +755,7 @@ function test_array_prototype_lastindexof(randominput, searchElement  , fromInde
 		
 		var k = len + n
 	
+	while ( k >=  0 ) { 
 		
 		var kPresent = HasProperty(O, ToString(k))
 		
@@ -743,6 +774,8 @@ function test_array_prototype_lastindexof(randominput, searchElement  , fromInde
 		}
 		
 		
+	}
+	
 	
 		console.log("OK Test")
 }
@@ -771,6 +804,7 @@ function test_array_prototype_map(randominput, callbackfn  , thisArg  ){
 	
 	var k = 0
 	
+	while ( k < len ) { 
 		
 		var Pk = ToString(k)
 		
@@ -785,6 +819,8 @@ function test_array_prototype_map(randominput, callbackfn  , thisArg  ){
 		}
 		
 		
+	}
+	
 	
 		console.log("OK Test")
 }
@@ -857,6 +893,7 @@ function test_array_prototype_reduce(randominput, callbackfn  , initialValue  ){
 		
 		var kPresent = false
 		
+		while ( kPresent === false && k < len ) { 
 			
 			var Pk = ToString(k)
 			
@@ -867,6 +904,8 @@ function test_array_prototype_reduce(randominput, callbackfn  , initialValue  ){
 			}
 			
 			
+		}
+		
 		
 		if (( kPresent === false )){
 			 try{
@@ -880,6 +919,7 @@ function test_array_prototype_reduce(randominput, callbackfn  , initialValue  ){
 			}
 		}
 	
+	while ( k < len ) { 
 		
 		var Pk = ToString(k)
 		
@@ -892,6 +932,8 @@ function test_array_prototype_reduce(randominput, callbackfn  , initialValue  ){
 		}
 		
 		
+	}
+	
 	
 		console.log("OK Test")
 }
@@ -939,6 +981,7 @@ function test_array_prototype_reduceright(randominput, callbackfn  , initialValu
 		
 		var kPresent = false
 		
+		while ( kPresent === false && k >=  0 ) { 
 			
 			var Pk = ToString(k)
 			
@@ -949,6 +992,8 @@ function test_array_prototype_reduceright(randominput, callbackfn  , initialValu
 			}
 			
 			
+		}
+		
 		
 		if (( kPresent === false )){
 			 try{
@@ -962,6 +1007,7 @@ function test_array_prototype_reduceright(randominput, callbackfn  , initialValu
 			}
 		}
 	
+	while ( k >=  0 ) { 
 		
 		var Pk = ToString(k)
 		
@@ -974,6 +1020,8 @@ function test_array_prototype_reduceright(randominput, callbackfn  , initialValu
 		}
 		
 		
+	}
+	
 	
 		console.log("OK Test")
 }
@@ -995,6 +1043,7 @@ function test_array_prototype_shift(randominput, ){
 	
 	var k = 1
 	
+	while ( k < len ) { 
 		
 		var from = ToString(k)
 		
@@ -1011,6 +1060,8 @@ function test_array_prototype_shift(randominput, ){
 		
 			
 		
+	}
+	
 	
 	
 	
@@ -1033,6 +1084,7 @@ function test_array_prototype_slice(randominput, start, end ){
 	
 	var n = 0
 	
+	while ( k < final ) { 
 		
 		var Pk = ToString(k)
 		
@@ -1046,6 +1098,8 @@ function test_array_prototype_slice(randominput, start, end ){
 		
 		
 		
+	}
+	
 	
 	
 		console.log("OK Test")
@@ -1073,6 +1127,7 @@ function test_array_prototype_some(randominput, callbackfn  , thisArg  ){
 	
 	var k = 0
 	
+	while ( k < len ) { 
 		
 		var Pk = ToString(k)
 		
@@ -1093,6 +1148,8 @@ function test_array_prototype_some(randominput, callbackfn  , thisArg  ){
 		}
 		
 		
+	}
+	
 	
 		console.log("OK Test")
 }
@@ -1108,6 +1165,7 @@ function test_array_prototype_tolocalestring(randominput,reserved1,reserved2){
 	
 	var k = 0
 	
+	while ( k < len ) { 
 		
 		if  ( k > 0  ) { 
 			
@@ -1123,6 +1181,8 @@ function test_array_prototype_tolocalestring(randominput,reserved1,reserved2){
 		}
 		
 		
+	}
+	
 	
 		console.log("OK Test")
 }
@@ -1150,6 +1210,7 @@ function test_array_prototype_unshift(randominput, items ){
 		
 		var k = len
 		
+		while ( k > 0 , ) { 
 			
 			var from = ToString(k-1)
 			
@@ -1166,12 +1227,17 @@ function test_array_prototype_unshift(randominput, items ){
 			
 				
 			
+		}
+		
 		
 		var j = 0
 		
+		while ( items != empty ) { 
 			
 			
 			
+	}
+	
 	
 	
 		console.log("OK Test")
@@ -2499,6 +2565,7 @@ function test_string_fromcodepoint(randominput,codePoints){
 	
 	var nextIndex = 0
 	
+	while ( nextIndex < length ) { 
 		
 		var next = codePoints[nextIndex]
 		
@@ -2948,6 +3015,7 @@ function test_string_prototype_split(randominput,separator,limit){
 	
 	var q = p
 	
+	while ( q!= s ) { 
 		
 		var e = SplitMatch(S, q, R)
 		
@@ -2967,6 +3035,8 @@ function test_string_prototype_split(randominput,separator,limit){
 				var p = e
 				
 				var q = p
+	}
+	
 	
 	
 		console.log("OK Test")
