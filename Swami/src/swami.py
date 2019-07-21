@@ -78,6 +78,8 @@ class Swami(object):
 			if funcSearch:
 				strL = re.sub(r'<a href="#sec.*?</emu-xref>\(', funcReplace, strL)
 			strL = strL.replace('\n', '')
+			strL = strL.replace("<sup>", "--EXP0--")
+			strL = strL.replace("</sup>", "--EXP1--")
 			strL = re.sub(r'<ol>', " ", strL)
 			strL = re.sub(r'</ol>', " ", strL)
 			strL = re.sub(r'</li>', " ", strL)
@@ -92,14 +94,52 @@ class Swami(object):
 				headingStr = '*' + str(level) + '*'
 				if "<ol>" not in strL:
 					cleaned = cleanupText(strL)
-					print(headingStr, cleaned)
-					outFile.write(headingStr)
-					outFile.write(cleaned)
-					outFile.write("\n")
+					# print(headingStr, cleaned)
+
+					# if ", let" in cleaned and re.sub(r'<.*?>', "", cleaned.split()[0]).lower() == "if":
+					if ", let" in cleaned and cleaned.split()[0].lower() == "if":
+						# print(headingStr, cleaned)
+						cleaned2 = cleaned.replace(", let", ", then--SPLIT--Let")
+						cleanedSpl = cleaned2.split("--SPLIT--")
+						# print(cleanedSpl[0])
+						# print(cleanedSpl[1])
+						outFile.write(headingStr)
+						outFile.write(cleanedSpl[0])
+						outFile.write("\n")
+						outLine = [cleanedSpl[1]]
+						writeSubSections(outLine, level + 1)
+					elif "else" in cleaned.split()[0].lower() and len(cleaned.split()) > 1:
+						spl0 = cleaned.split()[0]
+						outFile.write(headingStr)
+						outFile.write("Else,")
+						outFile.write("\n")
+						spl1 = cleaned.split(spl0)[1].strip()
+						# print(headingStr, cleaned)
+						# print(spl1)
+						outLine = [spl1]
+						writeSubSections(outLine, level + 1)
+					elif " else" in cleaned.lower():
+						cleaned2 = cleaned.replace(", else", "--SPLIT--Else, ")
+						cleaned2 = cleaned2.replace("; else", "--SPLIT--Else, ")
+						cleanedSpl = cleaned2.split("--SPLIT--")
+						outFile.write(headingStr)
+						outFile.write(cleanedSpl[0])
+						outFile.write("\n")
+						print(headingStr, cleaned)
+						print(cleanedSpl[1])
+						outLine = [cleanedSpl[1]]
+						outLevel = level - 1
+						if "return" in cleanedSpl[0].lower():
+							outLevel = level
+						writeSubSections(outLine, outLevel)
+					else:
+						outFile.write(headingStr)
+						outFile.write(cleaned)
+						outFile.write("\n")
 				else:
 					preStr = strL.split("<ol>")[0]
 					cleaned = cleanupText(preStr)
-					print(headingStr, cleaned)
+					# print(headingStr, cleaned)
 					outFile.write(headingStr)
 					outFile.write(cleaned)
 					outFile.write("\n")
@@ -122,18 +162,18 @@ class Swami(object):
 				print(eTxt)
 				relSecRaw.append(e)
 		noFunctions = 0
-		print(len(relSecRaw))
+		# print(len(relSecRaw))
 		for s in relSecRaw:
-			print(s, '\n\n')
+			# print(s, '\n\n')
 			label = s.find("h1")
 			labelS = str(label)
 			labelComp = labelS.split("</span>")
 			lc2 = []
 			for ls in labelComp:
 				ls = re.sub(r'<.*?>', "", ls)
-				print(ls)
+				# print(ls)
 				lc2.append(ls)
-			print(lc2)
+			# print(lc2)
 
 			summary = s.find('p')
 			summStr = str(summary)
@@ -153,14 +193,14 @@ class Swami(object):
 				outFile.write("Summary= ")
 				outFile.write(lc2[1])
 				outFile.write("\n")
-				print(summStr)
+				# print(summStr)
 				outFile.write("Description= ")
 				outFile.write(summStr)
 				outFile.write("\n")
 				emuAlg = emuAlg[0]
 				ol = emuAlg.find("ol")
 				cont = ol.contents
-				print(cont)
+				# print(cont)
 				writeSubSections(cont, 0)
 				outFile.write(end)
 		# print("begin extracting relevant sections .....................................")

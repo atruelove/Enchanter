@@ -292,9 +292,13 @@ Summary= ToPrimitive ( input [ , PreferredType ] )
 Description= The abstract operation ToPrimitive takes an input argument and an optional argument PreferredType. The abstract operation ToPrimitive converts its input argument to a non-Object type. If an object is capable of converting to more than one primitive type, it may use the optional hint PreferredType to favour that type. Conversion occurs according to the following algorithm:
 *0*Assert: VARinput is an ECMAScript language value. 
 *0*If FUNCType(VARinput) is Object, then
-*1*If VARPreferredType is not present, let VARhint be "default". 
-*1*Else if VARPreferredType is hint String, let VARhint be "string". 
-*1*Else VARPreferredType is hint Number, let VARhint be "number". 
+*1*If VARPreferredType is not present, then
+*2*Let VARhint be "default". 
+*1*Else,
+*2*if VARPreferredType is hint String, then
+*3*Let VARhint be "string".
+*1*Else,
+*2*VARPreferredType is hint Number, let VARhint be "number".
 *1*Let VARexoticToPrim be ? FUNCGetMethod(VARinput, @@toPrimitive). 
 *1*If VARexoticToPrim is not undefined, then
 *2*Let VARresult be ? FUNCCall(VARexoticToPrim, VARinput, « VARhint »). 
@@ -348,8 +352,8 @@ Description= The abstract operation ToInt32 converts argument to one of 232 inte
 *0*Let VARnumber be ? FUNCToNumber(VARargument). 
 *0*If VARnumber is NaN, +0, -0, +∞, or -∞, return +0. 
 *0*Let VARint be the mathematical value that is the same sign as VARnumber and whose magnitude is floor(abs(VARnumber)). 
-*0*Let VARint32bit be VARint modulo 232. 
-*0*If VARint32bit ≥ 231, return VARint32bit - 232; otherwise return VARint32bit.    
+*0*Let VARint32bit be VARint modulo 2--EXP0--32--EXP1--. 
+*0*If VARint32bit ≥ 2--EXP0--31--EXP1--, return VARint32bit - 2--EXP0--32--EXP1--; otherwise return VARint32bit.    
 
 #############  END  ## 26 ###########################
 ############# BEGIN ## 27 ###########################
@@ -359,7 +363,7 @@ Description= The abstract operation ToUint32 converts argument to one of 232 int
 *0*Let VARnumber be ? FUNCToNumber(VARargument). 
 *0*If VARnumber is NaN, +0, -0, +∞, or -∞, return +0. 
 *0*Let VARint be the mathematical value that is the same sign as VARnumber and whose magnitude is floor(abs(VARnumber)). 
-*0*Let VARint32bit be VARint modulo 232. 
+*0*Let VARint32bit be VARint modulo 2--EXP0--32--EXP1--. 
 *0*Return VARint32bit.    
 
 #############  END  ## 27 ###########################
@@ -370,8 +374,8 @@ Description= The abstract operation ToInt16 converts argument to one of 216 inte
 *0*Let VARnumber be ? FUNCToNumber(VARargument). 
 *0*If VARnumber is NaN, +0, -0, +∞, or -∞, return +0. 
 *0*Let VARint be the mathematical value that is the same sign as VARnumber and whose magnitude is floor(abs(VARnumber)). 
-*0*Let VARint16bit be VARint modulo 216. 
-*0*If VARint16bit ≥ 215, return VARint16bit - 216; otherwise return VARint16bit.    
+*0*Let VARint16bit be VARint modulo 2--EXP0--16--EXP1--. 
+*0*If VARint16bit ≥ 2--EXP0--15--EXP1--, return VARint16bit - 2--EXP0--16--EXP1--; otherwise return VARint16bit.    
 
 #############  END  ## 28 ###########################
 ############# BEGIN ## 29 ###########################
@@ -381,7 +385,7 @@ Description= The abstract operation ToUint16 converts argument to one of 216 int
 *0*Let VARnumber be ? FUNCToNumber(VARargument). 
 *0*If VARnumber is NaN, +0, -0, +∞, or -∞, return +0. 
 *0*Let VARint be the mathematical value that is the same sign as VARnumber and whose magnitude is floor(abs(VARnumber)). 
-*0*Let VARint16bit be VARint modulo 216. 
+*0*Let VARint16bit be VARint modulo 2--EXP0--16--EXP1--. 
 *0*Return VARint16bit.    
 
 #############  END  ## 29 ###########################
@@ -392,8 +396,8 @@ Description= The abstract operation ToInt8 converts argument to one of 28 intege
 *0*Let VARnumber be ? FUNCToNumber(VARargument). 
 *0*If VARnumber is NaN, +0, -0, +∞, or -∞, return +0. 
 *0*Let VARint be the mathematical value that is the same sign as VARnumber and whose magnitude is floor(abs(VARnumber)). 
-*0*Let VARint8bit be VARint modulo 28. 
-*0*If VARint8bit ≥ 27, return VARint8bit - 28; otherwise return VARint8bit.    
+*0*Let VARint8bit be VARint modulo 2--EXP0--8--EXP1--. 
+*0*If VARint8bit ≥ 2--EXP0--7--EXP1--, return VARint8bit - 2--EXP0--8--EXP1--; otherwise return VARint8bit.    
 
 #############  END  ## 30 ###########################
 ############# BEGIN ## 31 ###########################
@@ -403,7 +407,7 @@ Description= The abstract operation ToUint8 converts argument to one of 28 integ
 *0*Let VARnumber be ? FUNCToNumber(VARargument). 
 *0*If VARnumber is NaN, +0, -0, +∞, or -∞, return +0. 
 *0*Let VARint be the mathematical value that is the same sign as VARnumber and whose magnitude is floor(abs(VARnumber)). 
-*0*Let VARint8bit be VARint modulo 28. 
+*0*Let VARint8bit be VARint modulo 2--EXP0--8--EXP1--. 
 *0*Return VARint8bit.    
 
 #############  END  ## 31 ###########################
@@ -438,7 +442,7 @@ Description= The abstract operation NumberToString converts a Number m to String
 *0*If VARm is +0 or -0, return the String "0". 
 *0*If VARm is less than zero, return the FUNCstring-concatenation of "-" and ! NumberToString(-VARm). 
 *0*If VARm is +∞, return the String "Infinity". 
-*0*Otherwise, let VARn, VARk, and VARs be integers such that VARk ≥ 1, 10VARk-1 ≤ VARs &lt; 10VARk, the Number value for VARs × 10VARn-VARk is VARm, and VARk is as small as possible. Note that VARk is the number of digits in the decimal representation of VARs, that VARs is not divisible by 10, and that the least significant digit of VARs is not necessarily uniquely determined by these criteria. 
+*0*Otherwise, let VARn, VARk, and VARs be integers such that VARk ≥ 1, 10--EXP0--VARk-1--EXP1-- ≤ VARs &lt; 10--EXP0--VARk--EXP1--, the Number value for VARs × 10--EXP0--VARn-VARk--EXP1-- is VARm, and VARk is as small as possible. Note that VARk is the number of digits in the decimal representation of VARs, that VARs is not divisible by 10, and that the least significant digit of VARs is not necessarily uniquely determined by these criteria. 
 *0*If VARk ≤ VARn ≤ 21, return the string-concatenation of:the code units of the VARk digits of the decimal representation of VARs (in order, with no leading zeroes) VARn-VARk occurrences of the code unit 0x0030 (DIGIT ZERO) 
 *0*If 0 &lt; VARn ≤ 21, return the string-concatenation of:the code units of the most significant VARn digits of the decimal representation of VARs the code unit 0x002E (FULL STOP) the code units of the remaining VARk-VARn digits of the decimal representation of VARs 
 *0*If -6 &lt; VARn ≤ 0, return the string-concatenation of:the code unit 0x0030 (DIGIT ZERO) the code unit 0x002E (FULL STOP) -VARn occurrences of the code unit 0x0030 (DIGIT ZERO) the code units of the VARk digits of the decimal representation of VARs 
@@ -462,7 +466,7 @@ Summary= ToLength ( argument )
 Description= The abstract operation ToLength converts argument to an integer suitable for use as the length of an array-like object. It performs the following steps:
 *0*Let VARlen be ? FUNCToInteger(VARargument). 
 *0*If VARlen ≤ +0, return +0. 
-*0*Return min(VARlen, 253-1).    
+*0*Return min(VARlen, 2--EXP0--53--EXP1---1).    
 
 #############  END  ## 36 ###########################
 ############# BEGIN ## 37 ###########################
@@ -1109,7 +1113,8 @@ Description= The concrete Environment Record method SetMutableBinding for declar
 *1*Return FUNCNormalCompletion(empty). 
 *0*If the binding for VARN in VARenvRec is a strict binding, set VARS to true. 
 *0*If the binding for VARN in VARenvRec has not yet been initialized, throw a ReferenceError exception. 
-*0*Else if the binding for VARN in VARenvRec is a mutable binding, change its bound value to VARV. 
+*0*Else,
+*1*if the binding for VARN in VARenvRec is a mutable binding, change its bound value to VARV.
 *0*Else,
 *1*Assert: This is an attempt to change the value of an immutable binding. 
 *1*If VARS is true, throw a TypeError exception. 
@@ -1607,7 +1612,8 @@ Description= When the abstract operation NewFunctionEnvironment is called with a
 *0*Let VARenvRec be a new function Environment Record containing no bindings. 
 *0*Set VARenvRec.[[VARFunctionObject]] to VARF. 
 *0*If VARF.[[VARThisMode]] is lexical, set VARenvRec.[[VARThisBindingStatus]] to "lexical". 
-*0*Else, set VARenvRec.[[VARThisBindingStatus]] to "uninitialized". 
+*0*Else,
+*1*set VARenvRec.[[VARVARThisBindingStatus]] to "uninitialized".
 *0*Let VARhome be VARF.[[VARHomeObject]]. 
 *0*Set VARenvRec.[[VARHomeObject]] to VARhome. 
 *0*Set VARenvRec.[[VARNewTarget]] to VARnewTarget. 
@@ -1719,7 +1725,10 @@ Description= The ResolveBinding abstract operation is used to determine the bind
 *0*If VARenv is not present or if VARenv is undefined, then
 *1*Set VARenv to the running execution context's LexicalEnvironment. 
 *0*Assert: VARenv is a Lexical Environment. 
-*0*If the code matching the syntactic production that is being evaluated is contained in strict mode code, let VARstrict be true, else let VARstrict be false. 
+*0*If the code matching the syntactic production that is being evaluated is contained in strict mode code, then
+*1*Let VARstrict be true
+*0*Else,
+*1*let VARstrict be false.
 *0*Return ? FUNCGetIdentifierReference(VARenv, VARname, VARstrict).    
 
 #############  END  ## 141 ###########################
@@ -1789,8 +1798,10 @@ Description= The abstract operation InitializeHostDefinedRealm performs the foll
 *0*Set the Realm of VARnewContext to VARrealm. 
 *0*Set the ScriptOrModule of VARnewContext to null. 
 *0*Push VARnewContext onto the execution context stack; VARnewContext is now the running execution context. 
-*0*If the host requires use of an exotic object to serve as VARrealm's global object, let VARglobal be such an object created in an implementation-defined manner. Otherwise, let VARglobal be undefined, indicating that an ordinary object should be created as the global object. 
-*0*If the host requires that the this binding in VARrealm's global scope return an object other than the global object, let VARthisValue be such an object created in an implementation-defined manner. Otherwise, let VARthisValue be undefined, indicating that VARrealm's global this binding should be the global object. 
+*0*If the host requires use of an exotic object to serve as VARrealm's global object, then
+*1*Let VARglobal be such an object created in an implementation-defined manner. Otherwise, then
+*0*If the host requires that the this binding in VARrealm's global scope return an object other than the global object, then
+*1*Let VARthisValue be such an object created in an implementation-defined manner. Otherwise, then
 *0*Perform FUNCSetRealmGlobalObject(VARrealm, VARglobal, VARthisValue). 
 *0*Let VARglobalObj be ? FUNCSetDefaultGlobalBindings(VARrealm). 
 *0*Create any implementation-defined global object properties on VARglobalObj. 
@@ -1872,10 +1883,12 @@ Description= When the abstract operation OrdinarySetPrototypeOf is called with O
 *0*Let VARdone be false. 
 *0*Repeat, while VARdone is false,
 *1*If VARp is null, set VARdone to true. 
-*1*Else if FUNCSameValue(VARp, VARO) is true, return false. 
+*1*Else,
+*2*if FUNCSameValue(VARp, VARO) is true, return false.
 *1*Else,
 *2*If VARp.[[VARGetPrototypeOf]] is not the ordinary object internal method defined in 9.1.1, set VARdone to true. 
-*2*Else, set VARp to VARp.[[VARPrototype]]. 
+*2*Else,
+*3*set VARp to VARp.[[VARVARPrototype]].
 *0*Set VARO.[[VARPrototype]] to VARV. 
 *0*Return true.     
 
@@ -2206,7 +2219,8 @@ Description= When the abstract operation OrdinaryCallBindThis is called with fun
 *0*If VARthisMode is lexical, return FUNCNormalCompletion(undefined). 
 *0*Let VARcalleeRealm be VARF.[[VARRealm]]. 
 *0*Let VARlocalEnv be the LexicalEnvironment of VARcalleeContext. 
-*0*If VARthisMode is strict, let VARthisValue be VARthisArgument. 
+*0*If VARthisMode is strict, then
+*1*Let VARthisValue be VARthisArgument. 
 *0*Else,
 *1*If VARthisArgument is undefined or null, then
 *2*Let VARglobalEnv be VARcalleeRealm.[[VARGlobalEnv]]. 
@@ -2250,7 +2264,8 @@ Description= The [[Construct]] internal method for an ECMAScript function object
 *1*If FUNCType(VARresult.[[VARValue]]) is Object, return FUNCNormalCompletion(VARresult.[[VARValue]]). 
 *1*If VARkind is "base", return FUNCNormalCompletion(VARthisArgument). 
 *1*If VARresult.[[VARValue]] is not undefined, throw a TypeError exception. 
-*0*Else, FUNCReturnIfAbrupt(VARresult). 
+*0*Else,
+*1*FUNCReturnIfAbrupt(VARresult).
 *0*Return ? VARenvRec.GetThisBinding().    
 
 #############  END  ## 183 ###########################
@@ -2260,8 +2275,10 @@ Summary= FunctionAllocate ( functionPrototype, strict, functionKind )
 Description= The abstract operation FunctionAllocate requires the three arguments functionPrototype, strict and functionKind. FunctionAllocate performs the following steps:
 *0*Assert: FUNCType(VARfunctionPrototype) is Object. 
 *0*Assert: VARfunctionKind is either "normal", "non-constructor", "generator", "async", or "async generator". 
-*0*If VARfunctionKind is "normal", let VARneedsConstruct be true. 
-*0*Else, let VARneedsConstruct be false. 
+*0*If VARfunctionKind is "normal", then
+*1*Let VARneedsConstruct be true. 
+*0*Else,
+*1*let VARneedsConstruct be false.
 *0*If VARfunctionKind is "non-constructor", set VARfunctionKind to "normal". 
 *0*Let VARF be a newly created ECMAScript function object with the internal slots listed in Table 27. All of those internal slots are initialized to undefined. 
 *0*Set VARF's essential internal methods to the default ordinary object definitions specified in 9.1. 
@@ -2289,8 +2306,10 @@ Description= The abstract operation FunctionInitialize requires the arguments: a
 *0*Set VARF.[[VARECMAScriptCode]] to VARBody. 
 *0*Set VARF.[[VARScriptOrModule]] to FUNCGetActiveScriptOrModule(). 
 *0*If VARkind is Arrow, set VARF.[[VARThisMode]] to lexical. 
-*0*Else if VARStrict is true, set VARF.[[VARThisMode]] to strict. 
-*0*Else, set VARF.[[VARThisMode]] to global. 
+*0*Else,
+*1*if VARStrict is true, set VARF.[[VARVARThisMode]] to strict.
+*0*Else,
+*1*set VARF.[[VARVARThisMode]] to global.
 *0*Return VARF.    
 
 #############  END  ## 185 ###########################
@@ -2300,8 +2319,10 @@ Summary= FunctionCreate ( kind, ParameterList, Body, Scope, Strict [ , prototype
 Description= The abstract operation FunctionCreate requires the arguments: kind which is one of (Normal, Method, Arrow), a parameter list Parse Node specified by ParameterList, a body Parse Node specified by Body, a Lexical Environment specified by Scope, a Boolean flag Strict, and optionally, an object prototype. FunctionCreate performs the following steps:
 *0*If VARprototype is not present, then
 *1*Set VARprototype to the intrinsic object %FunctionPrototype%. 
-*0*If VARkind is not Normal, let VARallocKind be "non-constructor". 
-*0*Else, let VARallocKind be "normal". 
+*0*If VARkind is not Normal, then
+*1*Let VARallocKind be "non-constructor". 
+*0*Else,
+*1*let VARallocKind be "normal".
 *0*Let VARF be FUNCFunctionAllocate(VARprototype, VARStrict, VARallocKind). 
 *0*Return FUNCFunctionInitialize(VARF, VARkind, VARParameterList, VARBody, VARScope).    
 
@@ -2395,7 +2416,8 @@ Description= The abstract operation SetFunctionName requires a Function argument
 *0*If FUNCType(VARname) is Symbol, then
 *1*Let VARdescription be VARname's [[VARDescription]] value. 
 *1*If VARdescription is undefined, set VARname to the empty String. 
-*1*Else, set VARname to the string-concatenation of "[", VARdescription, and "]". 
+*1*Else,
+*2*set VARname to the string-concatenation of "[", VARdescription, and "]".
 *0*If VARprefix is present, then
 *1*Set VARname to the string-concatenation of VARprefix, the code unit 0x0020 (SPACE), and VARname. 
 *0*Return ! FUNCDefinePropertyOrThrow(VARF, "name", PropertyDescriptor { [[VARValue]]: VARname, [[VARWritable]]: false, [[VAREnumerable]]: false, [[VARConfigurable]]: true }).    
@@ -2422,7 +2444,8 @@ Description= When an execution context is established for evaluating an ECMAScri
 *0*Let VARstrict be VARfunc.[[VARStrict]]. 
 *0*Let VARformals be VARfunc.[[VARFormalParameters]]. 
 *0*Let VARparameterNames be the BoundNames of VARformals. 
-*0*If VARparameterNames has any duplicate entries, let VARhasDuplicates be true. Otherwise, let VARhasDuplicates be false. 
+*0*If VARparameterNames has any duplicate entries, then
+*1*Let VARhasDuplicates be true. Otherwise, then
 *0*Let VARsimpleParameterList be IsSimpleParameterList of VARformals. 
 *0*Let VARhasParameterExpressions be ContainsExpression of VARformals. 
 *0*Let VARvarNames be the VarDeclaredNames of VARcode. 
@@ -2493,7 +2516,8 @@ Description= When an execution context is established for evaluating an ECMAScri
 *2*If VARn is not an element of VARinstantiatedVarNames, then
 *3*Append VARn to VARinstantiatedVarNames. 
 *3*Perform ! VARvarEnvRec.CreateMutableBinding(VARn, false). 
-*3*If VARn is not an element of VARparameterBindings or if VARn is an element of VARfunctionNames, let VARinitialValue be undefined. 
+*3*If VARn is not an element of VARparameterBindings or if VARn is an element of VARfunctionNames, then
+*4*Let VARinitialValue be undefined. 
 *3*Else,
 *4*Let VARinitialValue be ! VARenvRec.GetBindingValue(VARn, false). 
 *3*Call VARvarEnvRec.InitializeBinding(VARn, VARinitialValue). 
@@ -2502,7 +2526,8 @@ Description= When an execution context is established for evaluating an ECMAScri
 *0*If VARstrict is false, then
 *1*Let VARlexEnv be FUNCNewDeclarativeEnvironment(VARvarEnv). 
 *1*NOTE: Non-strict functions use a separate lexical Environment Record for top-level lexical declarations so that a direct eval can determine whether any var scoped declarations introduced by the eval code conflict with pre-existing top-level lexically scoped declarations. This is not needed for strict functions because a strict direct eval always places all declarations into a new Environment Record. 
-*0*Else, let VARlexEnv be VARvarEnv. 
+*0*Else,
+*1*let VARlexEnv be VARvarEnv.
 *0*Let VARlexEnvRec be VARlexEnv's EnvironmentRecord. 
 *0*Set the LexicalEnvironment of VARcalleeContext to VARlexEnv. 
 *0*Let VARlexDeclarations be the LexicallyScopedDeclarations of VARcode. 
@@ -2632,7 +2657,7 @@ Summary= ArrayCreate ( length [ , proto ] )
 Description= The abstract operation ArrayCreate with argument length (either 0 or a positive integer) and optional argument proto is used to specify the creation of new Array exotic objects. It performs the following steps:
 *0*Assert: VARlength is an integer Number ≥ 0. 
 *0*If VARlength is -0, set VARlength to +0. 
-*0*If VARlength&gt;232-1, throw a RangeError exception. 
+*0*If VARlength&gt;2--EXP0--32--EXP1---1, throw a RangeError exception. 
 *0*If VARproto is not present, set VARproto to the intrinsic object %ArrayPrototype%. 
 *0*Let VARA be a newly created Array exotic object. 
 *0*Set VARA's essential internal methods except for [[VARDefineOwnProperty]] to the default ordinary object definitions specified in 9.1. 
@@ -2682,7 +2707,8 @@ Description= When the abstract operation ArraySetLength is called with an Array 
 *0*If VARnewLen ≥ VARoldLen, then
 *1*Return FUNCOrdinaryDefineOwnProperty(VARA, "length", VARnewLenDesc). 
 *0*If VARoldLenDesc.[[VARWritable]] is false, return false. 
-*0*If VARnewLenDesc.[[VARWritable]] is absent or has the value true, let VARnewWritable be true. 
+*0*If VARnewLenDesc.[[VARWritable]] is absent or has the value true, then
+*1*Let VARnewWritable be true. 
 *0*Else,
 *1*Need to defer setting the [[VARWritable]] attribute to false in case any elements cannot be deleted. 
 *1*Let VARnewWritable be false. 
@@ -3360,7 +3386,8 @@ Description= When the [[DefineOwnProperty]] internal method of a Proxy exotic ob
 *0*Let VARextensibleTarget be ? FUNCIsExtensible(VARtarget). 
 *0*If VARDesc has a [[VARConfigurable]] field and if VARDesc.[[VARConfigurable]] is false, then
 *1*Let VARsettingConfigFalse be true. 
-*0*Else, let VARsettingConfigFalse be false. 
+*0*Else,
+*1*let VARsettingConfigFalse be false.
 *0*If VARtargetDesc is undefined, then
 *1*If VARextensibleTarget is false, throw a TypeError exception. 
 *1*If VARsettingConfigFalse is true, throw a TypeError exception. 
@@ -3595,7 +3622,7 @@ Description= The abstract operation GetTemplateObject is called with a Parse Nod
 *2*Return VARe.[[VARArray]]. 
 *0*Let VARcookedStrings be TemplateStrings of VARtemplateLiteral with argument false. 
 *0*Let VARcount be the number of elements in the List VARcookedStrings. 
-*0*Assert: VARcount ≤ 232-1. 
+*0*Assert: VARcount ≤ 2--EXP0--32--EXP1---1. 
 *0*Let VARtemplate be ! FUNCArrayCreate(VARcount). 
 *0*Let VARrawObj be ! FUNCArrayCreate(VARcount). 
 *0*Let VARindex be 0. 
@@ -3621,7 +3648,8 @@ Description= The abstract operation EvaluateNew with arguments constructExpr, an
 *0*Assert: VARarguments is either empty or an Arguments. 
 *0*Let VARref be the result of evaluating VARconstructExpr. 
 *0*Let VARconstructor be ? FUNCGetValue(VARref). 
-*0*If VARarguments is empty, let VARargList be a new empty List. 
+*0*If VARarguments is empty, then
+*1*Let VARargList be a new empty List. 
 *0*Else,
 *1*Let VARargList be ArgumentListEvaluation of VARarguments. 
 *1*FUNCReturnIfAbrupt(VARargList). 
@@ -3887,8 +3915,10 @@ Description= The abstract operation ForIn/OfHeadEvaluation is called with argume
 *1*Return ? FUNCEnumerateObjectProperties(VARobj). 
 *0*Else,
 *1*Assert: VARiterationKind is iterate. 
-*1*If VARiterationKind is async-iterate, let VARiteratorHint be async. 
-*1*Else, let VARiteratorHint be sync. 
+*1*If VARiterationKind is async-iterate, then
+*2*Let VARiteratorHint be async. 
+*1*Else,
+*2*let VARiteratorHint be sync.
 *1*Return ? FUNCGetIterator(VARexprValue, VARiteratorHint).     
 
 #############  END  ## 280 ###########################
@@ -4366,7 +4396,8 @@ Description= The abstract operation PerformEval with arguments x, evalRealm, str
 *1*Let VARF be VARthisEnvRec.[[VARFunctionObject]]. 
 *1*Let VARinFunction be true. 
 *1*Let VARinMethod be VARthisEnvRec.HasSuperBinding(). 
-*1*If VARF.[[VARConstructorKind]] is "derived", let VARinDerivedConstructor be true; otherwise, let VARinDerivedConstructor be false. 
+*1*If VARF.[[VARConstructorKind]] is "derived", then
+*2*Let VARinDerivedConstructor be true; otherwise, then
 *0*Else,
 *1*Let VARinFunction be false. 
 *1*Let VARinMethod be false. 
@@ -4374,8 +4405,10 @@ Description= The abstract operation PerformEval with arguments x, evalRealm, str
 *0*Let VARscript be the ECMAScript code that is the result of parsing VARx, interpreted as UTF-16 encoded Unicode text as described in 6.1.4, for the goal symbol Script. If VARinFunction is false, additional early error rules from 18.2.1.1.1 are applied. If VARinMethod is false, additional early error rules from 18.2.1.1.2 are applied. If VARinDerivedConstructor is false, additional early error rules from 18.2.1.1.3 are applied. If the parse fails, throw a SyntaxError exception. If any early errors are detected, throw a SyntaxError or a ReferenceError exception, depending on the type of the error (but see also clause 16). Parsing and early error detection may be interweaved in an implementation-dependent manner. 
 *0*If VARscript Contains ScriptBody is false, return undefined. 
 *0*Let VARbody be the ScriptBody of VARscript. 
-*0*If VARstrictCaller is true, let VARstrictEval be true. 
-*0*Else, let VARstrictEval be IsStrict of VARscript. 
+*0*If VARstrictCaller is true, then
+*1*Let VARstrictEval be true. 
+*0*Else,
+*1*let VARstrictEval be IsStrict of VARscript.
 *0*Let VARctx be the running execution context. 
 *0*NOTE: If VARdirect is true, VARctx will be the execution context that performed the direct eval. If VARdirect is false, VARctx will be the execution context for the invocation of the eval function. 
 *0*If VARdirect is true, then
@@ -4526,18 +4559,21 @@ Description= The parseInt function produces an integer value dictated by interpr
 *0*Let VARinputString be ? FUNCToString(VARstring). 
 *0*Let VARS be a newly created substring of VARinputString consisting of the first code unit that is not a StrWhiteSpaceChar and all code units following that code unit. (In other words, remove leading white space.) If VARinputString does not contain any such code unit, let VARS be the empty string. 
 *0*Let VARsign be 1. 
-*0*If VARS is not empty and the first code unit of VARS is the code unit 0x002D (HYPHEN-MINUS), let VARsign be -1. 
+*0*If VARS is not empty and the first code unit of VARS is the code unit 0x002D (HYPHEN-MINUS), then
+*1*Let VARsign be -1. 
 *0*If VARS is not empty and the first code unit of VARS is the code unit 0x002B (PLUS SIGN) or the code unit 0x002D (HYPHEN-MINUS), remove the first code unit from VARS. 
 *0*Let VARR be ? FUNCToInt32(VARradix). 
 *0*Let VARstripPrefix be true. 
 *0*If VARR ≠ 0, then
 *1*If VARR &lt; 2 or VARR &gt; 36, return NaN. 
-*1*If VARR ≠ 16, let VARstripPrefix be false. 
+*1*If VARR ≠ 16, then
+*2*Let VARstripPrefix be false. 
 *0*Else VARR = 0,
 *1*Let VARR be 10. 
 *0*If VARstripPrefix is true, then
 *1*If the length of VARS is at least 2 and the first two code units of VARS are either "0x" or "0X", remove the first two code units from VARS and let VARR be 16. 
-*0*If VARS contains a code unit that is not a radix-VARR digit, let VARZ be the substring of VARS consisting of all code units before the first such code unit; otherwise, let VARZ be VARS. 
+*0*If VARS contains a code unit that is not a radix-VARR digit, then
+*1*Let VARZ be the substring of VARS consisting of all code units before the first such code unit; otherwise, then
 *0*If VARZ is empty, return NaN. 
 *0*Let VARmathInt be the mathematical integer value that is represented by VARZ in radix-VARR notation, using the letters A-Z and a-z for digits with values 10 through 35. (However, if VARR is 10 and VARZ contains more than 20 significant digits, every significant digit after the 20th may be replaced by a 0 digit, at the option of the implementation; and if VARR is not 2, 4, 8, 10, 16, or 32, then VARmathInt may be an implementation-dependent approximation to the mathematical integer value that is represented by VARZ in radix-VARR notation.) 
 *0*If VARmathInt = 0, then
@@ -4678,7 +4714,8 @@ Description= The assign function is used to copy the values of all of the enumer
 *0*If only one argument was passed, return VARto. 
 *0*Let VARsources be the List of argument values starting with the second argument. 
 *0*For each element VARnextSource of VARsources, in ascending index order, do
-*1*If VARnextSource is undefined or null, let VARkeys be a new empty List. 
+*1*If VARnextSource is undefined or null, then
+*2*Let VARkeys be a new empty List. 
 *1*Else,
 *2*Let VARfrom be ! FUNCToObject(VARnextSource). 
 *2*Let VARkeys be ? VARfrom.[[VAROwnPropertyKeys]](). 
@@ -4947,18 +4984,37 @@ Description= When the toString method is called, the following steps are taken:
 *0*If the this value is null, return "[object Null]". 
 *0*Let VARO be ! FUNCToObject(this value). 
 *0*Let VARisArray be ? FUNCIsArray(VARO). 
-*0*If VARisArray is true, let VARbuiltinTag be "Array". 
-*0*Else if VARO is a String exotic object, let VARbuiltinTag be "String". 
-*0*Else if VARO has a [[VARParameterMap]] internal slot, let VARbuiltinTag be "Arguments". 
-*0*Else if VARO has a [[VARCall]] internal method, let VARbuiltinTag be "Function". 
-*0*Else if VARO has an [[VARErrorData]] internal slot, let VARbuiltinTag be "Error". 
-*0*Else if VARO has a [[VARBooleanData]] internal slot, let VARbuiltinTag be "Boolean". 
-*0*Else if VARO has a [[VARNumberData]] internal slot, let VARbuiltinTag be "Number". 
-*0*Else if VARO has a [[VARDateValue]] internal slot, let VARbuiltinTag be "Date". 
-*0*Else if VARO has a [[VARRegExpMatcher]] internal slot, let VARbuiltinTag be "RegExp". 
-*0*Else, let VARbuiltinTag be "Object". 
+*0*If VARisArray is true, then
+*1*Let VARbuiltinTag be "Array". 
+*0*Else,
+*1*if VARO is a String exotic object, then
+*2*Let VARbuiltinTag be "String".
+*0*Else,
+*1*if VARO has a [[VARVARParameterMap]] internal slot, then
+*2*Let VARbuiltinTag be "Arguments".
+*0*Else,
+*1*if VARO has a [[VARVARCall]] internal method, then
+*2*Let VARbuiltinTag be "Function".
+*0*Else,
+*1*if VARO has an [[VARVARErrorData]] internal slot, then
+*2*Let VARbuiltinTag be "Error".
+*0*Else,
+*1*if VARO has a [[VARVARBooleanData]] internal slot, then
+*2*Let VARbuiltinTag be "Boolean".
+*0*Else,
+*1*if VARO has a [[VARVARNumberData]] internal slot, then
+*2*Let VARbuiltinTag be "Number".
+*0*Else,
+*1*if VARO has a [[VARVARDateValue]] internal slot, then
+*2*Let VARbuiltinTag be "Date".
+*0*Else,
+*1*if VARO has a [[VARVARRegExpMatcher]] internal slot, then
+*2*Let VARbuiltinTag be "RegExp".
+*0*Else,
+*1*let VARbuiltinTag be "Object".
 *0*Let VARtag be ? FUNCGet(VARO, @@toStringTag). 
-*0*If FUNCType(VARtag) is not String, let VARtag be VARbuiltinTag. 
+*0*If FUNCType(VARtag) is not String, then
+*1*Let VARtag be VARbuiltinTag. 
 *0*Return the string-concatenation of "[object ", VARtag, and "]".     
 
 #############  END  ## 340 ###########################
@@ -5008,8 +5064,11 @@ Description= The abstract operation CreateDynamicFunction is called with argumen
 *1*Let VARfallbackProto be "%AsyncGenerator%". 
 *0*Let VARargCount be the number of elements in VARargs. 
 *0*Let VARP be the empty String. 
-*0*If VARargCount = 0, let VARbodyText be the empty String. 
-*0*Else if VARargCount = 1, let VARbodyText be VARargs[0]. 
+*0*If VARargCount = 0, then
+*1*Let VARbodyText be the empty String. 
+*0*Else,
+*1*if VARargCount = 1, then
+*2*Let VARbodyText be VARargs[0].
 *0*Else VARargCount &gt; 1,
 *1*Let VARfirstArg be VARargs[0]. 
 *1*Set VARP to ? FUNCToString(VARfirstArg). 
@@ -5048,7 +5107,8 @@ Description= The abstract operation CreateDynamicFunction is called with argumen
 *0*Else if VARkind is "async generator", then
 *1*Let VARprototype be FUNCObjectCreate(%AsyncGeneratorPrototype%). 
 *1*Perform FUNCDefinePropertyOrThrow(VARF, "prototype", PropertyDescriptor { [[VARValue]]: VARprototype, [[VARWritable]]: true, [[VAREnumerable]]: false, [[VARConfigurable]]: false }). 
-*0*Else if VARkind is "normal", perform FUNCMakeConstructor(VARF). 
+*0*Else,
+*1*if VARkind is "normal", perform FUNCMakeConstructor(VARF).
 *0*NOTE: Async functions are not constructable and do not have a [[VARConstruct]] internal method or a "prototype" property. 
 *0*Perform FUNCSetFunctionName(VARF, "anonymous"). 
 *0*Return VARF.      
@@ -5078,14 +5138,17 @@ Description= When the bind method is called with argument thisArg and zero or mo
 *0*Let VARtargetHasLength be ? FUNCHasOwnProperty(VARTarget, "length"). 
 *0*If VARtargetHasLength is true, then
 *1*Let VARtargetLen be ? FUNCGet(VARTarget, "length"). 
-*1*If FUNCType(VARtargetLen) is not Number, let VARL be 0. 
+*1*If FUNCType(VARtargetLen) is not Number, then
+*2*Let VARL be 0. 
 *1*Else,
 *2*Let VARtargetLen be FUNCToInteger(VARtargetLen). 
 *2*Let VARL be the larger of 0 and the result of VARtargetLen minus the number of elements of VARargs. 
-*0*Else, let VARL be 0. 
+*0*Else,
+*1*let VARL be 0.
 *0*Perform ! FUNCSetFunctionLength(VARF, VARL). 
 *0*Let VARtargetName be ? FUNCGet(VARTarget, "name"). 
-*0*If FUNCType(VARtargetName) is not String, let VARtargetName be the empty string. 
+*0*If FUNCType(VARtargetName) is not String, then
+*1*Let VARtargetName be the empty string. 
 *0*Perform FUNCSetFunctionName(VARF, VARtargetName, "bound"). 
 *0*Return VARF.     
 
@@ -5136,7 +5199,9 @@ ID= 19.3.3.2
 Summary= Boolean.prototype.toString ( )
 Description= The following steps are taken:
 *0*Let VARb be ? thisBooleanValue(this value). 
-*0*If VARb is true, return "true"; else return "false".     
+*0*If VARb is true, return "true"
+*0*Else,
+*1*return "false".
 
 #############  END  ## 350 ###########################
 ############# BEGIN ## 351 ###########################
@@ -5151,8 +5216,10 @@ ID= 19.4.1.1
 Summary= Symbol ( [ description ] )
 Description= When Symbol is called with optional argument description, the following steps are taken:
 *0*If NewTarget is not undefined, throw a TypeError exception. 
-*0*If VARdescription is undefined, let VARdescString be undefined. 
-*0*Else, let VARdescString be ? FUNCToString(VARdescription). 
+*0*If VARdescription is undefined, then
+*1*Let VARdescString be undefined. 
+*0*Else,
+*1*let VARdescString be ? FUNCToString(VARdescription).
 *0*Return a new unique Symbol value whose [[VARDescription]] value is VARdescString.     
 
 #############  END  ## 352 ###########################
@@ -5194,7 +5261,8 @@ Summary= Runtime Semantics: SymbolDescriptiveString ( sym )
 Description= When the abstract operation SymbolDescriptiveString is called with argument sym, the following steps are taken:
 *0*Assert: FUNCType(VARsym) is Symbol. 
 *0*Let VARdesc be VARsym's [[VARDescription]] value. 
-*0*If VARdesc is undefined, let VARdesc be the empty string. 
+*0*If VARdesc is undefined, then
+*1*Let VARdesc be the empty string. 
 *0*Assert: FUNCType(VARdesc) is String. 
 *0*Return the string-concatenation of "Symbol(", VARdesc, and ")".      
 
@@ -5217,7 +5285,10 @@ Description= This function is called by ECMAScript language operators to convert
 ID= 19.5.1.1
 Summary= Error ( message )
 Description= When the Error function is called with argument message, the following steps are taken:
-*0*If NewTarget is undefined, let VARnewTarget be the active function object, else let VARnewTarget be NewTarget. 
+*0*If NewTarget is undefined, then
+*1*Let VARnewTarget be the active function object
+*0*Else,
+*1*let VARnewTarget be NewTarget.
 *0*Let VARO be ? FUNCOrdinaryCreateFromConstructor(VARnewTarget, "%ErrorPrototype%", « [[VARErrorData]] »). 
 *0*If VARmessage is not undefined, then
 *1*Let VARmsg be ? FUNCToString(VARmessage). 
@@ -5233,9 +5304,11 @@ Description= The following steps are taken:
 *0*Let VARO be the this value. 
 *0*If FUNCType(VARO) is not Object, throw a TypeError exception. 
 *0*Let VARname be ? FUNCGet(VARO, "name"). 
-*0*If VARname is undefined, let VARname be "Error"; otherwise let VARname be ? FUNCToString(VARname). 
+*0*If VARname is undefined, then
+*1*Let VARname be "Error"; otherwise let VARname be ? FUNCToString(VARname). 
 *0*Let VARmsg be ? FUNCGet(VARO, "message"). 
-*0*If VARmsg is undefined, let VARmsg be the empty String; otherwise let VARmsg be ? FUNCToString(VARmsg). 
+*0*If VARmsg is undefined, then
+*1*Let VARmsg be the empty String; otherwise let VARmsg be ? FUNCToString(VARmsg). 
 *0*If VARname is the empty String, return VARmsg. 
 *0*If VARmsg is the empty String, return VARname. 
 *0*Return the string-concatenation of VARname, the code unit 0x003A (COLON), the code unit 0x0020 (SPACE), and VARmsg.     
@@ -5245,7 +5318,10 @@ Description= The following steps are taken:
 ID= 19.5.6.1.1
 Summary= NativeError ( message )
 Description= When a NativeError function is called with argument message, the following steps are taken:
-*0*If NewTarget is undefined, let VARnewTarget be the active function object, else let VARnewTarget be NewTarget. 
+*0*If NewTarget is undefined, then
+*1*Let VARnewTarget be the active function object
+*0*Else,
+*1*let VARnewTarget be NewTarget.
 *0*Let VARO be ? FUNCOrdinaryCreateFromConstructor(VARnewTarget, "%VARNativeErrorPrototype%", « [[VARErrorData]] »). 
 *0*If VARmessage is not undefined, then
 *1*Let VARmsg be ? FUNCToString(VARmessage). 
@@ -5258,8 +5334,10 @@ Description= When a NativeError function is called with argument message, the fo
 ID= 20.1.1.1
 Summary= Number ( value )
 Description= When Number is called with argument value, the following steps are taken:
-*0*If no arguments were passed to this function invocation, let VARn be +0. 
-*0*Else, let VARn be ? FUNCToNumber(VARvalue). 
+*0*If no arguments were passed to this function invocation, then
+*1*Let VARn be +0. 
+*0*Else,
+*1*let VARn be ? FUNCToNumber(VARvalue).
 *0*If NewTarget is undefined, return VARn. 
 *0*Let VARO be ? FUNCOrdinaryCreateFromConstructor(NewTarget, "%NumberPrototype%", « [[VARNumberData]] »). 
 *0*Set VARO.[[VARNumberData]] to VARn. 
@@ -5303,7 +5381,7 @@ Description= When Number.isSafeInteger is called with one argument number, the f
 *0*If VARnumber is NaN, +∞, or -∞, return false. 
 *0*Let VARinteger be FUNCToInteger(VARnumber). 
 *0*If VARinteger is not equal to VARnumber, return false. 
-*0*If abs(VARinteger) ≤ 253-1, return true. 
+*0*If abs(VARinteger) ≤ 2--EXP0--53--EXP1---1, return true. 
 *0*Otherwise, return false.     
 
 #############  END  ## 366 ###########################
@@ -5327,9 +5405,9 @@ Description= Return a String containing this Number value represented in decimal
 *1*Let VARe be 0. 
 *0*Else VARx ≠ 0,
 *1*If VARfractionDigits is not undefined, then
-*2*Let VARe and VARn be integers such that 10VARf ≤ VARn &lt; 10VARf+1 and for which the exact mathematical value of VARn × 10VARe-VARf - VARx is as close to zero as possible. If there are two such sets of VARe and VARn, pick the VARe and VARn for which VARn × 10VARe-VARf is larger. 
+*2*Let VARe and VARn be integers such that 10--EXP0--VARf--EXP1-- ≤ VARn &lt; 10--EXP0--VARf+1--EXP1-- and for which the exact mathematical value of VARn × 10--EXP0--VARe-VARf--EXP1-- - VARx is as close to zero as possible. If there are two such sets of VARe and VARn, pick the VARe and VARn for which VARn × 10--EXP0--VARe-VARf--EXP1-- is larger. 
 *1*Else VARfractionDigits is undefined,
-*2*Let VARe, VARn, and VARf be integers such that VARf ≥ 0, 10VARf ≤ VARn &lt; 10VARf+1, the Number value for VARn × 10VARe-VARf is VARx, and VARf is as small as possible. Note that the decimal representation of VARn has VARf+1 digits, VARn is not divisible by 10, and the least significant digit of VARn is not necessarily uniquely determined by these criteria. 
+*2*Let VARe, VARn, and VARf be integers such that VARf ≥ 0, 10--EXP0--VARf--EXP1-- ≤ VARn &lt; 10--EXP0--VARf+1--EXP1--, the Number value for VARn × 10--EXP0--VARe-VARf--EXP1-- is VARx, and VARf is as small as possible. Note that the decimal representation of VARn has VARf+1 digits, VARn is not divisible by 10, and the least significant digit of VARn is not necessarily uniquely determined by these criteria. 
 *1*Let VARm be the String value consisting of the digits of the decimal representation of VARn (in order, with no leading zeroes). 
 *0*If VARf ≠ 0, then
 *1*Let VARa be the first element of VARm, and let VARb be the remaining VARf elements of VARm. 
@@ -5338,7 +5416,8 @@ Description= Return a String containing this Number value represented in decimal
 *1*Let VARc be "+". 
 *1*Let VARd be "0". 
 *0*Else,
-*1*If VARe &gt; 0, let VARc be "+". 
+*1*If VARe &gt; 0, then
+*2*Let VARc be "+". 
 *1*Else VARe ≤ 0,
 *2*Let VARc be "-". 
 *2*Let VARe be -VARe. 
@@ -5359,11 +5438,12 @@ Description= toFixed returns a String containing this Number value represented i
 *0*If VARx &lt; 0, then
 *1*Let VARs be "-". 
 *1*Let VARx be -VARx. 
-*0*If VARx ≥ 1021, then
+*0*If VARx ≥ 10--EXP0--21--EXP1--, then
 *1*Let VARm be ! FUNCToString(VARx). 
-*0*Else VARx &lt; 1021,
-*1*Let VARn be an integer for which the exact mathematical value of VARn ÷ 10VARf - VARx is as close to zero as possible. If there are two such VARn, pick the larger VARn. 
-*1*If VARn = 0, let VARm be the String "0". Otherwise, let VARm be the String value consisting of the digits of the decimal representation of VARn (in order, with no leading zeroes). 
+*0*Else VARx &lt; 10--EXP0--21--EXP1--,
+*1*Let VARn be an integer for which the exact mathematical value of VARn ÷ 10--EXP0--VARf--EXP1-- - VARx is as close to zero as possible. If there are two such VARn, pick the larger VARn. 
+*1*If VARn = 0, then
+*2*Let VARm be the String "0". Otherwise, then
 *1*If VARf ≠ 0, then
 *2*Let VARk be the length of VARm. 
 *2*If VARk ≤ VARf, then
@@ -5394,7 +5474,7 @@ Description= Return a String containing this Number value represented either in 
 *1*Let VARm be the String value consisting of VARp occurrences of the code unit 0x0030 (DIGIT ZERO). 
 *1*Let VARe be 0. 
 *0*Else VARx ≠ 0,
-*1*Let VARe and VARn be integers such that 10VARp-1 ≤ VARn &lt; 10VARp and for which the exact mathematical value of VARn × 10VARe-VARp+1 - VARx is as close to zero as possible. If there are two such sets of VARe and VARn, pick the VARe and VARn for which VARn × 10VARe-VARp+1 is larger. 
+*1*Let VARe and VARn be integers such that 10--EXP0--VARp-1--EXP1-- ≤ VARn &lt; 10--EXP0--VARp--EXP1-- and for which the exact mathematical value of VARn × 10--EXP0--VARe-VARp+1--EXP1-- - VARx is as close to zero as possible. If there are two such sets of VARe and VARn, pick the VARe and VARn for which VARn × 10--EXP0--VARe-VARp+1--EXP1-- is larger. 
 *1*Let VARm be the String value consisting of the digits of the decimal representation of VARn (in order, with no leading zeroes). 
 *1*If VARe &lt; -6 or VARe ≥ VARp, then
 *2*Assert: VARe ≠ 0. 
@@ -5421,9 +5501,13 @@ ID= 20.1.3.6
 Summary= Number.prototype.toString ( [ radix ] )
 Description= The optional radix should be an integer value in the inclusive range 2 to 36. If radix is not present or is undefined the Number 10 is used as the value of radix.
 *0*Let VARx be ? FUNCthisNumberValue(this value). 
-*0*If VARradix is not present, let VARradixNumber be 10. 
-*0*Else if VARradix is undefined, let VARradixNumber be 10. 
-*0*Else, let VARradixNumber be ? FUNCToInteger(VARradix). 
+*0*If VARradix is not present, then
+*1*Let VARradixNumber be 10. 
+*0*Else,
+*1*if VARradix is undefined, then
+*2*Let VARradixNumber be 10.
+*0*Else,
+*1*let VARradixNumber be ? FUNCToInteger(VARradix).
 *0*If VARradixNumber &lt; 2 or VARradixNumber &gt; 36, throw a RangeError exception. 
 *0*If VARradixNumber = 10, return ! FUNCToString(VARx). 
 *0*Return the String representation of this Number value using the radix specified by VARradixNumber. Letters a-z are used for digits with values 10 through 35. The precise algorithm is implementation-dependent, however the algorithm should be a generalization of that specified in 7.1.12.1.     
@@ -5462,8 +5546,8 @@ Summary= Math.imul ( x, y )
 Description= When Math.imul is called with arguments x and y, the following steps are taken:
 *0*Let VARa be FUNCToUint32(VARx). 
 *0*Let VARb be FUNCToUint32(VARy). 
-*0*Let VARproduct be (VARa × VARb) modulo 232. 
-*0*If VARproduct ≥ 231, return VARproduct - 232; otherwise return VARproduct.     
+*0*Let VARproduct be (VARa × VARb) modulo 2--EXP0--32--EXP1--. 
+*0*If VARproduct ≥ 2--EXP0--31--EXP1--, return VARproduct - 2--EXP0--32--EXP1--; otherwise return VARproduct.     
 
 #############  END  ## 374 ###########################
 ############# BEGIN ## 375 ###########################
@@ -5520,7 +5604,7 @@ ID= 20.3.1.14
 Summary= TimeClip ( time )
 Description= The abstract operation TimeClip calculates a number of milliseconds from its argument, which must be an ECMAScript Number value. This operator functions as follows:
 *0*If VARtime is not finite, return NaN. 
-*0*If abs(VARtime) &gt; 8.64 × 1015, return NaN. 
+*0*If abs(VARtime) &gt; 8.64 × 10--EXP0--15--EXP1--, return NaN. 
 *0*Let VARclippedTime be ! FUNCToInteger(VARtime). 
 *0*If VARclippedTime is -0, set VARclippedTime to +0. 
 *0*Return VARclippedTime.     
@@ -5538,12 +5622,28 @@ Description= This description applies only if the Date constructor is called wit
 *0*Else,
 *1*Let VARy be ? FUNCToNumber(VARyear). 
 *1*Let VARm be ? FUNCToNumber(VARmonth). 
-*1*If VARdate is present, let VARdt be ? FUNCToNumber(VARdate); else let VARdt be 1. 
-*1*If VARhours is present, let VARh be ? FUNCToNumber(VARhours); else let VARh be 0. 
-*1*If VARminutes is present, let VARmin be ? FUNCToNumber(VARminutes); else let VARmin be 0. 
-*1*If VARseconds is present, let VARs be ? FUNCToNumber(VARseconds); else let VARs be 0. 
-*1*If VARms is present, let VARmilli be ? FUNCToNumber(VARms); else let VARmilli be 0. 
-*1*If VARy is not NaN and 0 ≤ FUNCToInteger(VARy) ≤ 99, let VARyr be 1900+FUNCToInteger(VARy); otherwise, let VARyr be VARy. 
+*1*If VARdate is present, then
+*2*Let VARdt be ? FUNCToNumber(VARdate)
+*1*Else,
+*2*let VARdt be 1.
+*1*If VARhours is present, then
+*2*Let VARh be ? FUNCToNumber(VARhours)
+*1*Else,
+*2*let VARh be 0.
+*1*If VARminutes is present, then
+*2*Let VARmin be ? FUNCToNumber(VARminutes)
+*1*Else,
+*2*let VARmin be 0.
+*1*If VARseconds is present, then
+*2*Let VARs be ? FUNCToNumber(VARseconds)
+*1*Else,
+*2*let VARs be 0.
+*1*If VARms is present, then
+*2*Let VARmilli be ? FUNCToNumber(VARms)
+*1*Else,
+*2*let VARmilli be 0.
+*1*If VARy is not NaN and 0 ≤ FUNCToInteger(VARy) ≤ 99, then
+*2*Let VARyr be 1900+FUNCToInteger(VARy); otherwise, then
 *1*Let VARfinalDate be FUNCMakeDate(FUNCMakeDay(VARyr, VARm, VARdt), FUNCMakeTime(VARh, VARmin, VARs, VARmilli)). 
 *1*Let VARO be ? FUNCOrdinaryCreateFromConstructor(NewTarget, "%DatePrototype%", « [[VARDateValue]] »). 
 *1*Set VARO.[[VARDateValue]] to FUNCTimeClip(FUNCUTC(VARfinalDate)). 
@@ -5594,13 +5694,32 @@ ID= 20.3.3.4
 Summary= Date.UTC ( year [ , month [ , date [ , hours [ , minutes [ , seconds [ , ms ] ] ] ] ] ] )
 Description= When the UTC function is called, the following steps are taken:
 *0*Let VARy be ? FUNCToNumber(VARyear). 
-*0*If VARmonth is present, let VARm be ? FUNCToNumber(VARmonth); else let VARm be 0. 
-*0*If VARdate is present, let VARdt be ? FUNCToNumber(VARdate); else let VARdt be 1. 
-*0*If VARhours is present, let VARh be ? FUNCToNumber(VARhours); else let VARh be 0. 
-*0*If VARminutes is present, let VARmin be ? FUNCToNumber(VARminutes); else let VARmin be 0. 
-*0*If VARseconds is present, let VARs be ? FUNCToNumber(VARseconds); else let VARs be 0. 
-*0*If VARms is present, let VARmilli be ? FUNCToNumber(VARms); else let VARmilli be 0. 
-*0*If VARy is not NaN and 0 ≤ FUNCToInteger(VARy) ≤ 99, let VARyr be 1900+FUNCToInteger(VARy); otherwise, let VARyr be VARy. 
+*0*If VARmonth is present, then
+*1*Let VARm be ? FUNCToNumber(VARmonth)
+*0*Else,
+*1*let VARm be 0.
+*0*If VARdate is present, then
+*1*Let VARdt be ? FUNCToNumber(VARdate)
+*0*Else,
+*1*let VARdt be 1.
+*0*If VARhours is present, then
+*1*Let VARh be ? FUNCToNumber(VARhours)
+*0*Else,
+*1*let VARh be 0.
+*0*If VARminutes is present, then
+*1*Let VARmin be ? FUNCToNumber(VARminutes)
+*0*Else,
+*1*let VARmin be 0.
+*0*If VARseconds is present, then
+*1*Let VARs be ? FUNCToNumber(VARseconds)
+*0*Else,
+*1*let VARs be 0.
+*0*If VARms is present, then
+*1*Let VARmilli be ? FUNCToNumber(VARms)
+*0*Else,
+*1*let VARmilli be 0.
+*0*If VARy is not NaN and 0 ≤ FUNCToInteger(VARy) ≤ 99, then
+*1*Let VARyr be 1900+FUNCToInteger(VARy); otherwise, then
 *0*Return FUNCTimeClip(FUNCMakeDate(FUNCMakeDay(VARyr, VARm, VARdt), FUNCMakeTime(VARh, VARmin, VARs, VARmilli))).     
 
 #############  END  ## 384 ###########################
@@ -5781,10 +5900,13 @@ ID= 20.3.4.21
 Summary= Date.prototype.setFullYear ( year [ , month [ , date ] ] )
 Description= The following steps are performed:
 *0*Let VARt be ? thisTimeValue(this value). 
-*0*If VARt is NaN, let VARt be +0; otherwise, let VARt be FUNCLocalTime(VARt). 
+*0*If VARt is NaN, then
+*1*Let VARt be +0; otherwise, then
 *0*Let VARy be ? FUNCToNumber(VARyear). 
-*0*If VARmonth is not present, let VARm be MonthFromTime(VARt); otherwise, let VARm be ? FUNCToNumber(VARmonth). 
-*0*If VARdate is not present, let VARdt be FUNCDateFromTime(VARt); otherwise, let VARdt be ? FUNCToNumber(VARdate). 
+*0*If VARmonth is not present, then
+*1*Let VARm be MonthFromTime(VARt); otherwise, then
+*0*If VARdate is not present, then
+*1*Let VARdt be FUNCDateFromTime(VARt); otherwise, then
 *0*Let VARnewDate be FUNCMakeDate(FUNCMakeDay(VARy, VARm, VARdt), TimeWithinDay(VARt)). 
 *0*Let VARu be FUNCTimeClip(FUNCUTC(VARnewDate)). 
 *0*Set the [[VARDateValue]] internal slot of this Date object to VARu. 
@@ -5797,9 +5919,12 @@ Summary= Date.prototype.setHours ( hour [ , min [ , sec [ , ms ] ] ] )
 Description= The following steps are performed:
 *0*Let VARt be FUNCLocalTime(? thisTimeValue(this value)). 
 *0*Let VARh be ? FUNCToNumber(VARhour). 
-*0*If VARmin is not present, let VARm be MinFromTime(VARt); otherwise, let VARm be ? FUNCToNumber(VARmin). 
-*0*If VARsec is not present, let VARs be SecFromTime(VARt); otherwise, let VARs be ? FUNCToNumber(VARsec). 
-*0*If VARms is not present, let VARmilli be msFromTime(VARt); otherwise, let VARmilli be ? FUNCToNumber(VARms). 
+*0*If VARmin is not present, then
+*1*Let VARm be MinFromTime(VARt); otherwise, then
+*0*If VARsec is not present, then
+*1*Let VARs be SecFromTime(VARt); otherwise, then
+*0*If VARms is not present, then
+*1*Let VARmilli be msFromTime(VARt); otherwise, then
 *0*Let VARdate be FUNCMakeDate(Day(VARt), FUNCMakeTime(VARh, VARm, VARs, VARmilli)). 
 *0*Let VARu be FUNCTimeClip(FUNCUTC(VARdate)). 
 *0*Set the [[VARDateValue]] internal slot of this Date object to VARu. 
@@ -5824,8 +5949,10 @@ Summary= Date.prototype.setMinutes ( min [ , sec [ , ms ] ] )
 Description= The following steps are performed:
 *0*Let VARt be FUNCLocalTime(? thisTimeValue(this value)). 
 *0*Let VARm be ? FUNCToNumber(VARmin). 
-*0*If VARsec is not present, let VARs be SecFromTime(VARt); otherwise, let VARs be ? FUNCToNumber(VARsec). 
-*0*If VARms is not present, let VARmilli be msFromTime(VARt); otherwise, let VARmilli be ? FUNCToNumber(VARms). 
+*0*If VARsec is not present, then
+*1*Let VARs be SecFromTime(VARt); otherwise, then
+*0*If VARms is not present, then
+*1*Let VARmilli be msFromTime(VARt); otherwise, then
 *0*Let VARdate be FUNCMakeDate(Day(VARt), FUNCMakeTime(HourFromTime(VARt), VARm, VARs, VARmilli)). 
 *0*Let VARu be FUNCTimeClip(FUNCUTC(VARdate)). 
 *0*Set the [[VARDateValue]] internal slot of this Date object to VARu. 
@@ -5838,7 +5965,8 @@ Summary= Date.prototype.setMonth ( month [ , date ] )
 Description= The following steps are performed:
 *0*Let VARt be FUNCLocalTime(? thisTimeValue(this value)). 
 *0*Let VARm be ? FUNCToNumber(VARmonth). 
-*0*If VARdate is not present, let VARdt be FUNCDateFromTime(VARt); otherwise, let VARdt be ? FUNCToNumber(VARdate). 
+*0*If VARdate is not present, then
+*1*Let VARdt be FUNCDateFromTime(VARt); otherwise, then
 *0*Let VARnewDate be FUNCMakeDate(FUNCMakeDay(YearFromTime(VARt), VARm, VARdt), TimeWithinDay(VARt)). 
 *0*Let VARu be FUNCTimeClip(FUNCUTC(VARnewDate)). 
 *0*Set the [[VARDateValue]] internal slot of this Date object to VARu. 
@@ -5851,7 +5979,8 @@ Summary= Date.prototype.setSeconds ( sec [ , ms ] )
 Description= The following steps are performed:
 *0*Let VARt be FUNCLocalTime(? thisTimeValue(this value)). 
 *0*Let VARs be ? FUNCToNumber(VARsec). 
-*0*If VARms is not present, let VARmilli be msFromTime(VARt); otherwise, let VARmilli be ? FUNCToNumber(VARms). 
+*0*If VARms is not present, then
+*1*Let VARmilli be msFromTime(VARt); otherwise, then
 *0*Let VARdate be FUNCMakeDate(Day(VARt), FUNCMakeTime(HourFromTime(VARt), MinFromTime(VARt), VARs, VARmilli)). 
 *0*Let VARu be FUNCTimeClip(FUNCUTC(VARdate)). 
 *0*Set the [[VARDateValue]] internal slot of this Date object to VARu. 
@@ -5886,10 +6015,13 @@ ID= 20.3.4.29
 Summary= Date.prototype.setUTCFullYear ( year [ , month [ , date ] ] )
 Description= The following steps are performed:
 *0*Let VARt be ? thisTimeValue(this value). 
-*0*If VARt is NaN, let VARt be +0. 
+*0*If VARt is NaN, then
+*1*Let VARt be +0. 
 *0*Let VARy be ? FUNCToNumber(VARyear). 
-*0*If VARmonth is not present, let VARm be MonthFromTime(VARt); otherwise, let VARm be ? FUNCToNumber(VARmonth). 
-*0*If VARdate is not present, let VARdt be FUNCDateFromTime(VARt); otherwise, let VARdt be ? FUNCToNumber(VARdate). 
+*0*If VARmonth is not present, then
+*1*Let VARm be MonthFromTime(VARt); otherwise, then
+*0*If VARdate is not present, then
+*1*Let VARdt be FUNCDateFromTime(VARt); otherwise, then
 *0*Let VARnewDate be FUNCMakeDate(FUNCMakeDay(VARy, VARm, VARdt), TimeWithinDay(VARt)). 
 *0*Let VARv be FUNCTimeClip(VARnewDate). 
 *0*Set the [[VARDateValue]] internal slot of this Date object to VARv. 
@@ -5902,9 +6034,12 @@ Summary= Date.prototype.setUTCHours ( hour [ , min [ , sec [ , ms ] ] ] )
 Description= The following steps are performed:
 *0*Let VARt be ? thisTimeValue(this value). 
 *0*Let VARh be ? FUNCToNumber(VARhour). 
-*0*If VARmin is not present, let VARm be MinFromTime(VARt); otherwise, let VARm be ? FUNCToNumber(VARmin). 
-*0*If VARsec is not present, let VARs be SecFromTime(VARt); otherwise, let VARs be ? FUNCToNumber(VARsec). 
-*0*If VARms is not present, let VARmilli be msFromTime(VARt); otherwise, let VARmilli be ? FUNCToNumber(VARms). 
+*0*If VARmin is not present, then
+*1*Let VARm be MinFromTime(VARt); otherwise, then
+*0*If VARsec is not present, then
+*1*Let VARs be SecFromTime(VARt); otherwise, then
+*0*If VARms is not present, then
+*1*Let VARmilli be msFromTime(VARt); otherwise, then
 *0*Let VARnewDate be FUNCMakeDate(Day(VARt), FUNCMakeTime(VARh, VARm, VARs, VARmilli)). 
 *0*Let VARv be FUNCTimeClip(VARnewDate). 
 *0*Set the [[VARDateValue]] internal slot of this Date object to VARv. 
@@ -5929,10 +6064,12 @@ Summary= Date.prototype.setUTCMinutes ( min [ , sec [ , ms ] ] )
 Description= The following steps are performed:
 *0*Let VARt be ? thisTimeValue(this value). 
 *0*Let VARm be ? FUNCToNumber(VARmin). 
-*0*If VARsec is not present, let VARs be SecFromTime(VARt). 
+*0*If VARsec is not present, then
+*1*Let VARs be SecFromTime(VARt). 
 *0*Else,
 *1*Let VARs be ? FUNCToNumber(VARsec). 
-*0*If VARms is not present, let VARmilli be msFromTime(VARt). 
+*0*If VARms is not present, then
+*1*Let VARmilli be msFromTime(VARt). 
 *0*Else,
 *1*Let VARmilli be ? FUNCToNumber(VARms). 
 *0*Let VARdate be FUNCMakeDate(Day(VARt), FUNCMakeTime(HourFromTime(VARt), VARm, VARs, VARmilli)). 
@@ -5947,7 +6084,8 @@ Summary= Date.prototype.setUTCMonth ( month [ , date ] )
 Description= The following steps are performed:
 *0*Let VARt be ? thisTimeValue(this value). 
 *0*Let VARm be ? FUNCToNumber(VARmonth). 
-*0*If VARdate is not present, let VARdt be FUNCDateFromTime(VARt). 
+*0*If VARdate is not present, then
+*1*Let VARdt be FUNCDateFromTime(VARt). 
 *0*Else,
 *1*Let VARdt be ? FUNCToNumber(VARdate). 
 *0*Let VARnewDate be FUNCMakeDate(FUNCMakeDay(YearFromTime(VARt), VARm, VARdt), TimeWithinDay(VARt)). 
@@ -5962,7 +6100,8 @@ Summary= Date.prototype.setUTCSeconds ( sec [ , ms ] )
 Description= The following steps are performed:
 *0*Let VARt be ? thisTimeValue(this value). 
 *0*Let VARs be ? FUNCToNumber(VARsec). 
-*0*If VARms is not present, let VARmilli be msFromTime(VARt). 
+*0*If VARms is not present, then
+*1*Let VARmilli be msFromTime(VARt). 
 *0*Else,
 *1*Let VARmilli be ? FUNCToNumber(VARms). 
 *0*Let VARdate be FUNCMakeDate(Day(VARt), FUNCMakeTime(HourFromTime(VARt), MinFromTime(VARt), VARs, VARmilli)). 
@@ -6032,7 +6171,8 @@ Description= The following steps are performed:
 *0*Assert: FUNCType(VARtv) is Number. 
 *0*Assert: VARtv is not NaN. 
 *0*Let VARoffset be FUNCLocalTZA(VARtv, true). 
-*0*If VARoffset ≥ 0, let VARoffsetSign be "+"; otherwise, let VARoffsetSign be "-". 
+*0*If VARoffset ≥ 0, then
+*1*Let VARoffsetSign be "+"; otherwise, then
 *0*Let VARoffsetMin be the String representation of MinFromTime(abs(VARoffset)), formatted as a two-digit decimal number, padded to the left with a zero if necessary. 
 *0*Let VARoffsetHour be the String representation of HourFromTime(abs(VARoffset)), formatted as a two-digit decimal number, padded to the left with a zero if necessary. 
 *0*Let VARtzName be an implementation-defined string that is either the empty string or the string-concatenation of the code unit 0x0020 (SPACE), the code unit 0x0028 (LEFT PARENTHESIS), an implementation-dependent timezone name, and the code unit 0x0029 (RIGHT PARENTHESIS). 
@@ -6091,7 +6231,8 @@ Description= This function is called by ECMAScript language operators to convert
 *1*Let VARtryFirst be "string". 
 *0*Else if VARhint is the String value "number", then
 *1*Let VARtryFirst be "number". 
-*0*Else, throw a TypeError exception. 
+*0*Else,
+*1*throw a TypeError exception.
 *0*Return ? FUNCOrdinaryToPrimitive(VARO, VARtryFirst).     
 
 #############  END  ## 428 ###########################
@@ -6099,7 +6240,8 @@ Description= This function is called by ECMAScript language operators to convert
 ID= 21.1.1.1
 Summary= String ( value )
 Description= When String is called with argument value, the following steps are taken:
-*0*If no arguments were passed to this function invocation, let VARs be "". 
+*0*If no arguments were passed to this function invocation, then
+*1*Let VARs be "". 
 *0*Else,
 *1*If NewTarget is undefined and FUNCType(VARvalue) is Symbol, return FUNCSymbolDescriptiveString(VARvalue). 
 *1*Let VARs be ? FUNCToString(VARvalue). 
@@ -6159,8 +6301,10 @@ Description= The String.raw function may be called with a variable number of arg
 *1*Append in order the code unit elements of VARnextSeg to the end of VARstringElements. 
 *1*If VARnextIndex + 1 = VARliteralSegments, then
 *2*Return the String value whose code units are, in order, the elements in the List VARstringElements. If VARstringElements has no elements, the empty string is returned. 
-*1*If VARnextIndex &lt; VARnumberOfSubstitutions, let VARnext be VARsubstitutions[VARnextIndex]. 
-*1*Else, let VARnext be the empty String. 
+*1*If VARnextIndex &lt; VARnumberOfSubstitutions, then
+*2*Let VARnext be VARsubstitutions[VARnextIndex]. 
+*1*Else,
+*2*let VARnext be the empty String.
 *1*Let VARnextSub be ? FUNCToString(VARnext). 
 *1*Append in order the code unit elements of VARnextSub to the end of VARstringElements. 
 *1*Let VARnextIndex be VARnextIndex + 1.     
@@ -6231,7 +6375,10 @@ Description= The following steps are taken:
 *0*If VARisRegExp is true, throw a TypeError exception. 
 *0*Let VARsearchStr be ? FUNCToString(VARsearchString). 
 *0*Let VARlen be the length of VARS. 
-*0*If VARendPosition is undefined, let VARpos be VARlen, else let VARpos be ? FUNCToInteger(VARendPosition). 
+*0*If VARendPosition is undefined, then
+*1*Let VARpos be VARlen
+*0*Else,
+*1*let VARpos be ? FUNCToInteger(VARendPosition).
 *0*Let VARend be min(max(VARpos, 0), VARlen). 
 *0*Let VARsearchLength be the length of VARsearchStr. 
 *0*Let VARstart be VARend - VARsearchLength. 
@@ -6278,7 +6425,8 @@ Description= If searchString appears as a substring of the result of converting 
 *0*Let VARS be ? FUNCToString(VARO). 
 *0*Let VARsearchStr be ? FUNCToString(VARsearchString). 
 *0*Let VARnumPos be ? FUNCToNumber(VARposition). (If VARposition is undefined, this step produces the value NaN.) 
-*0*If VARnumPos is NaN, let VARpos be +∞; otherwise, let VARpos be FUNCToInteger(VARnumPos). 
+*0*If VARnumPos is NaN, then
+*1*Let VARpos be +∞; otherwise, then
 *0*Let VARlen be the length of VARS. 
 *0*Let VARstart be min(max(VARpos, 0), VARlen). 
 *0*Let VARsearchLen be the length of VARsearchStr. 
@@ -6314,7 +6462,8 @@ Summary= String.prototype.normalize ( [ form ] )
 Description= When the normalize method is called with one argument form, the following steps are taken:
 *0*Let VARO be ? FUNCRequireObjectCoercible(this value). 
 *0*Let VARS be ? FUNCToString(VARO). 
-*0*If VARform is not present or VARform is undefined, let VARform be "NFC". 
+*0*If VARform is not present or VARform is undefined, then
+*1*Let VARform be "NFC". 
 *0*Let VARf be ? FUNCToString(VARform). 
 *0*If VARf is not one of "NFC", "NFD", "NFKC", or "NFKD", throw a RangeError exception. 
 *0*Let VARns be the String value that is the result of normalizing VARS into the normalization form named by VARf as specified in https://unicode.org/reports/tr15/. 
@@ -6330,8 +6479,10 @@ Description= When the padEnd method is called, the following steps are taken:
 *0*Let VARintMaxLength be ? FUNCToLength(VARmaxLength). 
 *0*Let VARstringLength be the length of VARS. 
 *0*If VARintMaxLength is not greater than VARstringLength, return VARS. 
-*0*If VARfillString is undefined, let VARfiller be the String value consisting solely of the code unit 0x0020 (SPACE). 
-*0*Else, let VARfiller be ? FUNCToString(VARfillString). 
+*0*If VARfillString is undefined, then
+*1*Let VARfiller be the String value consisting solely of the code unit 0x0020 (SPACE). 
+*0*Else,
+*1*let VARfiller be ? FUNCToString(VARfillString).
 *0*If VARfiller is the empty String, return VARS. 
 *0*Let VARfillLen be VARintMaxLength - VARstringLength. 
 *0*Let VARtruncatedStringFiller be the String value consisting of repeated concatenations of VARfiller truncated to length VARfillLen. 
@@ -6347,8 +6498,10 @@ Description= When the padStart method is called, the following steps are taken:
 *0*Let VARintMaxLength be ? FUNCToLength(VARmaxLength). 
 *0*Let VARstringLength be the length of VARS. 
 *0*If VARintMaxLength is not greater than VARstringLength, return VARS. 
-*0*If VARfillString is undefined, let VARfiller be the String value consisting solely of the code unit 0x0020 (SPACE). 
-*0*Else, let VARfiller be ? FUNCToString(VARfillString). 
+*0*If VARfillString is undefined, then
+*1*Let VARfiller be the String value consisting solely of the code unit 0x0020 (SPACE). 
+*0*Else,
+*1*let VARfiller be ? FUNCToString(VARfillString).
 *0*If VARfiller is the empty String, return VARS. 
 *0*Let VARfillLen be VARintMaxLength - VARstringLength. 
 *0*Let VARtruncatedStringFiller be the String value consisting of repeated concatenations of VARfiller truncated to length VARfillLen. 
@@ -6436,9 +6589,14 @@ Description= The slice method takes two arguments, start and end, and returns a 
 *0*Let VARS be ? FUNCToString(VARO). 
 *0*Let VARlen be the length of VARS. 
 *0*Let VARintStart be ? FUNCToInteger(VARstart). 
-*0*If VARend is undefined, let VARintEnd be VARlen; else let VARintEnd be ? FUNCToInteger(VARend). 
-*0*If VARintStart &lt; 0, let VARfrom be max(VARlen + VARintStart, 0); otherwise let VARfrom be min(VARintStart, VARlen). 
-*0*If VARintEnd &lt; 0, let VARto be max(VARlen + VARintEnd, 0); otherwise let VARto be min(VARintEnd, VARlen). 
+*0*If VARend is undefined, then
+*1*Let VARintEnd be VARlen
+*0*Else,
+*1*let VARintEnd be ? FUNCToInteger(VARend).
+*0*If VARintStart &lt; 0, then
+*1*Let VARfrom be max(VARlen + VARintStart, 0); otherwise let VARfrom be min(VARintStart, VARlen). 
+*0*If VARintEnd &lt; 0, then
+*1*Let VARto be max(VARlen + VARintEnd, 0); otherwise let VARto be min(VARintEnd, VARlen). 
 *0*Let VARspan be max(VARto - VARfrom, 0). 
 *0*Return the String value containing VARspan consecutive elements from VARS beginning with the element at index VARfrom.     
 
@@ -6455,7 +6613,10 @@ Description= Returns an Array object into which substrings of the result of conv
 *0*Let VARS be ? FUNCToString(VARO). 
 *0*Let VARA be ! FUNCArrayCreate(0). 
 *0*Let VARlengthA be 0. 
-*0*If VARlimit is undefined, let VARlim be 232-1; else let VARlim be ? FUNCToUint32(VARlimit). 
+*0*If VARlimit is undefined, then
+*1*Let VARlim be 2--EXP0--32--EXP1---1
+*0*Else,
+*1*let VARlim be ? FUNCToUint32(VARlimit).
 *0*Let VARs be the length of VARS. 
 *0*Let VARp be 0. 
 *0*Let VARR be ? FUNCToString(VARseparator). 
@@ -6471,9 +6632,11 @@ Description= Returns an Array object into which substrings of the result of conv
 *0*Let VARq be VARp. 
 *0*Repeat, while VARq ≠ VARs
 *1*Let VARe be FUNCSplitMatch(VARS, VARq, VARR). 
-*1*If VARe is false, let VARq be VARq+1. 
+*1*If VARe is false, then
+*2*Let VARq be VARq+1. 
 *1*Else VARe is an integer index ≤ VARs,
-*2*If VARe = VARp, let VARq be VARq+1. 
+*2*If VARe = VARp, then
+*3*Let VARq be VARq+1. 
 *2*Else VARe ≠ VARp,
 *3*Let VART be the String value equal to the substring of VARS consisting of the code units at indices VARp (inclusive) through VARq (exclusive). 
 *3*Perform ! FUNCCreateDataProperty(VARA, ! FUNCToString(VARlengthA), VART). 
@@ -6524,7 +6687,10 @@ Description= The substring method takes two arguments, start and end, and return
 *0*Let VARS be ? FUNCToString(VARO). 
 *0*Let VARlen be the length of VARS. 
 *0*Let VARintStart be ? FUNCToInteger(VARstart). 
-*0*If VARend is undefined, let VARintEnd be VARlen; else let VARintEnd be ? FUNCToInteger(VARend). 
+*0*If VARend is undefined, then
+*1*Let VARintEnd be VARlen
+*0*Else,
+*1*let VARintEnd be ? FUNCToInteger(VARend).
 *0*Let VARfinalStart be min(max(VARintStart, 0), VARlen). 
 *0*Let VARfinalEnd be min(max(VARintEnd, 0), VARlen). 
 *0*Let VARfrom be min(VARfinalStart, VARfinalEnd). 
@@ -6603,11 +6769,14 @@ Description= None
 *1*Set VARO.[[VARIteratedString]] to undefined. 
 *1*Return FUNCCreateIterResultObject(undefined, true). 
 *0*Let VARfirst be the numeric value of the code unit at index VARposition within VARs. 
-*0*If VARfirst &lt; 0xD800 or VARfirst &gt; 0xDBFF or VARposition+1 = VARlen, let VARresultString be the String value consisting of the single code unit VARfirst. 
+*0*If VARfirst &lt; 0xD800 or VARfirst &gt; 0xDBFF or VARposition+1 = VARlen, then
+*1*Let VARresultString be the String value consisting of the single code unit VARfirst. 
 *0*Else,
 *1*Let VARsecond be the numeric value of the code unit at index VARposition+1 within the String VARS. 
-*1*If VARsecond &lt; 0xDC00 or VARsecond &gt; 0xDFFF, let VARresultString be the String value consisting of the single code unit VARfirst. 
-*1*Else, let VARresultString be the string-concatenation of the code unit VARfirst and the code unit VARsecond. 
+*1*If VARsecond &lt; 0xDC00 or VARsecond &gt; 0xDFFF, then
+*2*Let VARresultString be the String value consisting of the single code unit VARfirst. 
+*1*Else,
+*2*let VARresultString be the string-concatenation of the code unit VARfirst and the code unit VARsecond.
 *0*Let VARresultSize be the number of code units in VARresultString. 
 *0*Set VARO.[[VARStringIteratorNextIndex]] to VARposition + VARresultSize. 
 *0*Return FUNCCreateIterResultObject(VARresultString, false).      
@@ -6620,8 +6789,10 @@ Description= The abstract operation RepeatMatcher takes eight parameters, a Matc
 *0*If VARmax is zero, return VARc(VARx). 
 *0*Let VARd be an internal Continuation closure that takes one State argument VARy and performs the following steps when evaluated:
 *1*If VARmin is zero and VARy's VARendIndex is equal to VARx's VARendIndex, return failure. 
-*1*If VARmin is zero, let VARmin2 be zero; otherwise let VARmin2 be VARmin-1. 
-*1*If VARmax is ∞, let VARmax2 be ∞; otherwise let VARmax2 be VARmax-1. 
+*1*If VARmin is zero, then
+*2*Let VARmin2 be zero; otherwise let VARmin2 be VARmin-1. 
+*1*If VARmax is ∞, then
+*2*Let VARmax2 be ∞; otherwise let VARmax2 be VARmax-1. 
 *1*Call FUNCRepeatMatcher(VARm, VARmin2, VARmax2, VARgreedy, VARy, VARc, VARparenIndex, VARparenCount) and return its result. 
 *0*Let VARcap be a copy of VARx's VARcaptures List. 
 *0*For each integer VARk that satisfies VARparenIndex &lt; VARk and VARk ≤ VARparenIndex+VARparenCount, set VARcap[VARk] to undefined. 
@@ -6760,16 +6931,20 @@ Description= The following steps are taken:
 *1*If VARpatternIsRegExp is true and VARflags is undefined, then
 *2*Let VARpatternConstructor be ? FUNCGet(VARpattern, "constructor"). 
 *2*If FUNCSameValue(VARnewTarget, VARpatternConstructor) is true, return VARpattern. 
-*0*Else, let VARnewTarget be NewTarget. 
+*0*Else,
+*1*let VARnewTarget be NewTarget.
 *0*If FUNCType(VARpattern) is Object and VARpattern has a [[VARRegExpMatcher]] internal slot, then
 *1*Let VARP be VARpattern.[[VAROriginalSource]]. 
-*1*If VARflags is undefined, let VARF be VARpattern.[[VAROriginalFlags]]. 
-*1*Else, let VARF be VARflags. 
+*1*If VARflags is undefined, then
+*2*Let VARF be VARpattern.[[VARVAROriginalFlags]]. 
+*1*Else,
+*2*let VARF be VARflags.
 *0*Else if VARpatternIsRegExp is true, then
 *1*Let VARP be ? FUNCGet(VARpattern, "source"). 
 *1*If VARflags is undefined, then
 *2*Let VARF be ? FUNCGet(VARpattern, "flags"). 
-*1*Else, let VARF be VARflags. 
+*1*Else,
+*2*let VARF be VARflags.
 *0*Else,
 *1*Let VARP be VARpattern. 
 *1*Let VARF be VARflags. 
@@ -6790,12 +6965,19 @@ Description= When the abstract operation RegExpAlloc with argument newTarget is 
 ID= 21.2.3.2.2
 Summary= Runtime Semantics: RegExpInitialize ( obj, pattern, flags )
 Description= When the abstract operation RegExpInitialize with arguments obj, pattern, and flags is called, the following steps are taken:
-*0*If VARpattern is undefined, let VARP be the empty String. 
-*0*Else, let VARP be ? FUNCToString(VARpattern). 
-*0*If VARflags is undefined, let VARF be the empty String. 
-*0*Else, let VARF be ? FUNCToString(VARflags). 
+*0*If VARpattern is undefined, then
+*1*Let VARP be the empty String. 
+*0*Else,
+*1*let VARP be ? FUNCToString(VARpattern).
+*0*If VARflags is undefined, then
+*1*Let VARF be the empty String. 
+*0*Else,
+*1*let VARF be ? FUNCToString(VARflags).
 *0*If VARF contains any code unit other than "g", "i", "m", "s", "u", or "y" or if it contains the same code unit more than once, throw a SyntaxError exception. 
-*0*If VARF contains "u", let VARBMP be false; else let VARBMP be true. 
+*0*If VARF contains "u", then
+*1*Let VARBMP be false
+*0*Else,
+*1*let VARBMP be true.
 *0*If VARBMP is true, then
 *1*Parse VARP using the grammars in 21.2.1 and interpreting each of its 16-bit elements as a Unicode BMP code point. UTF-16 decoding is not applied to the elements. The goal symbol for the parse is Pattern[~U, ~N]. If the result of parsing contains a GroupName, reparse with the goal symbol Pattern[~U, +N] and use this result instead. Throw a SyntaxError exception if VARP did not conform to the grammar, if any elements of VARP were not matched by the parse, or if any Early Error conditions exist. 
 *1*Let VARpatternCharacters be a List whose elements are the code unit elements of VARP. 
@@ -6861,11 +7043,20 @@ Description= The abstract operation RegExpBuiltinExec with arguments R and S per
 *0*Let VARlength be the number of code units in VARS. 
 *0*Let VARlastIndex be ? FUNCToLength(? FUNCGet(VARR, "lastIndex")). 
 *0*Let VARflags be VARR.[[VAROriginalFlags]]. 
-*0*If VARflags contains "g", let VARglobal be true, else let VARglobal be false. 
-*0*If VARflags contains "y", let VARsticky be true, else let VARsticky be false. 
+*0*If VARflags contains "g", then
+*1*Let VARglobal be true
+*0*Else,
+*1*let VARglobal be false.
+*0*If VARflags contains "y", then
+*1*Let VARsticky be true
+*0*Else,
+*1*let VARsticky be false.
 *0*If VARglobal is false and VARsticky is false, set VARlastIndex to 0. 
 *0*Let VARmatcher be VARR.[[VARRegExpMatcher]]. 
-*0*If VARflags contains "u", let VARfullUnicode be true, else let VARfullUnicode be false. 
+*0*If VARflags contains "u", then
+*1*Let VARfullUnicode be true
+*0*Else,
+*1*let VARfullUnicode be false.
 *0*Let VARmatchSucceeded be false. 
 *0*Repeat, while VARmatchSucceeded is false
 *1*If VARlastIndex &gt; VARlength, then
@@ -6888,7 +7079,7 @@ Description= The abstract operation RegExpBuiltinExec with arguments R and S per
 *0*If VARglobal is true or VARsticky is true, then
 *1*Perform ? FUNCSet(VARR, "lastIndex", VARe, true). 
 *0*Let VARn be the number of elements in VARr's VARcaptures List. (This is the same value as 21.2.2.1's VARNcapturingParens.) 
-*0*Assert: VARn &lt; 232-1. 
+*0*Assert: VARn &lt; 2--EXP0--32--EXP1---1. 
 *0*Let VARA be ! FUNCArrayCreate(VARn + 1). 
 *0*Assert: The value of VARA's "length" property is VARn + 1. 
 *0*Perform ! FUNCCreateDataProperty(VARA, "index", VARlastIndex). 
@@ -6901,8 +7092,9 @@ Description= The abstract operation RegExpBuiltinExec with arguments R and S per
 *1*Let VARgroups be undefined. 
 *0*Perform ! FUNCCreateDataProperty(VARA, "groups", VARgroups). 
 *0*For each integer VARi such that VARi &gt; 0 and VARi ≤ VARn, do
-*1*Let VARcaptureI be VARith element of VARr's VARcaptures List. 
-*1*If VARcaptureI is undefined, let VARcapturedValue be undefined. 
+*1*Let VARcaptureI be VARi--EXP0--th--EXP1-- element of VARr's VARcaptures List. 
+*1*If VARcaptureI is undefined, then
+*2*Let VARcapturedValue be undefined. 
 *1*Else if VARfullUnicode is true, then
 *2*Assert: VARcaptureI is a List of code points. 
 *2*Let VARcapturedValue be the String value whose code units are the UTF16Encoding of the code points of VARcaptureI. 
@@ -6921,7 +7113,7 @@ ID= 21.2.5.2.3
 Summary= AdvanceStringIndex ( S, index, unicode )
 Description= The abstract operation AdvanceStringIndex with arguments S, index, and unicode performs the following steps:
 *0*Assert: FUNCType(VARS) is String. 
-*0*Assert: VARindex is an integer such that 0≤VARindex≤253-1. 
+*0*Assert: VARindex is an integer such that 0≤VARindex≤2--EXP0--53--EXP1---1. 
 *0*Assert: FUNCType(VARunicode) is Boolean. 
 *0*If VARunicode is false, return VARindex+1. 
 *0*Let VARlength be the number of code units in VARS. 
@@ -7056,14 +7248,21 @@ Description= Returns an Array object into which substrings of the result of conv
 *0*Let VARS be ? FUNCToString(VARstring). 
 *0*Let VARC be ? FUNCSpeciesConstructor(VARrx, %RegExp%). 
 *0*Let VARflags be ? FUNCToString(? FUNCGet(VARrx, "flags")). 
-*0*If VARflags contains "u", let VARunicodeMatching be true. 
-*0*Else, let VARunicodeMatching be false. 
-*0*If VARflags contains "y", let VARnewFlags be VARflags. 
-*0*Else, let VARnewFlags be the string-concatenation of VARflags and "y". 
+*0*If VARflags contains "u", then
+*1*Let VARunicodeMatching be true. 
+*0*Else,
+*1*let VARunicodeMatching be false.
+*0*If VARflags contains "y", then
+*1*Let VARnewFlags be VARflags. 
+*0*Else,
+*1*let VARnewFlags be the string-concatenation of VARflags and "y".
 *0*Let VARsplitter be ? FUNCConstruct(VARC, « VARrx, VARnewFlags »). 
 *0*Let VARA be ! FUNCArrayCreate(0). 
 *0*Let VARlengthA be 0. 
-*0*If VARlimit is undefined, let VARlim be 232-1; else let VARlim be ? FUNCToUint32(VARlimit). 
+*0*If VARlimit is undefined, then
+*1*Let VARlim be 2--EXP0--32--EXP1---1
+*0*Else,
+*1*let VARlim be ? FUNCToUint32(VARlimit).
 *0*Let VARsize be the length of VARS. 
 *0*Let VARp be 0. 
 *0*If VARlim = 0, return VARA. 
@@ -7076,11 +7275,13 @@ Description= Returns an Array object into which substrings of the result of conv
 *0*Repeat, while VARq &lt; VARsize
 *1*Perform ? FUNCSet(VARsplitter, "lastIndex", VARq, true). 
 *1*Let VARz be ? FUNCRegExpExec(VARsplitter, VARS). 
-*1*If VARz is null, let VARq be FUNCAdvanceStringIndex(VARS, VARq, VARunicodeMatching). 
+*1*If VARz is null, then
+*2*Let VARq be FUNCAdvanceStringIndex(VARS, VARq, VARunicodeMatching). 
 *1*Else VARz is not null,
 *2*Let VARe be ? FUNCToLength(? FUNCGet(VARsplitter, "lastIndex")). 
 *2*Let VARe be min(VARe, VARsize). 
-*2*If VARe = VARp, let VARq be FUNCAdvanceStringIndex(VARS, VARq, VARunicodeMatching). 
+*2*If VARe = VARp, then
+*3*Let VARq be FUNCAdvanceStringIndex(VARS, VARq, VARunicodeMatching). 
 *2*Else VARe ≠ VARp,
 *3*Let VART be the String value equal to the substring of VARS consisting of the elements at indices VARp (inclusive) through VARq (exclusive). 
 *3*Perform ! FUNCCreateDataProperty(VARA, ! FUNCToString(VARlengthA), VART). 
@@ -7110,7 +7311,9 @@ Description= The following steps are taken:
 *0*If FUNCType(VARR) is not Object, throw a TypeError exception. 
 *0*Let VARstring be ? FUNCToString(VARS). 
 *0*Let VARmatch be ? FUNCRegExpExec(VARR, VARstring). 
-*0*If VARmatch is not null, return true; else return false.     
+*0*If VARmatch is not null, return true
+*0*Else,
+*1*return false.
 
 #############  END  ## 484 ###########################
 ############# BEGIN ## 485 ###########################
@@ -7131,7 +7334,10 @@ Summary= Array ( )
 Description= This description applies if and only if the Array constructor is called with no arguments.
 *0*Let VARnumberOfArgs be the number of arguments passed to this function call. 
 *0*Assert: VARnumberOfArgs = 0. 
-*0*If NewTarget is undefined, let VARnewTarget be the active function object, else let VARnewTarget be NewTarget. 
+*0*If NewTarget is undefined, then
+*1*Let VARnewTarget be the active function object
+*0*Else,
+*1*let VARnewTarget be NewTarget.
 *0*Let VARproto be ? FUNCGetPrototypeFromConstructor(VARnewTarget, "%ArrayPrototype%"). 
 *0*Return ! FUNCArrayCreate(0, VARproto).     
 
@@ -7142,7 +7348,10 @@ Summary= Array ( len )
 Description= This description applies if and only if the Array constructor is called with exactly one argument.
 *0*Let VARnumberOfArgs be the number of arguments passed to this function call. 
 *0*Assert: VARnumberOfArgs = 1. 
-*0*If NewTarget is undefined, let VARnewTarget be the active function object, else let VARnewTarget be NewTarget. 
+*0*If NewTarget is undefined, then
+*1*Let VARnewTarget be the active function object
+*0*Else,
+*1*let VARnewTarget be NewTarget.
 *0*Let VARproto be ? FUNCGetPrototypeFromConstructor(VARnewTarget, "%ArrayPrototype%"). 
 *0*Let VARarray be ! FUNCArrayCreate(0, VARproto). 
 *0*If FUNCType(VARlen) is not Number, then
@@ -7162,7 +7371,10 @@ Summary= Array ( ...items )
 Description= This description applies if and only if the Array constructor is called with at least two arguments.
 *0*Let VARnumberOfArgs be the number of arguments passed to this function call. 
 *0*Assert: VARnumberOfArgs ≥ 2. 
-*0*If NewTarget is undefined, let VARnewTarget be the active function object, else let VARnewTarget be NewTarget. 
+*0*If NewTarget is undefined, then
+*1*Let VARnewTarget be the active function object
+*0*Else,
+*1*let VARnewTarget be NewTarget.
 *0*Let VARproto be ? FUNCGetPrototypeFromConstructor(VARnewTarget, "%ArrayPrototype%"). 
 *0*Let VARarray be ? FUNCArrayCreate(VARnumberOfArgs, VARproto). 
 *0*Let VARk be 0. 
@@ -7182,10 +7394,14 @@ ID= 22.1.2.1
 Summary= Array.from ( items [ , mapfn [ , thisArg ] ] )
 Description= When the from method is called with argument items and optional arguments mapfn and thisArg, the following steps are taken:
 *0*Let VARC be the this value. 
-*0*If VARmapfn is undefined, let VARmapping be false. 
+*0*If VARmapfn is undefined, then
+*1*Let VARmapping be false. 
 *0*Else,
 *1*If FUNCIsCallable(VARmapfn) is false, throw a TypeError exception. 
-*1*If VARthisArg is present, let VART be VARthisArg; else let VART be undefined. 
+*1*If VARthisArg is present, then
+*2*Let VART be VARthisArg
+*1*Else,
+*2*let VART be undefined.
 *1*Let VARmapping be true. 
 *0*Let VARusingIterator be ? FUNCGetMethod(VARitems, @@iterator). 
 *0*If VARusingIterator is not undefined, then
@@ -7196,7 +7412,7 @@ Description= When the from method is called with argument items and optional arg
 *1*Let VARiteratorRecord be ? FUNCGetIterator(VARitems, sync, VARusingIterator). 
 *1*Let VARk be 0. 
 *1*Repeat,
-*2*If VARk ≥ 253-1, then
+*2*If VARk ≥ 2--EXP0--53--EXP1---1, then
 *3*Let VARerror be FUNCThrowCompletion(a newly created TypeError object). 
 *3*Return ? FUNCIteratorClose(VARiteratorRecord, VARerror). 
 *2*Let VARPk be ! FUNCToString(VARk). 
@@ -7209,7 +7425,8 @@ Description= When the from method is called with argument items and optional arg
 *3*Let VARmappedValue be FUNCCall(VARmapfn, VART, « VARnextValue, VARk »). 
 *3*If VARmappedValue is an FUNCabrupt completion, return ? IteratorClose(VARiteratorRecord, VARmappedValue). 
 *3*Let VARmappedValue be VARmappedValue.[[VARValue]]. 
-*2*Else, let VARmappedValue be VARnextValue. 
+*2*Else,
+*3*let VARmappedValue be VARnextValue.
 *2*Let VARdefineStatus be FUNCCreateDataPropertyOrThrow(VARA, VARPk, VARmappedValue). 
 *2*If VARdefineStatus is an FUNCabrupt completion, return ? IteratorClose(VARiteratorRecord, VARdefineStatus). 
 *2*Increase VARk by 1. 
@@ -7226,7 +7443,8 @@ Description= When the from method is called with argument items and optional arg
 *1*Let VARkValue be ? FUNCGet(VARarrayLike, VARPk). 
 *1*If VARmapping is true, then
 *2*Let VARmappedValue be ? FUNCCall(VARmapfn, VART, « VARkValue, VARk »). 
-*1*Else, let VARmappedValue be VARkValue. 
+*1*Else,
+*2*let VARmappedValue be VARkValue.
 *1*Perform ? FUNCCreateDataPropertyOrThrow(VARA, VARPk, VARmappedValue). 
 *1*Increase VARk by 1. 
 *0*Perform ? FUNCSet(VARA, "length", VARlen, true). 
@@ -7275,7 +7493,7 @@ Description= When the concat method is called with zero or more arguments, it re
 *1*If VARspreadable is true, then
 *2*Let VARk be 0. 
 *2*Let VARlen be ? FUNCToLength(? FUNCGet(VARE, "length")). 
-*2*If VARn + VARlen &gt; 253-1, throw a TypeError exception. 
+*2*If VARn + VARlen &gt; 2--EXP0--53--EXP1---1, throw a TypeError exception. 
 *2*Repeat, while VARk &lt; VARlen
 *3*Let VARP be ! FUNCToString(VARk). 
 *3*Let VARexists be ? FUNCHasProperty(VARE, VARP). 
@@ -7285,7 +7503,7 @@ Description= When the concat method is called with zero or more arguments, it re
 *3*Increase VARn by 1. 
 *3*Increase VARk by 1. 
 *1*Else VARE is added as a single item rather than spread,
-*2*If VARn≥253-1, throw a TypeError exception. 
+*2*If VARn≥2--EXP0--53--EXP1---1, throw a TypeError exception. 
 *2*Perform ? FUNCCreateDataPropertyOrThrow(VARA, ! FUNCToString(VARn), VARE). 
 *2*Increase VARn by 1. 
 *0*Perform ? FUNCSet(VARA, "length", VARn, true). 
@@ -7309,11 +7527,23 @@ Description= The copyWithin method takes up to three arguments target, start and
 *0*Let VARO be ? FUNCToObject(this value). 
 *0*Let VARlen be ? FUNCToLength(? FUNCGet(VARO, "length")). 
 *0*Let VARrelativeTarget be ? FUNCToInteger(VARtarget). 
-*0*If VARrelativeTarget &lt; 0, let VARto be max((VARlen + VARrelativeTarget), 0); else let VARto be min(VARrelativeTarget, VARlen). 
+*0*If VARrelativeTarget &lt; 0, then
+*1*Let VARto be max((VARlen + VARrelativeTarget), 0)
+*0*Else,
+*1*let VARto be min(VARrelativeTarget, VARlen).
 *0*Let VARrelativeStart be ? FUNCToInteger(VARstart). 
-*0*If VARrelativeStart &lt; 0, let VARfrom be max((VARlen + VARrelativeStart), 0); else let VARfrom be min(VARrelativeStart, VARlen). 
-*0*If VARend is undefined, let VARrelativeEnd be VARlen; else let VARrelativeEnd be ? FUNCToInteger(VARend). 
-*0*If VARrelativeEnd &lt; 0, let VARfinal be max((VARlen + VARrelativeEnd), 0); else let VARfinal be min(VARrelativeEnd, VARlen). 
+*0*If VARrelativeStart &lt; 0, then
+*1*Let VARfrom be max((VARlen + VARrelativeStart), 0)
+*0*Else,
+*1*let VARfrom be min(VARrelativeStart, VARlen).
+*0*If VARend is undefined, then
+*1*Let VARrelativeEnd be VARlen
+*0*Else,
+*1*let VARrelativeEnd be ? FUNCToInteger(VARend).
+*0*If VARrelativeEnd &lt; 0, then
+*1*Let VARfinal be max((VARlen + VARrelativeEnd), 0)
+*0*Else,
+*1*let VARfinal be min(VARrelativeEnd, VARlen).
 *0*Let VARcount be min(VARfinal-VARfrom, VARlen-VARto). 
 *0*If VARfrom&lt;VARto and VARto&lt;VARfrom+VARcount, then
 *1*Let VARdirection be -1. 
@@ -7351,7 +7581,10 @@ Description= callbackfn should be a function that accepts three arguments and re
 *0*Let VARO be ? FUNCToObject(this value). 
 *0*Let VARlen be ? FUNCToLength(? FUNCGet(VARO, "length")). 
 *0*If FUNCIsCallable(VARcallbackfn) is false, throw a TypeError exception. 
-*0*If VARthisArg is present, let VART be VARthisArg; else let VART be undefined. 
+*0*If VARthisArg is present, then
+*1*Let VART be VARthisArg
+*0*Else,
+*1*let VART be undefined.
 *0*Let VARk be 0. 
 *0*Repeat, while VARk &lt; VARlen
 *1*Let VARPk be ! FUNCToString(VARk). 
@@ -7371,9 +7604,18 @@ Description= The fill method takes up to three arguments value, start and end.
 *0*Let VARO be ? FUNCToObject(this value). 
 *0*Let VARlen be ? FUNCToLength(? FUNCGet(VARO, "length")). 
 *0*Let VARrelativeStart be ? FUNCToInteger(VARstart). 
-*0*If VARrelativeStart &lt; 0, let VARk be max((VARlen + VARrelativeStart), 0); else let VARk be min(VARrelativeStart, VARlen). 
-*0*If VARend is undefined, let VARrelativeEnd be VARlen; else let VARrelativeEnd be ? FUNCToInteger(VARend). 
-*0*If VARrelativeEnd &lt; 0, let VARfinal be max((VARlen + VARrelativeEnd), 0); else let VARfinal be min(VARrelativeEnd, VARlen). 
+*0*If VARrelativeStart &lt; 0, then
+*1*Let VARk be max((VARlen + VARrelativeStart), 0)
+*0*Else,
+*1*let VARk be min(VARrelativeStart, VARlen).
+*0*If VARend is undefined, then
+*1*Let VARrelativeEnd be VARlen
+*0*Else,
+*1*let VARrelativeEnd be ? FUNCToInteger(VARend).
+*0*If VARrelativeEnd &lt; 0, then
+*1*Let VARfinal be max((VARlen + VARrelativeEnd), 0)
+*0*Else,
+*1*let VARfinal be min(VARrelativeEnd, VARlen).
 *0*Repeat, while VARk &lt; VARfinal
 *1*Let VARPk be ! FUNCToString(VARk). 
 *1*Perform ? FUNCSet(VARO, VARPk, VARvalue, true). 
@@ -7388,7 +7630,10 @@ Description= callbackfn should be a function that accepts three arguments and re
 *0*Let VARO be ? FUNCToObject(this value). 
 *0*Let VARlen be ? FUNCToLength(? FUNCGet(VARO, "length")). 
 *0*If FUNCIsCallable(VARcallbackfn) is false, throw a TypeError exception. 
-*0*If VARthisArg is present, let VART be VARthisArg; else let VART be undefined. 
+*0*If VARthisArg is present, then
+*1*Let VART be VARthisArg
+*0*Else,
+*1*let VART be undefined.
 *0*Let VARA be ? FUNCArraySpeciesCreate(VARO, 0). 
 *0*Let VARk be 0. 
 *0*Let VARto be 0. 
@@ -7412,7 +7657,10 @@ Description= The find method is called with one or two arguments, predicate and 
 *0*Let VARO be ? FUNCToObject(this value). 
 *0*Let VARlen be ? FUNCToLength(? FUNCGet(VARO, "length")). 
 *0*If FUNCIsCallable(VARpredicate) is false, throw a TypeError exception. 
-*0*If VARthisArg is present, let VART be VARthisArg; else let VART be undefined. 
+*0*If VARthisArg is present, then
+*1*Let VART be VARthisArg
+*0*Else,
+*1*let VART be undefined.
 *0*Let VARk be 0. 
 *0*Repeat, while VARk &lt; VARlen
 *1*Let VARPk be ! FUNCToString(VARk). 
@@ -7430,7 +7678,10 @@ Description= predicate should be a function that accepts three arguments and ret
 *0*Let VARO be ? FUNCToObject(this value). 
 *0*Let VARlen be ? FUNCToLength(? FUNCGet(VARO, "length")). 
 *0*If FUNCIsCallable(VARpredicate) is false, throw a TypeError exception. 
-*0*If VARthisArg is present, let VART be VARthisArg; else let VART be undefined. 
+*0*If VARthisArg is present, then
+*1*Let VART be VARthisArg
+*0*Else,
+*1*let VART be undefined.
 *0*Let VARk be 0. 
 *0*Repeat, while VARk &lt; VARlen
 *1*Let VARPk be ! FUNCToString(VARk). 
@@ -7448,7 +7699,10 @@ Description= callbackfn should be a function that accepts three arguments. forEa
 *0*Let VARO be ? FUNCToObject(this value). 
 *0*Let VARlen be ? FUNCToLength(? FUNCGet(VARO, "length")). 
 *0*If FUNCIsCallable(VARcallbackfn) is false, throw a TypeError exception. 
-*0*If VARthisArg is present, let VART be VARthisArg; else let VART be undefined. 
+*0*If VARthisArg is present, then
+*1*Let VART be VARthisArg
+*0*Else,
+*1*let VART be undefined.
 *0*Let VARk be 0. 
 *0*Repeat, while VARk &lt; VARlen
 *1*Let VARPk be ! FUNCToString(VARk). 
@@ -7472,7 +7726,8 @@ Description= includes compares searchElement to the elements of the array, in as
 *1*Let VARk be VARn. 
 *0*Else VARn &lt; 0,
 *1*Let VARk be VARlen + VARn. 
-*1*If VARk &lt; 0, let VARk be 0. 
+*1*If VARk &lt; 0, then
+*2*Let VARk be 0. 
 *0*Repeat, while VARk &lt; VARlen
 *1*Let VARelementK be the result of ? FUNCGet(VARO, ! FUNCToString(VARk)). 
 *1*If FUNCSameValueZero(VARsearchElement, VARelementK) is true, return true. 
@@ -7490,10 +7745,14 @@ Description= indexOf compares searchElement to the elements of the array, in asc
 *0*Let VARn be ? FUNCToInteger(VARfromIndex). (If VARfromIndex is undefined, this step produces the value 0.) 
 *0*If VARn ≥ VARlen, return -1. 
 *0*If VARn ≥ 0, then
-*1*If VARn is -0, let VARk be +0; else let VARk be VARn. 
+*1*If VARn is -0, then
+*2*Let VARk be +0
+*1*Else,
+*2*let VARk be VARn.
 *0*Else VARn &lt; 0,
 *1*Let VARk be VARlen + VARn. 
-*1*If VARk &lt; 0, let VARk be 0. 
+*1*If VARk &lt; 0, then
+*2*Let VARk be 0. 
 *0*Repeat, while VARk &lt; VARlen
 *1*Let VARkPresent be ? FUNCHasProperty(VARO, ! FUNCToString(VARk)). 
 *1*If VARkPresent is true, then
@@ -7510,14 +7769,18 @@ Summary= Array.prototype.join ( separator )
 Description= The elements of the array are converted to Strings, and these Strings are then concatenated, separated by occurrences of the separator. If no separator is provided, a single comma is used as the separator.
 *0*Let VARO be ? FUNCToObject(this value). 
 *0*Let VARlen be ? FUNCToLength(? FUNCGet(VARO, "length")). 
-*0*If VARseparator is undefined, let VARsep be the single-element String ",". 
-*0*Else, let VARsep be ? FUNCToString(VARseparator). 
+*0*If VARseparator is undefined, then
+*1*Let VARsep be the single-element String ",". 
+*0*Else,
+*1*let VARsep be ? FUNCToString(VARseparator).
 *0*Let VARR be the empty String. 
 *0*Let VARk be 0. 
 *0*Repeat, while VARk &lt; VARlen
-*1*If VARk &gt; 0, let VARR be the string-concatenation of VARR and VARsep. 
+*1*If VARk &gt; 0, then
+*2*Let VARR be the string-concatenation of VARR and VARsep. 
 *1*Let VARelement be ? FUNCGet(VARO, ! FUNCToString(VARk)). 
-*1*If VARelement is undefined or null, let VARnext be the empty String; otherwise, let VARnext be ? FUNCToString(VARelement). 
+*1*If VARelement is undefined or null, then
+*2*Let VARnext be the empty String; otherwise, then
 *1*Set VARR to the string-concatenation of VARR and VARnext. 
 *1*Increase VARk by 1. 
 *0*Return VARR.     
@@ -7538,9 +7801,15 @@ Description= lastIndexOf compares searchElement to the elements of the array in 
 *0*Let VARO be ? FUNCToObject(this value). 
 *0*Let VARlen be ? FUNCToLength(? FUNCGet(VARO, "length")). 
 *0*If VARlen is 0, return -1. 
-*0*If VARfromIndex is present, let VARn be ? FUNCToInteger(VARfromIndex); else let VARn be VARlen-1. 
+*0*If VARfromIndex is present, then
+*1*Let VARn be ? FUNCToInteger(VARfromIndex)
+*0*Else,
+*1*let VARn be VARlen-1.
 *0*If VARn ≥ 0, then
-*1*If VARn is -0, let VARk be +0; else let VARk be min(VARn, VARlen - 1). 
+*1*If VARn is -0, then
+*2*Let VARk be +0
+*1*Else,
+*2*let VARk be min(VARn, VARlen - 1).
 *0*Else VARn &lt; 0,
 *1*Let VARk be VARlen + VARn. 
 *0*Repeat, while VARk ≥ 0
@@ -7560,7 +7829,10 @@ Description= callbackfn should be a function that accepts three arguments. map c
 *0*Let VARO be ? FUNCToObject(this value). 
 *0*Let VARlen be ? FUNCToLength(? FUNCGet(VARO, "length")). 
 *0*If FUNCIsCallable(VARcallbackfn) is false, throw a TypeError exception. 
-*0*If VARthisArg is present, let VART be VARthisArg; else let VART be undefined. 
+*0*If VARthisArg is present, then
+*1*Let VART be VARthisArg
+*0*Else,
+*1*let VART be undefined.
 *0*Let VARA be ? FUNCArraySpeciesCreate(VARO, VARlen). 
 *0*Let VARk be 0. 
 *0*Repeat, while VARk &lt; VARlen
@@ -7600,7 +7872,7 @@ Description= The arguments are appended to the end of the array, in the order in
 *0*Let VARlen be ? FUNCToLength(? FUNCGet(VARO, "length")). 
 *0*Let VARitems be a List whose elements are, in left to right order, the arguments that were passed to this function invocation. 
 *0*Let VARargCount be the number of elements in VARitems. 
-*0*If VARlen + VARargCount &gt; 253-1, throw a TypeError exception. 
+*0*If VARlen + VARargCount &gt; 2--EXP0--53--EXP1---1, throw a TypeError exception. 
 *0*Repeat, while VARitems is not empty
 *1*Remove the first element from VARitems and let VARE be the value of the element. 
 *1*Perform ? FUNCSet(VARO, ! FUNCToString(VARlen), VARE, true). 
@@ -7737,9 +8009,18 @@ Description= The slice method takes two arguments, start and end, and returns an
 *0*Let VARO be ? FUNCToObject(this value). 
 *0*Let VARlen be ? FUNCToLength(? FUNCGet(VARO, "length")). 
 *0*Let VARrelativeStart be ? FUNCToInteger(VARstart). 
-*0*If VARrelativeStart &lt; 0, let VARk be max((VARlen + VARrelativeStart), 0); else let VARk be min(VARrelativeStart, VARlen). 
-*0*If VARend is undefined, let VARrelativeEnd be VARlen; else let VARrelativeEnd be ? FUNCToInteger(VARend). 
-*0*If VARrelativeEnd &lt; 0, let VARfinal be max((VARlen + VARrelativeEnd), 0); else let VARfinal be min(VARrelativeEnd, VARlen). 
+*0*If VARrelativeStart &lt; 0, then
+*1*Let VARk be max((VARlen + VARrelativeStart), 0)
+*0*Else,
+*1*let VARk be min(VARrelativeStart, VARlen).
+*0*If VARend is undefined, then
+*1*Let VARrelativeEnd be VARlen
+*0*Else,
+*1*let VARrelativeEnd be ? FUNCToInteger(VARend).
+*0*If VARrelativeEnd &lt; 0, then
+*1*Let VARfinal be max((VARlen + VARrelativeEnd), 0)
+*0*Else,
+*1*let VARfinal be min(VARrelativeEnd, VARlen).
 *0*Let VARcount be max(VARfinal - VARk, 0). 
 *0*Let VARA be ? FUNCArraySpeciesCreate(VARO, VARcount). 
 *0*Let VARn be 0. 
@@ -7762,7 +8043,10 @@ Description= callbackfn should be a function that accepts three arguments and re
 *0*Let VARO be ? FUNCToObject(this value). 
 *0*Let VARlen be ? FUNCToLength(? FUNCGet(VARO, "length")). 
 *0*If FUNCIsCallable(VARcallbackfn) is false, throw a TypeError exception. 
-*0*If VARthisArg is present, let VART be VARthisArg; else let VART be undefined. 
+*0*If VARthisArg is present, then
+*1*Let VART be VARthisArg
+*0*Else,
+*1*let VART be undefined.
 *0*Let VARk be 0. 
 *0*Repeat, while VARk &lt; VARlen
 *1*Let VARPk be ! FUNCToString(VARk). 
@@ -7811,7 +8095,10 @@ Description= When the splice method is called with two or more arguments start, 
 *0*Let VARO be ? FUNCToObject(this value). 
 *0*Let VARlen be ? FUNCToLength(? FUNCGet(VARO, "length")). 
 *0*Let VARrelativeStart be ? FUNCToInteger(VARstart). 
-*0*If VARrelativeStart &lt; 0, let VARactualStart be max((VARlen + VARrelativeStart), 0); else let VARactualStart be min(VARrelativeStart, VARlen). 
+*0*If VARrelativeStart &lt; 0, then
+*1*Let VARactualStart be max((VARlen + VARrelativeStart), 0)
+*0*Else,
+*1*let VARactualStart be min(VARrelativeStart, VARlen).
 *0*If the number of actual arguments is 0, then
 *1*Let VARinsertCount be 0. 
 *1*Let VARactualDeleteCount be 0. 
@@ -7822,7 +8109,7 @@ Description= When the splice method is called with two or more arguments start, 
 *1*Let VARinsertCount be the number of actual arguments minus 2. 
 *1*Let VARdc be ? FUNCToInteger(VARdeleteCount). 
 *1*Let VARactualDeleteCount be min(max(VARdc, 0), VARlen - VARactualStart). 
-*0*If VARlen+VARinsertCount-VARactualDeleteCount &gt; 253-1, throw a TypeError exception. 
+*0*If VARlen+VARinsertCount-VARactualDeleteCount &gt; 2--EXP0--53--EXP1---1, throw a TypeError exception. 
 *0*Let VARA be ? FUNCArraySpeciesCreate(VARO, VARactualDeleteCount). 
 *0*Let VARk be 0. 
 *0*Repeat, while VARk &lt; VARactualDeleteCount
@@ -7898,7 +8185,8 @@ Summary= Array.prototype.toString ( )
 Description= When the toString method is called, the following steps are taken:
 *0*Let VARarray be ? FUNCToObject(this value). 
 *0*Let VARfunc be ? FUNCGet(VARarray, "join"). 
-*0*If FUNCIsCallable(VARfunc) is false, let VARfunc be the intrinsic function %ObjProto_toString%. 
+*0*If FUNCIsCallable(VARfunc) is false, then
+*1*Let VARfunc be the intrinsic function %ObjProto_toString%. 
 *0*Return ? FUNCCall(VARfunc, VARarray).     
 
 #############  END  ## 520 ###########################
@@ -7910,7 +8198,7 @@ Description= The arguments are prepended to the start of the array, such that th
 *0*Let VARlen be ? FUNCToLength(? FUNCGet(VARO, "length")). 
 *0*Let VARargCount be the number of actual arguments. 
 *0*If VARargCount &gt; 0, then
-*1*If VARlen+VARargCount &gt; 253-1, throw a TypeError exception. 
+*1*If VARlen+VARargCount &gt; 2--EXP0--53--EXP1---1, throw a TypeError exception. 
 *1*Let VARk be VARlen. 
 *1*Repeat, while VARk &gt; 0,
 *2*Let VARfrom be ! FUNCToString(VARk-1). 
@@ -7975,7 +8263,8 @@ Description= None
 *0*If VARitemKind is "key", return FUNCCreateIterResultObject(VARindex, false). 
 *0*Let VARelementKey be ! FUNCToString(VARindex). 
 *0*Let VARelementValue be ? FUNCGet(VARa, VARelementKey). 
-*0*If VARitemKind is "value", let VARresult be VARelementValue. 
+*0*If VARitemKind is "value", then
+*1*Let VARresult be VARelementValue. 
 *0*Else,
 *1*Assert: VARitemKind is "key+value". 
 *1*Let VARresult be FUNCCreateArrayFromList(« VARindex, VARelementValue »). 
@@ -7998,8 +8287,12 @@ Description= When the from method is called with argument source, and optional a
 *0*If VARmapfn is present and VARmapfn is not undefined, then
 *1*If FUNCIsCallable(VARmapfn) is false, throw a TypeError exception. 
 *1*Let VARmapping be true. 
-*0*Else, let VARmapping be false. 
-*0*If VARthisArg is present, let VART be VARthisArg; else let VART be undefined. 
+*0*Else,
+*1*let VARmapping be false.
+*0*If VARthisArg is present, then
+*1*Let VART be VARthisArg
+*0*Else,
+*1*let VART be undefined.
 *0*Let VARusingIterator be ? FUNCGetMethod(VARsource, @@iterator). 
 *0*If VARusingIterator is not undefined, then
 *1*Let VARvalues be ? FUNCIterableToList(VARsource, VARusingIterator). 
@@ -8011,7 +8304,8 @@ Description= When the from method is called with argument source, and optional a
 *2*Let VARkValue be the first element of VARvalues and remove that element from VARvalues. 
 *2*If VARmapping is true, then
 *3*Let VARmappedValue be ? FUNCCall(VARmapfn, VART, « VARkValue, VARk »). 
-*2*Else, let VARmappedValue be VARkValue. 
+*2*Else,
+*3*let VARmappedValue be VARkValue.
 *2*Perform ? FUNCSet(VARtargetObj, VARPk, VARmappedValue, true). 
 *2*Increase VARk by 1. 
 *1*Assert: VARvalues is now an empty List. 
@@ -8026,7 +8320,8 @@ Description= When the from method is called with argument source, and optional a
 *1*Let VARkValue be ? FUNCGet(VARarrayLike, VARPk). 
 *1*If VARmapping is true, then
 *2*Let VARmappedValue be ? FUNCCall(VARmapfn, VART, « VARkValue, VARk »). 
-*1*Else, let VARmappedValue be VARkValue. 
+*1*Else,
+*2*let VARmappedValue be VARkValue.
 *1*Perform ? FUNCSet(VARtargetObj, VARPk, VARmappedValue, true). 
 *1*Increase VARk by 1. 
 *0*Return VARtargetObj.     
@@ -8073,11 +8368,23 @@ Description= The interpretation and use of the arguments of %TypedArray%.prototy
 *0*Perform ? FUNCValidateTypedArray(VARO). 
 *0*Let VARlen be VARO.[[VARArrayLength]]. 
 *0*Let VARrelativeTarget be ? FUNCToInteger(VARtarget). 
-*0*If VARrelativeTarget &lt; 0, let VARto be max((VARlen + VARrelativeTarget), 0); else let VARto be min(VARrelativeTarget, VARlen). 
+*0*If VARrelativeTarget &lt; 0, then
+*1*Let VARto be max((VARlen + VARrelativeTarget), 0)
+*0*Else,
+*1*let VARto be min(VARrelativeTarget, VARlen).
 *0*Let VARrelativeStart be ? FUNCToInteger(VARstart). 
-*0*If VARrelativeStart &lt; 0, let VARfrom be max((VARlen + VARrelativeStart), 0); else let VARfrom be min(VARrelativeStart, VARlen). 
-*0*If VARend is undefined, let VARrelativeEnd be VARlen; else let VARrelativeEnd be ? FUNCToInteger(VARend). 
-*0*If VARrelativeEnd &lt; 0, let VARfinal be max((VARlen + VARrelativeEnd), 0); else let VARfinal be min(VARrelativeEnd, VARlen). 
+*0*If VARrelativeStart &lt; 0, then
+*1*Let VARfrom be max((VARlen + VARrelativeStart), 0)
+*0*Else,
+*1*let VARfrom be min(VARrelativeStart, VARlen).
+*0*If VARend is undefined, then
+*1*Let VARrelativeEnd be VARlen
+*0*Else,
+*1*let VARrelativeEnd be ? FUNCToInteger(VARend).
+*0*If VARrelativeEnd &lt; 0, then
+*1*Let VARfinal be max((VARlen + VARrelativeEnd), 0)
+*0*Else,
+*1*let VARfinal be min(VARrelativeEnd, VARlen).
 *0*Let VARcount be min(VARfinal-VARfrom, VARlen-VARto). 
 *0*If VARcount &gt; 0, then
 *1*NOTE: The copying must be performed in a manner that preserves the bit-level encoding of the source data. 
@@ -8134,9 +8441,18 @@ Description= The interpretation and use of the arguments of %TypedArray%.prototy
 *0*Let VARlen be VARO.[[VARArrayLength]]. 
 *0*Let VARvalue be ? FUNCToNumber(VARvalue). 
 *0*Let VARrelativeStart be ? FUNCToInteger(VARstart). 
-*0*If VARrelativeStart &lt; 0, let VARk be max((VARlen + VARrelativeStart), 0); else let VARk be min(VARrelativeStart, VARlen). 
-*0*If VARend is undefined, let VARrelativeEnd be VARlen; else let VARrelativeEnd be ? FUNCToInteger(VARend). 
-*0*If VARrelativeEnd &lt; 0, let VARfinal be max((VARlen + VARrelativeEnd), 0); else let VARfinal be min(VARrelativeEnd, VARlen). 
+*0*If VARrelativeStart &lt; 0, then
+*1*Let VARk be max((VARlen + VARrelativeStart), 0)
+*0*Else,
+*1*let VARk be min(VARrelativeStart, VARlen).
+*0*If VARend is undefined, then
+*1*Let VARrelativeEnd be VARlen
+*0*Else,
+*1*let VARrelativeEnd be ? FUNCToInteger(VARend).
+*0*If VARrelativeEnd &lt; 0, then
+*1*Let VARfinal be max((VARlen + VARrelativeEnd), 0)
+*0*Else,
+*1*let VARfinal be min(VARrelativeEnd, VARlen).
 *0*If FUNCIsDetachedBuffer(VARO.[[VARViewedArrayBuffer]]) is true, throw a TypeError exception. 
 *0*Repeat, while VARk &lt; VARfinal
 *1*Let VARPk be ! FUNCToString(VARk). 
@@ -8153,7 +8469,10 @@ Description= The interpretation and use of the arguments of %TypedArray%.prototy
 *0*Perform ? FUNCValidateTypedArray(VARO). 
 *0*Let VARlen be VARO.[[VARArrayLength]]. 
 *0*If FUNCIsCallable(VARcallbackfn) is false, throw a TypeError exception. 
-*0*If VARthisArg is present, let VART be VARthisArg; else let VART be undefined. 
+*0*If VARthisArg is present, then
+*1*Let VART be VARthisArg
+*0*Else,
+*1*let VART be undefined.
 *0*Let VARkept be a new empty List. 
 *0*Let VARk be 0. 
 *0*Let VARcaptured be 0. 
@@ -8190,7 +8509,10 @@ Description= The interpretation and use of the arguments of %TypedArray%.prototy
 *0*Perform ? FUNCValidateTypedArray(VARO). 
 *0*Let VARlen be VARO.[[VARArrayLength]]. 
 *0*If FUNCIsCallable(VARcallbackfn) is false, throw a TypeError exception. 
-*0*If VARthisArg is present, let VART be VARthisArg; else let VART be undefined. 
+*0*If VARthisArg is present, then
+*1*Let VART be VARthisArg
+*0*Else,
+*1*let VART be undefined.
 *0*Let VARA be ? TypedArraySpeciesCreate(VARO, « VARlen »). 
 *0*Let VARk be 0. 
 *0*Repeat, while VARk &lt; VARlen
@@ -8297,14 +8619,19 @@ Description= Sets multiple values in this TypedArray, reading the values from th
 *0*Let VARsrcByteOffset be VARtypedArray.[[VARByteOffset]]. 
 *0*If VARsrcLength + VARtargetOffset &gt; VARtargetLength, throw a RangeError exception. 
 *0*If both FUNCIsSharedArrayBuffer(VARsrcBuffer) and FUNCIsSharedArrayBuffer(VARtargetBuffer) are true, then
-*1*If VARsrcBuffer.[[VARArrayBufferData]] and VARtargetBuffer.[[VARArrayBufferData]] are the same Shared Data Block values, let VARsame be true; else let VARsame be false. 
-*0*Else, let VARsame be FUNCSameValue(VARsrcBuffer, VARtargetBuffer). 
+*1*If VARsrcBuffer.[[VARArrayBufferData]] and VARtargetBuffer.[[VARArrayBufferData]] are the same Shared Data Block values, then
+*2*Let VARsame be true
+*1*Else,
+*2*let VARsame be false.
+*0*Else,
+*1*let VARsame be FUNCSameValue(VARsrcBuffer, VARtargetBuffer).
 *0*If VARsame is true, then
 *1*Let VARsrcByteLength be VARtypedArray.[[VARByteLength]]. 
 *1*Let VARsrcBuffer be ? FUNCCloneArrayBuffer(VARsrcBuffer, VARsrcByteOffset, VARsrcByteLength, %ArrayBuffer%). 
 *1*NOTE: %ArrayBuffer% is used to clone VARsrcBuffer because is it known to not have any observable side-effects. 
 *1*Let VARsrcByteIndex be 0. 
-*0*Else, let VARsrcByteIndex be VARsrcByteOffset. 
+*0*Else,
+*1*let VARsrcByteIndex be VARsrcByteOffset.
 *0*Let VARtargetByteIndex be VARtargetOffset × VARtargetElementSize + VARtargetByteOffset. 
 *0*Let VARlimit be VARtargetByteIndex + VARtargetElementSize × VARsrcLength. 
 *0*If FUNCSameValue(VARsrcType, VARtargetType) is true, then
@@ -8331,9 +8658,18 @@ Description= The interpretation and use of the arguments of %TypedArray%.prototy
 *0*Perform ? FUNCValidateTypedArray(VARO). 
 *0*Let VARlen be VARO.[[VARArrayLength]]. 
 *0*Let VARrelativeStart be ? FUNCToInteger(VARstart). 
-*0*If VARrelativeStart &lt; 0, let VARk be max((VARlen + VARrelativeStart), 0); else let VARk be min(VARrelativeStart, VARlen). 
-*0*If VARend is undefined, let VARrelativeEnd be VARlen; else let VARrelativeEnd be ? FUNCToInteger(VARend). 
-*0*If VARrelativeEnd &lt; 0, let VARfinal be max((VARlen + VARrelativeEnd), 0); else let VARfinal be min(VARrelativeEnd, VARlen). 
+*0*If VARrelativeStart &lt; 0, then
+*1*Let VARk be max((VARlen + VARrelativeStart), 0)
+*0*Else,
+*1*let VARk be min(VARrelativeStart, VARlen).
+*0*If VARend is undefined, then
+*1*Let VARrelativeEnd be VARlen
+*0*Else,
+*1*let VARrelativeEnd be ? FUNCToInteger(VARend).
+*0*If VARrelativeEnd &lt; 0, then
+*1*Let VARfinal be max((VARlen + VARrelativeEnd), 0)
+*0*Else,
+*1*let VARfinal be min(VARrelativeEnd, VARlen).
 *0*Let VARcount be max(VARfinal - VARk, 0). 
 *0*Let VARA be ? TypedArraySpeciesCreate(VARO, « VARcount »). 
 *0*Let VARsrcName be the String value of VARO.[[VARTypedArrayName]]. 
@@ -8387,9 +8723,18 @@ Description= Returns a new TypedArray object whose element type is the same as t
 *0*Let VARbuffer be VARO.[[VARViewedArrayBuffer]]. 
 *0*Let VARsrcLength be VARO.[[VARArrayLength]]. 
 *0*Let VARrelativeBegin be ? FUNCToInteger(VARbegin). 
-*0*If VARrelativeBegin &lt; 0, let VARbeginIndex be max((VARsrcLength + VARrelativeBegin), 0); else let VARbeginIndex be min(VARrelativeBegin, VARsrcLength). 
-*0*If VARend is undefined, let VARrelativeEnd be VARsrcLength; else, let VARrelativeEnd be ? FUNCToInteger(VARend). 
-*0*If VARrelativeEnd &lt; 0, let VARendIndex be max((VARsrcLength + VARrelativeEnd), 0); else let VARendIndex be min(VARrelativeEnd, VARsrcLength). 
+*0*If VARrelativeBegin &lt; 0, then
+*1*Let VARbeginIndex be max((VARsrcLength + VARrelativeBegin), 0)
+*0*Else,
+*1*let VARbeginIndex be min(VARrelativeBegin, VARsrcLength).
+*0*If VARend is undefined, then
+*1*Let VARrelativeEnd be VARsrcLength
+*0*Else,
+*1*, then
+*0*If VARrelativeEnd &lt; 0, then
+*1*Let VARendIndex be max((VARsrcLength + VARrelativeEnd), 0)
+*0*Else,
+*1*let VARendIndex be min(VARrelativeEnd, VARsrcLength).
 *0*Let VARnewLength be max(VARendIndex - VARbeginIndex, 0). 
 *0*Let VARconstructorName be the String value of VARO.[[VARTypedArrayName]]. 
 *0*Let VARelementSize be the Number value of the Element Size value specified in Table 56 for VARconstructorName. 
@@ -8599,7 +8944,8 @@ Description= When the Map function is called with optional argument, the followi
 *0*If NewTarget is undefined, throw a TypeError exception. 
 *0*Let VARmap be ? FUNCOrdinaryCreateFromConstructor(NewTarget, "%MapPrototype%", « [[VARMapData]] »). 
 *0*Set VARmap.[[VARMapData]] to a new empty List. 
-*0*If VARiterable is not present, let VARiterable be undefined. 
+*0*If VARiterable is not present, then
+*1*Let VARiterable be undefined. 
 *0*If VARiterable is either undefined or null, return VARmap. 
 *0*Let VARadder be ? FUNCGet(VARmap, "set"). 
 *0*If FUNCIsCallable(VARadder) is false, throw a TypeError exception. 
@@ -8665,7 +9011,10 @@ Description= When the forEach method is called with one or two arguments, the fo
 *0*If FUNCType(VARM) is not Object, throw a TypeError exception. 
 *0*If VARM does not have a [[VARMapData]] internal slot, throw a TypeError exception. 
 *0*If FUNCIsCallable(VARcallbackfn) is false, throw a TypeError exception. 
-*0*If VARthisArg is present, let VART be VARthisArg; else let VART be undefined. 
+*0*If VARthisArg is present, then
+*1*Let VART be VARthisArg
+*0*Else,
+*1*let VART be undefined.
 *0*Let VARentries be the List that is VARM.[[VARMapData]]. 
 *0*For each Record { [[VARKey]], [[VARValue]] } VARe that is an element of VARentries, in original key insertion order, do
 *1*If VARe.[[VARKey]] is not empty, then
@@ -8719,7 +9068,8 @@ Description= The following steps are taken:
 *1*If VARp.[[VARKey]] is not empty and FUNCSameValueZero(VARp.[[VARKey]], VARkey) is true, then
 *2*Set VARp.[[VARValue]] to VARvalue. 
 *2*Return VARM. 
-*0*If VARkey is -0, let VARkey be +0. 
+*0*If VARkey is -0, then
+*1*Let VARkey be +0. 
 *0*Let VARp be the Record { [[VARKey]]: VARkey, [[VARValue]]: VARvalue }. 
 *0*Append VARp as the last element of VARentries. 
 *0*Return VARM.     
@@ -8766,8 +9116,11 @@ Description= None
 *1*Set VARindex to VARindex+1. 
 *1*Set VARO.[[VARMapNextIndex]] to VARindex. 
 *1*If VARe.[[VARKey]] is not empty, then
-*2*If VARitemKind is "key", let VARresult be VARe.[[VARKey]]. 
-*2*Else if VARitemKind is "value", let VARresult be VARe.[[VARValue]]. 
+*2*If VARitemKind is "key", then
+*3*Let VARresult be VARe.[[VARVARKey]]. 
+*2*Else,
+*3*if VARitemKind is "value", then
+*4*Let VARresult be VARe.[[VARVARVARValue]].
 *2*Else,
 *3*Assert: VARitemKind is "key+value". 
 *3*Let VARresult be FUNCCreateArrayFromList(« VARe.[[VARKey]], VARe.[[VARValue]] »). 
@@ -8783,7 +9136,8 @@ Description= When the Set function is called with optional argument iterable, th
 *0*If NewTarget is undefined, throw a TypeError exception. 
 *0*Let VARset be ? FUNCOrdinaryCreateFromConstructor(NewTarget, "%SetPrototype%", « [[VARSetData]] »). 
 *0*Set VARset.[[VARSetData]] to a new empty List. 
-*0*If VARiterable is not present, let VARiterable be undefined. 
+*0*If VARiterable is not present, then
+*1*Let VARiterable be undefined. 
 *0*If VARiterable is either undefined or null, return VARset. 
 *0*Let VARadder be ? FUNCGet(VARset, "add"). 
 *0*If FUNCIsCallable(VARadder) is false, throw a TypeError exception. 
@@ -8807,7 +9161,8 @@ Description= The following steps are taken:
 *0*For each VARe that is an element of VARentries, do
 *1*If VARe is not empty and FUNCSameValueZero(VARe, VARvalue) is true, then
 *2*Return VARS. 
-*0*If VARvalue is -0, let VARvalue be +0. 
+*0*If VARvalue is -0, then
+*1*Let VARvalue be +0. 
 *0*Append VARvalue as the last element of VARentries. 
 *0*Return VARS.     
 
@@ -8856,7 +9211,10 @@ Description= When the forEach method is called with one or two arguments, the fo
 *0*If FUNCType(VARS) is not Object, throw a TypeError exception. 
 *0*If VARS does not have a [[VARSetData]] internal slot, throw a TypeError exception. 
 *0*If FUNCIsCallable(VARcallbackfn) is false, throw a TypeError exception. 
-*0*If VARthisArg is present, let VART be VARthisArg; else let VART be undefined. 
+*0*If VARthisArg is present, then
+*1*Let VART be VARthisArg
+*0*Else,
+*1*let VART be undefined.
 *0*Let VARentries be the List that is VARS.[[VARSetData]]. 
 *0*For each VARe that is an element of VARentries, in original insertion order, do
 *1*If VARe is not empty, then
@@ -8932,7 +9290,8 @@ Description= When the WeakMap function is called with optional argument iterable
 *0*If NewTarget is undefined, throw a TypeError exception. 
 *0*Let VARmap be ? FUNCOrdinaryCreateFromConstructor(NewTarget, "%WeakMapPrototype%", « [[VARWeakMapData]] »). 
 *0*Set VARmap.[[VARWeakMapData]] to a new empty List. 
-*0*If VARiterable is not present, let VARiterable be undefined. 
+*0*If VARiterable is not present, then
+*1*Let VARiterable be undefined. 
 *0*If VARiterable is either undefined or null, return VARmap. 
 *0*Let VARadder be ? FUNCGet(VARmap, "set"). 
 *0*If FUNCIsCallable(VARadder) is false, throw a TypeError exception. 
@@ -9022,7 +9381,8 @@ Description= When the WeakSet function is called with optional argument iterable
 *0*If NewTarget is undefined, throw a TypeError exception. 
 *0*Let VARset be ? FUNCOrdinaryCreateFromConstructor(NewTarget, "%WeakSetPrototype%", « [[VARWeakSetData]] »). 
 *0*Set VARset.[[VARWeakSetData]] to a new empty List. 
-*0*If VARiterable is not present, let VARiterable be undefined. 
+*0*If VARiterable is not present, then
+*1*Let VARiterable be undefined. 
 *0*If VARiterable is either undefined or null, return VARset. 
 *0*Let VARadder be ? FUNCGet(VARset, "add"). 
 *0*If FUNCIsCallable(VARadder) is false, throw a TypeError exception. 
@@ -9162,13 +9522,15 @@ Description= The abstract operation GetValueFromBuffer takes six parameters, an 
 *0*If FUNCIsSharedArrayBuffer(VARarrayBuffer) is true, then
 *1*Let VARexecution be the [[VARCandidateExecution]] field of the surrounding agent's Agent Record. 
 *1*Let VAReventList be the [[VAREventList]] field of the element in VARexecution.[[VAREventLists]] whose [[VARAgentSignifier]] is FUNCAgentSignifier(). 
-*1*If VARisTypedArray is true and VARtype is "Int8", "Uint8", "Int16", "Uint16", "Int32", or "Uint32", let VARnoTear be true; otherwise let VARnoTear be false. 
+*1*If VARisTypedArray is true and VARtype is "Int8", "Uint8", "Int16", "Uint16", "Int32", or "Uint32", then
+*2*Let VARnoTear be true; otherwise let VARnoTear be false. 
 *1*Let VARrawValue be a List of length VARelementSize of nondeterministically chosen byte values. 
 *1*NOTE: In implementations, VARrawValue is the result of a non-atomic or atomic read instruction on the underlying hardware. The nondeterminism is a semantic prescription of the memory model to describe observable behaviour of hardware with weak consistency. 
 *1*Let VARreadEvent be ReadSharedMemory { [[VAROrder]]: VARorder, [[VARNoTear]]: VARnoTear, [[VARBlock]]: VARblock, [[VARByteIndex]]: VARbyteIndex, [[VARElementSize]]: VARelementSize }. 
 *1*Append VARreadEvent to VAReventList. 
 *1*Append Chosen Value Record { [[VAREvent]]: VARreadEvent, [[VARChosenValue]]: VARrawValue } to VARexecution.[[VARChosenValues]]. 
-*0*Else, let VARrawValue be a List of VARelementSize containing, in order, the VARelementSize sequence of bytes starting with VARblock[VARbyteIndex]. 
+*0*Else,
+*1*let VARrawValue be a List of VARelementSize containing, in order, the VARelementSize sequence of bytes starting with VARblock[VARbyteIndex].
 *0*If VARisLittleEndian is not present, set VARisLittleEndian to the value of the [[VARLittleEndian]] field of the surrounding agent's Agent Record. 
 *0*Return FUNCRawBytesToNumber(VARtype, VARrawValue, VARisLittleEndian).     
 
@@ -9207,9 +9569,11 @@ Description= The abstract operation SetValueInBuffer takes seven parameters, an 
 *0*If FUNCIsSharedArrayBuffer(VARarrayBuffer) is true, then
 *1*Let VARexecution be the [[VARCandidateExecution]] field of the surrounding agent's Agent Record. 
 *1*Let VAReventList be the [[VAREventList]] field of the element in VARexecution.[[VAREventLists]] whose [[VARAgentSignifier]] is FUNCAgentSignifier(). 
-*1*If VARisTypedArray is true and VARtype is "Int8", "Uint8", "Int16", "Uint16", "Int32", or "Uint32", let VARnoTear be true; otherwise let VARnoTear be false. 
+*1*If VARisTypedArray is true and VARtype is "Int8", "Uint8", "Int16", "Uint16", "Int32", or "Uint32", then
+*2*Let VARnoTear be true; otherwise let VARnoTear be false. 
 *1*Append WriteSharedMemory { [[VAROrder]]: VARorder, [[VARNoTear]]: VARnoTear, [[VARBlock]]: VARblock, [[VARByteIndex]]: VARbyteIndex, [[VARElementSize]]: VARelementSize, [[VARPayload]]: VARrawBytes } to VAReventList. 
-*0*Else, store the individual bytes of VARrawBytes into VARblock, in order, starting at VARblock[VARbyteIndex]. 
+*0*Else,
+*1*store the individual bytes of VARrawBytes into VARblock, in order, starting at VARblock[VARbyteIndex].
 *0*Return FUNCNormalCompletion(undefined).     
 
 #############  END  ## 590 ###########################
@@ -9264,9 +9628,18 @@ Description= The following steps are taken:
 *0*If FUNCIsDetachedBuffer(VARO) is true, throw a TypeError exception. 
 *0*Let VARlen be VARO.[[VARArrayBufferByteLength]]. 
 *0*Let VARrelativeStart be ? FUNCToInteger(VARstart). 
-*0*If VARrelativeStart &lt; 0, let VARfirst be max((VARlen + VARrelativeStart), 0); else let VARfirst be min(VARrelativeStart, VARlen). 
-*0*If VARend is undefined, let VARrelativeEnd be VARlen; else let VARrelativeEnd be ? FUNCToInteger(VARend). 
-*0*If VARrelativeEnd &lt; 0, let VARfinal be max((VARlen + VARrelativeEnd), 0); else let VARfinal be min(VARrelativeEnd, VARlen). 
+*0*If VARrelativeStart &lt; 0, then
+*1*Let VARfirst be max((VARlen + VARrelativeStart), 0)
+*0*Else,
+*1*let VARfirst be min(VARrelativeStart, VARlen).
+*0*If VARend is undefined, then
+*1*Let VARrelativeEnd be VARlen
+*0*Else,
+*1*let VARrelativeEnd be ? FUNCToInteger(VARend).
+*0*If VARrelativeEnd &lt; 0, then
+*1*Let VARfinal be max((VARlen + VARrelativeEnd), 0)
+*0*Else,
+*1*let VARfinal be min(VARrelativeEnd, VARlen).
 *0*Let VARnewLen be max(VARfinal-VARfirst, 0). 
 *0*Let VARctor be ? FUNCSpeciesConstructor(VARO, %ArrayBuffer%). 
 *0*Let VARnew be ? FUNCConstruct(VARctor, « VARnewLen »). 
@@ -9326,9 +9699,18 @@ Description= The following steps are taken:
 *0*If FUNCIsSharedArrayBuffer(VARO) is false, throw a TypeError exception. 
 *0*Let VARlen be VARO.[[VARArrayBufferByteLength]]. 
 *0*Let VARrelativeStart be ? FUNCToInteger(VARstart). 
-*0*If VARrelativeStart &lt; 0, let VARfirst be max((VARlen + VARrelativeStart), 0); else let VARfirst be min(VARrelativeStart, VARlen). 
-*0*If VARend is undefined, let VARrelativeEnd be VARlen; else let VARrelativeEnd be ? FUNCToInteger(VARend). 
-*0*If VARrelativeEnd &lt; 0, let VARfinal be max((VARlen + VARrelativeEnd), 0); else let VARfinal be min(VARrelativeEnd, VARlen). 
+*0*If VARrelativeStart &lt; 0, then
+*1*Let VARfirst be max((VARlen + VARrelativeStart), 0)
+*0*Else,
+*1*let VARfirst be min(VARrelativeStart, VARlen).
+*0*If VARend is undefined, then
+*1*Let VARrelativeEnd be VARlen
+*0*Else,
+*1*let VARrelativeEnd be ? FUNCToInteger(VARend).
+*0*If VARrelativeEnd &lt; 0, then
+*1*Let VARfinal be max((VARlen + VARrelativeEnd), 0)
+*0*Else,
+*1*let VARfinal be min(VARrelativeEnd, VARlen).
 *0*Let VARnewLen be max(VARfinal - VARfirst, 0). 
 *0*Let VARctor be ? FUNCSpeciesConstructor(VARO, %SharedArrayBuffer%). 
 *0*Let VARnew be ? FUNCConstruct(VARctor, « VARnewLen »). 
@@ -9409,7 +9791,8 @@ ID= 24.3.4.5
 Summary= DataView.prototype.getFloat32 ( byteOffset [ , littleEndian ] )
 Description= When the getFloat32 method is called with argument byteOffset and optional argument littleEndian, the following steps are taken:
 *0*Let VARv be the this value. 
-*0*If VARlittleEndian is not present, let VARlittleEndian be false. 
+*0*If VARlittleEndian is not present, then
+*1*Let VARlittleEndian be false. 
 *0*Return ? FUNCGetViewValue(VARv, VARbyteOffset, VARlittleEndian, "Float32").     
 
 #############  END  ## 602 ###########################
@@ -9418,7 +9801,8 @@ ID= 24.3.4.6
 Summary= DataView.prototype.getFloat64 ( byteOffset [ , littleEndian ] )
 Description= When the getFloat64 method is called with argument byteOffset and optional argument littleEndian, the following steps are taken:
 *0*Let VARv be the this value. 
-*0*If VARlittleEndian is not present, let VARlittleEndian be false. 
+*0*If VARlittleEndian is not present, then
+*1*Let VARlittleEndian be false. 
 *0*Return ? FUNCGetViewValue(VARv, VARbyteOffset, VARlittleEndian, "Float64").     
 
 #############  END  ## 603 ###########################
@@ -9435,7 +9819,8 @@ ID= 24.3.4.8
 Summary= DataView.prototype.getInt16 ( byteOffset [ , littleEndian ] )
 Description= When the getInt16 method is called with argument byteOffset and optional argument littleEndian, the following steps are taken:
 *0*Let VARv be the this value. 
-*0*If VARlittleEndian is not present, let VARlittleEndian be false. 
+*0*If VARlittleEndian is not present, then
+*1*Let VARlittleEndian be false. 
 *0*Return ? FUNCGetViewValue(VARv, VARbyteOffset, VARlittleEndian, "Int16").     
 
 #############  END  ## 605 ###########################
@@ -9444,7 +9829,8 @@ ID= 24.3.4.9
 Summary= DataView.prototype.getInt32 ( byteOffset [ , littleEndian ] )
 Description= When the getInt32 method is called with argument byteOffset and optional argument littleEndian, the following steps are taken:
 *0*Let VARv be the this value. 
-*0*If VARlittleEndian is not present, let VARlittleEndian be false. 
+*0*If VARlittleEndian is not present, then
+*1*Let VARlittleEndian be false. 
 *0*Return ? FUNCGetViewValue(VARv, VARbyteOffset, VARlittleEndian, "Int32").     
 
 #############  END  ## 606 ###########################
@@ -9461,7 +9847,8 @@ ID= 24.3.4.11
 Summary= DataView.prototype.getUint16 ( byteOffset [ , littleEndian ] )
 Description= When the getUint16 method is called with argument byteOffset and optional argument littleEndian, the following steps are taken:
 *0*Let VARv be the this value. 
-*0*If VARlittleEndian is not present, let VARlittleEndian be false. 
+*0*If VARlittleEndian is not present, then
+*1*Let VARlittleEndian be false. 
 *0*Return ? FUNCGetViewValue(VARv, VARbyteOffset, VARlittleEndian, "Uint16").     
 
 #############  END  ## 608 ###########################
@@ -9470,7 +9857,8 @@ ID= 24.3.4.12
 Summary= DataView.prototype.getUint32 ( byteOffset [ , littleEndian ] )
 Description= When the getUint32 method is called with argument byteOffset and optional argument littleEndian, the following steps are taken:
 *0*Let VARv be the this value. 
-*0*If VARlittleEndian is not present, let VARlittleEndian be false. 
+*0*If VARlittleEndian is not present, then
+*1*Let VARlittleEndian be false. 
 *0*Return ? FUNCGetViewValue(VARv, VARbyteOffset, VARlittleEndian, "Uint32").     
 
 #############  END  ## 609 ###########################
@@ -9479,7 +9867,8 @@ ID= 24.3.4.13
 Summary= DataView.prototype.setFloat32 ( byteOffset, value [ , littleEndian ] )
 Description= When the setFloat32 method is called with arguments byteOffset and value and optional argument littleEndian, the following steps are taken:
 *0*Let VARv be the this value. 
-*0*If VARlittleEndian is not present, let VARlittleEndian be false. 
+*0*If VARlittleEndian is not present, then
+*1*Let VARlittleEndian be false. 
 *0*Return ? FUNCSetViewValue(VARv, VARbyteOffset, VARlittleEndian, "Float32", VARvalue).     
 
 #############  END  ## 610 ###########################
@@ -9488,7 +9877,8 @@ ID= 24.3.4.14
 Summary= DataView.prototype.setFloat64 ( byteOffset, value [ , littleEndian ] )
 Description= When the setFloat64 method is called with arguments byteOffset and value and optional argument littleEndian, the following steps are taken:
 *0*Let VARv be the this value. 
-*0*If VARlittleEndian is not present, let VARlittleEndian be false. 
+*0*If VARlittleEndian is not present, then
+*1*Let VARlittleEndian be false. 
 *0*Return ? FUNCSetViewValue(VARv, VARbyteOffset, VARlittleEndian, "Float64", VARvalue).     
 
 #############  END  ## 611 ###########################
@@ -9505,7 +9895,8 @@ ID= 24.3.4.16
 Summary= DataView.prototype.setInt16 ( byteOffset, value [ , littleEndian ] )
 Description= When the setInt16 method is called with arguments byteOffset and value and optional argument littleEndian, the following steps are taken:
 *0*Let VARv be the this value. 
-*0*If VARlittleEndian is not present, let VARlittleEndian be false. 
+*0*If VARlittleEndian is not present, then
+*1*Let VARlittleEndian be false. 
 *0*Return ? FUNCSetViewValue(VARv, VARbyteOffset, VARlittleEndian, "Int16", VARvalue).     
 
 #############  END  ## 613 ###########################
@@ -9514,7 +9905,8 @@ ID= 24.3.4.17
 Summary= DataView.prototype.setInt32 ( byteOffset, value [ , littleEndian ] )
 Description= When the setInt32 method is called with arguments byteOffset and value and optional argument littleEndian, the following steps are taken:
 *0*Let VARv be the this value. 
-*0*If VARlittleEndian is not present, let VARlittleEndian be false. 
+*0*If VARlittleEndian is not present, then
+*1*Let VARlittleEndian be false. 
 *0*Return ? FUNCSetViewValue(VARv, VARbyteOffset, VARlittleEndian, "Int32", VARvalue).     
 
 #############  END  ## 614 ###########################
@@ -9531,7 +9923,8 @@ ID= 24.3.4.19
 Summary= DataView.prototype.setUint16 ( byteOffset, value [ , littleEndian ] )
 Description= When the setUint16 method is called with arguments byteOffset and value and optional argument littleEndian, the following steps are taken:
 *0*Let VARv be the this value. 
-*0*If VARlittleEndian is not present, let VARlittleEndian be false. 
+*0*If VARlittleEndian is not present, then
+*1*Let VARlittleEndian be false. 
 *0*Return ? FUNCSetViewValue(VARv, VARbyteOffset, VARlittleEndian, "Uint16", VARvalue).     
 
 #############  END  ## 616 ###########################
@@ -9540,7 +9933,8 @@ ID= 24.3.4.20
 Summary= DataView.prototype.setUint32 ( byteOffset, value [ , littleEndian ] )
 Description= When the setUint32 method is called with arguments byteOffset and value and optional argument littleEndian, the following steps are taken:
 *0*Let VARv be the this value. 
-*0*If VARlittleEndian is not present, let VARlittleEndian be false. 
+*0*If VARlittleEndian is not present, then
+*1*Let VARlittleEndian be false. 
 *0*Return ? FUNCSetViewValue(VARv, VARbyteOffset, VARlittleEndian, "Uint32", VARvalue).     
 
 #############  END  ## 617 ###########################
@@ -9782,7 +10176,10 @@ Description= Atomics.wait puts the calling agent in a wait queue and puts it to 
 *0*Let VARi be ? FUNCValidateAtomicAccess(VARtypedArray, VARindex). 
 *0*Let VARv be ? FUNCToInt32(VARvalue). 
 *0*Let VARq be ? FUNCToNumber(VARtimeout). 
-*0*If VARq is NaN, let VARt be +∞, else let VARt be max(VARq, 0). 
+*0*If VARq is NaN, then
+*1*Let VARt be +∞
+*0*Else,
+*1*let VARt be max(VARq, 0).
 *0*Let VARB be FUNCAgentCanSuspend(). 
 *0*If VARB is false, throw a TypeError exception. 
 *0*Let VARblock be VARbuffer.[[VARArrayBufferData]]. 
@@ -9812,7 +10209,8 @@ Summary= Atomics.wake ( typedArray, index, count )
 Description= Atomics.wake wakes up some agents that are sleeping in the wait queue.  The following steps are taken:
 *0*Let VARbuffer be ? FUNCValidateSharedIntegerTypedArray(VARtypedArray, true). 
 *0*Let VARi be ? FUNCValidateAtomicAccess(VARtypedArray, VARindex). 
-*0*If VARcount is undefined, let VARc be +∞. 
+*0*If VARcount is undefined, then
+*1*Let VARc be +∞. 
 *0*Else,
 *1*Let VARintCount be ? FUNCToInteger(VARcount). 
 *1*Let VARc be max(VARintCount, 0). 
@@ -9908,10 +10306,14 @@ Description= The stringify function returns a String in UTF-16 encoded JSON form
 *3*Repeat, while VARk&lt;VARlen,
 *4*Let VARv be ? FUNCGet(VARreplacer, ! FUNCToString(VARk)). 
 *4*Let VARitem be undefined. 
-*4*If FUNCType(VARv) is String, let VARitem be VARv. 
-*4*Else if FUNCType(VARv) is Number, let VARitem be ! FUNCToString(VARv). 
+*4*If FUNCType(VARv) is String, then
+*5*Let VARitem be VARv. 
+*4*Else,
+*5*if FUNCType(VARv) is Number, then
+*6*Let VARitem be ! FUNCToString(VARv).
 *4*Else if FUNCType(VARv) is Object, then
-*5*If VARv has a [[VARStringData]] or [[VARNumberData]] internal slot, let VARitem be ? FUNCToString(VARv). 
+*5*If VARv has a [[VARStringData]] or [[VARNumberData]] internal slot, then
+*6*Let VARitem be ? FUNCToString(VARv). 
 *4*If VARitem is not undefined and VARitem is not currently an element of VARPropertyList, then
 *5*Append VARitem to the end of VARPropertyList. 
 *4*Let VARk be VARk+1. 
@@ -10235,8 +10637,11 @@ Description= The abstract operation GeneratorStart with arguments generator and 
 *1*Remove VARgenContext from the execution context stack and restore the execution context that is at the top of the execution context stack as the running execution context. 
 *1*Set VARgenerator.[[VARGeneratorState]] to "completed". 
 *1*Once a generator enters the "completed" state it never leaves it and its associated execution context is never resumed. Any execution state associated with VARgenerator can be discarded at this point. 
-*1*If VARresult.[[VARType]] is normal, let VARresultValue be undefined. 
-*1*Else if VARresult.[[VARType]] is return, let VARresultValue be VARresult.[[VARValue]]. 
+*1*If VARresult.[[VARType]] is normal, then
+*2*Let VARresultValue be undefined. 
+*1*Else,
+*2*if VARresult.[[VARVARType]] is return, then
+*3*Let VARresultValue be VARresult.[[VARVARVARValue]].
 *1*Else,
 *2*Assert: VARresult.[[VARType]] is throw. 
 *2*Return FUNCCompletion(VARresult). 
@@ -10307,7 +10712,8 @@ Description= None
 *0*If VARgenContext does not have a Generator component, return non-generator. 
 *0*Let VARgenerator be the Generator component of VARgenContext. 
 *0*If VARgenerator has an [[VARAsyncGeneratorState]] internal slot, return async. 
-*0*Else, return sync.     
+*0*Else,
+*1*return sync.
 
 #############  END  ## 665 ###########################
 ############# BEGIN ## 666 ###########################
@@ -10368,7 +10774,8 @@ Description= None
 *1*Assert: If we return here, the async generator either threw an exception or performed either an implicit or explicit return. 
 *1*Remove VARgenContext from the execution context stack and restore the execution context that is at the top of the execution context stack as the running execution context. 
 *1*Set VARgenerator.[[VARAsyncGeneratorState]] to "completed". 
-*1*If VARresult is a normal completion, let VARresultValue be undefined. 
+*1*If VARresult is a normal completion, then
+*2*Let VARresultValue be undefined. 
 *1*Else,
 *2*Let VARresultValue be VARresult.[[VARValue]]. 
 *2*If VARresult.[[VARType]] is not return, then
@@ -10445,7 +10852,8 @@ Description= An AsyncGeneratorResumeNext return processor fulfilled function is 
 *3*Assert: VARcompletion.[[VARType]] is throw. 
 *3*Perform ! FUNCAsyncGeneratorReject(VARgenerator, VARcompletion.[[VARValue]]). 
 *3*Return undefined. 
-*0*Else if VARstate is "completed", return ! FUNCAsyncGeneratorResolve(VARgenerator, undefined, true). 
+*0*Else,
+*1*if VARstate is "completed", return ! FUNCAsyncGeneratorResolve(VARgenerator, undefined, true).
 *0*Assert: VARstate is either "suspendedStart" or "suspendedYield". 
 *0*Let VARgenContext be VARgenerator.[[VARAsyncGeneratorContext]]. 
 *0*Let VARcallerContext be the running execution context. 
@@ -10593,11 +11001,13 @@ Description= The job PromiseReactionJob with parameters reaction and argument ap
 *0*Let VARtype be VARreaction.[[VARType]]. 
 *0*Let VARhandler be VARreaction.[[VARHandler]]. 
 *0*If VARhandler is undefined, then
-*1*If VARtype is "Fulfill", let VARhandlerResult be FUNCNormalCompletion(VARargument). 
+*1*If VARtype is "Fulfill", then
+*2*Let VARhandlerResult be FUNCNormalCompletion(VARargument). 
 *1*Else,
 *2*Assert: VARtype is "Reject". 
 *2*Let VARhandlerResult be FUNCThrowCompletion(VARargument). 
-*0*Else, let VARhandlerResult be FUNCCall(VARhandler, undefined, « VARargument »). 
+*0*Else,
+*1*let VARhandlerResult be FUNCCall(VARhandler, undefined, « VARargument »).
 *0*If VARhandlerResult is an abrupt completion, then
 *1*Let VARstatus be FUNCCall(VARpromiseCapability.[[VARReject]], undefined, « VARhandlerResult.[[VARValue]] »). 
 *0*Else,
@@ -10646,7 +11056,8 @@ Description= The all function returns a new promise which is fulfilled with an a
 *0*FUNCIfAbruptRejectPromise(VARiteratorRecord, VARpromiseCapability). 
 *0*Let VARresult be FUNCPerformPromiseAll(VARiteratorRecord, VARC, VARpromiseCapability). 
 *0*If VARresult is an abrupt completion, then
-*1*If VARiteratorRecord.[[VARDone]] is false, let VARresult be FUNCIteratorClose(VARiteratorRecord, VARresult). 
+*1*If VARiteratorRecord.[[VARDone]] is false, then
+*2*Let VARresult be FUNCIteratorClose(VARiteratorRecord, VARresult). 
 *1*FUNCIfAbruptRejectPromise(VARresult, VARpromiseCapability). 
 *0*Return FUNCCompletion(VARresult).     
 
@@ -10699,7 +11110,8 @@ Description= The race function returns a new promise which is settled in the sam
 *0*FUNCIfAbruptRejectPromise(VARiteratorRecord, VARpromiseCapability). 
 *0*Let VARresult be FUNCPerformPromiseRace(VARiteratorRecord, VARC, VARpromiseCapability). 
 *0*If VARresult is an abrupt completion, then
-*1*If VARiteratorRecord.[[VARDone]] is false, let VARresult be FUNCIteratorClose(VARiterator, VARresult). 
+*1*If VARiteratorRecord.[[VARDone]] is false, then
+*2*Let VARresult be FUNCIteratorClose(VARiterator, VARresult). 
 *1*FUNCIfAbruptRejectPromise(VARresult, VARpromiseCapability). 
 *0*Return FUNCCompletion(VARresult).     
 
@@ -10875,8 +11287,10 @@ ID= 26.1.2
 Summary= Reflect.construct ( target, argumentsList [ , newTarget ] )
 Description= When the construct function is called with arguments target, argumentsList, and newTarget, the following steps are taken:
 *0*If FUNCIsConstructor(VARtarget) is false, throw a TypeError exception. 
-*0*If VARnewTarget is not present, let VARnewTarget be VARtarget. 
-*0*Else if FUNCIsConstructor(VARnewTarget) is false, throw a TypeError exception. 
+*0*If VARnewTarget is not present, then
+*1*Let VARnewTarget be VARtarget. 
+*0*Else,
+*1*if FUNCIsConstructor(VARnewTarget) is false, throw a TypeError exception.
 *0*Let VARargs be ? FUNCCreateListFromArrayLike(VARargumentsList). 
 *0*Return ? FUNCConstruct(VARtarget, VARargs, VARnewTarget).    
 

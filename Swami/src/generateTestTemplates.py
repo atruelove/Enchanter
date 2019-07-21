@@ -45,6 +45,9 @@ ifResultPOSPatterns = ["IN", "NNP", "."]
 multiStepIfPatterns = ["IN", "NNP", ",", "RB"]
 elsePattern = ["RB ,"]
 whilePattern = ["NN", ",", "IN", "NNP"]
+incrementPattern1 = ["IN", "CD", "."]
+incrementPattern2 = ["NN", "NNP", "."]
+
 class TestTemplate(object):
 	def __init__(self, relspecpath, compiler):
 		self.template_content = {}
@@ -61,9 +64,16 @@ class TestTemplate(object):
 		value = ""
 		funcval = False
 		args = ""
-		isassignment = re.search(assignmentpattern, specline)
+		# print(specline)
+		# isassignment = re.search(assignmentpattern, specline)
+		isassignment = False
+		if "let" in specline or "Let" in specline:
+			isassignment = True
 		if isassignment:
-			variable = specline.split(" be ")[0].split("Let ")[1].strip()
+			splitter = "Let "
+			if "let" in specline.split()[0]:
+				splitter = "let "
+			variable = specline.split(" be ")[0].split(splitter)[1].strip()
 			value = specline.split(" be ")[1]
 		if "(" in value and ")" in value:
 			funcval = True
@@ -76,17 +86,32 @@ class TestTemplate(object):
 				return variable, value
 		else:
 			return variable, value
-		
-	
-	# method to simplify the conditional statements extracted from the body of 
+
+
+	# method to simplify the conditional statements extracted from the body of
 	# relevant sections by translating English phrases in to syntaxtically valid code
 	# and substituting the assignment variables with their values stored in dictionary  
 	# the order of substitution matters!
 	def substituteVars(self, text, sectionid):
 
+		def expFunc(match):
+			newText = match.group()
+			newText = newText.replace("--EXP0--", ", ")
+			newText = newText.replace("--EXP1--", " )")
+			newText = "Math.pow( " + newText
+			# print(newText)
+			return newText
+
 		if text[0].isdigit() or ". " in text:
 			text = "".join(text.split(". ")[1:])		
 	
+		expSearch = re.search(r'[0-9]*?--EXP0--[0-9]*?--EXP1--', text, re.M|re.I)
+		if expSearch:
+			print(expSearch.group())
+			text = re.sub(r'[0-9]*?--EXP0--[0-9]*?--EXP1--', expFunc, text)
+		text = text.replace("--EXP0--", "")
+		text = text.replace("--EXP1--", "")
+
 		if "If" in text:
 			text = text.replace("If", "if (");
 		if ", the result is" in text:
@@ -321,6 +346,7 @@ class TestTemplate(object):
 		numvars = 0
 		index = 0
 		POS = bodyPOS.split("\n")
+		print(sectionid)
 		for statement in body.split("\n"):
 			statementAdded = False
 			if len(statement) > 100 or statement == "":
@@ -411,13 +437,42 @@ class TestTemplate(object):
 				if POSElements[0] == whilePattern[0] and POSElements[1] == whilePattern[1] and POSElements[2] == whilePattern[2] and POSElements[3] == whilePattern[3]:
 					isWhile = True
 			if isWhile:
-				print(statement)
 				statementAdded = True
 				statement = statement.replace("repeat, ", "")
 				statement = statement.replace("Repeat, ", "")
 				statement = statement.replace("while", "while ( ")
 				statement = statement + " ) "
 				updatedstatement = self.substituteVars(statement, sectionid)
+
+			isIncrement = False
+			incremProv = False
+			if len(POSElements) >= len(incrementPattern1):
+				if POSElements[-1] == incrementPattern1[-1] and POSElements[-2] == incrementPattern1[-2] and POSElements[-3] == incrementPattern1[-3]:
+					incremProv = True
+			if POSElements == incrementPattern2:
+				incremProv = True
+			if incremProv:
+				if "increment" in statement.lower() or "decrement" in statement.lower() or "increase" in statement.lower() or "decrease" in statement.lower():
+					isIncrement = True
+			if isIncrement:
+				iOperator = ""
+				iVar = ""
+				iAmt = ""
+				if "increment" in statement.lower() or "increase" in statement.lower():
+					iOperator = "+"
+				elif "decrement" in statement.lower() or "decrease" in statement.lower():
+					iOperator = "-"
+				if "CD" not in POSElements:
+					iAmt = "1"
+				else:
+					lastWord = statement.split()[-1]
+					tmpAmt = re.sub(r'[^0-9]*?', "", lastWord)
+					iAmt = tmpAmt
+				iVar = statement.split()[-3]
+				updatedstatement = iVar + " = " + iVar + " " + iOperator + " " + iAmt
+				updatedstatement = "--INCDEC-- " + updatedstatement
+				statementAdded = True
+
 
 			# This entire block seems to be unncessary. The pattern caught here is caught elsewhere, and gives the
 			# same output by adding a single line into substituteVars()
@@ -649,12 +704,13 @@ class TestTemplate(object):
 		hLast = headingList[hIndex]
 		bracketOpen = False
 		hlst = []
+		# print(header)
 		for i in range(1, len(testtemplate)):
 			templatecount += 1
 			test = ""
 			testcondition = testtemplate[i]
 			isOther = False
-
+			# print(testcondition)
 			headingSearch = re.search(r'\*\*\*[0-9]*?\*\*\*', testcondition, re.M|re.I)
 			# if headingSearch:
 			headingStr = headingSearch.group()
@@ -685,7 +741,6 @@ class TestTemplate(object):
 			testfunction += lineTab + test
 
 			if "while" in testcondition.strip():
-				print(testcondition)
 				bracketOpen = True
 				isOther = True
 				hlst.append(headingNo)
@@ -694,11 +749,23 @@ class TestTemplate(object):
 
 			if "--ASSIGNMENT--" in testcondition.strip().split():
 				if "=" in testcondition.strip():
-					test = testcondition.strip()
-					test = test.replace("--ASSIGNMENT--", "").strip()
+					# test = testcondition.strip()
+					test = testcondition.replace("--ASSIGNMENT--", "").strip()
 					test = self.convertTextToCode(test)
 					# testfunction += lineTab + str(headingNo) + " " + test
-					testfunction += lineTab + "var " + test
+					# vPrefix = ""
+					# currVar = test.strip().split()[0]
+					# if currVar + " = " not in testfunction:
+					# 	vPrefix = "var "
+					vPrefix = "var "
+					testfunction += lineTab + vPrefix + test
+					isOther = True
+
+			if "--INCDEC--" in testcondition.strip().split():
+				if "=" in testcondition.strip():
+					test = testcondition.replace("--INCDEC--", "").strip()
+					test = self.convertTextToCode(test)
+					testfunction += lineTab + test
 					isOther = True
 
 			if "if " not in testtemplate[i] and not isOther:
@@ -733,7 +800,6 @@ class TestTemplate(object):
 				# testfunction += lineTab + str(headingNo) + " " + "if " + test
 				testfunction += lineTab + "if " + test
 
-			## STOP
 
 			if "return" in testcondition and not isOther:
 				# print(testcondition)
@@ -777,7 +843,8 @@ class TestTemplate(object):
 		# for t in range(1, len(templates)):
 		# 	print(tIndex, ": ", templates[t])
 		template = ''.join(templates)
-		if len(testtemplate) > 1 and "if" in template and "unknown" not in template.split("){")[0] and  "NewTarget" not in template:
+		# if len(testtemplate) > 1 and "if" in template and "unknown" not in template.split("){")[0] and  "NewTarget" not in template:
+		if len(testtemplate) > 1 and "if" in template and "unknown" not in template.split("){")[0]:
 			self.test_templates[header] = template
 
 	# method to filter out sections that do not encode 

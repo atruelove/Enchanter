@@ -33,11 +33,41 @@ IN NNP ( NNP ) VBZ RB JJ , NN JJ .
 IN NNP VBZ JJ , JJ NNP .
 IN NNP VBZ DT NNP NN , VB . JJ ( NNP , NNP ) .
 
+if...let
+IN NNP VBZ RB JJ , VB JJ VB JJ .
+IN NNP VBZ JJ , VB NNP VB VBN .
+RB IN NNP VBZ DT JJ NN NNP NNP NNP JJ NN , VB NNP VB `` NN '' .
+
 if..let...else..let
 IN NNP VBZ RB JJ , VB NNP VB JJ ( NNP ) : RB , VB NNP VB . NNP ( NNP ) .
 IN NNP CC NN : CD , VB NNP VB VBN ( ( NNP NNP NNP ) , CD ) : JJ VB NNP VB VBN ( NNP , NNP ) .
 IN NNP VBZ JJ , VB NNP VB NNP : JJ VB NNP VB . NNP ( NNP ) .
 
 foreach
+IN DT NN NNP IN NNP , VBP
+IN DT NN NNP IN NNP IN NN NN , VBP
+IN DT NNP IN NNP , VBP
+IN DT NN ( JJ NNP NNP NNP NNP , NNP NNP NNP NNP NNP ) NNP WDT VBZ DT NN IN NNS , VBP
+IN DT NN NNP IN DT NNS IN NNP , VBP
+IN DT NNP WDT VBZ DT NN IN NNS , VBP
+IN DT NN NN NNP IN NNP , VBP
+IN DT NNP IN NNP , IN JJ NN NN , VBP (*0*for each d in vardeclarations, in reverse list order, do)
+IN DT NNP WDT VBZ DT NN IN NNP , VBP
+IN DT NNP IN NNP IN NN NN , VBP (*0*for each name in methodnames in list order, do)
+IN DT NN NNP VBG IN CD JJ IN NNP CC NN : NNP , IN VBG NN , VBP
+
+VB NNP VB DT RB VBN NN IN DT JJ NN IN DT NN IN NNP . (*0*let obj be a newly created object with an internal slot for each name in internalslotslist.)
 
 repeat
+NN , IN NNP CC NN : NNP
+NN , IN NNP VBZ RB JJ
+NN , IN NNP CC NN : NNP ,
+NN , IN NNP CC NN : CD
+
+increment
+NN NNP IN CD .
+NN NNP . (mostly return, but some increment)
+NN VBN IN CD .
+JJ NNP CC NNP DT IN CD . (increment 2 variables by 1, "increment toindex and fromindex each by 1.")
+NN NN IN CD .
+JJ NNP IN CD . (*1*increment bytelocation by 1.)
