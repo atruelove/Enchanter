@@ -71,3 +71,12 @@ NN VBN IN CD .
 JJ NNP CC NNP DT IN CD . (increment 2 variables by 1, "increment toindex and fromindex each by 1.")
 NN NN IN CD .
 JJ NNP IN CD . (*1*increment bytelocation by 1.)
+
+assert
+NN : NNP ( NNP ) VBZ JJ .
+NN : NNP ( NNP ) VBZ NN .
+NN : NN VBZ DT NN NN .
+NN : NNP ( NNP ) VBZ VBG .
+NN : NNP VBZ DT JJ NN NN .
+NN : NNP VBZ JJ .
+NN : NNP VBZ CD .

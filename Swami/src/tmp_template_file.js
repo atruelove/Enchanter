@@ -1,6 +1,4 @@
 function test_validatesharedintegertypedarray( typedArray  , onlyInt32  ){
-	
-	
 	if (( typeof ( typedArray ) != "object" )){
 		 try{
 			var output = new ValidateSharedIntegerTypedArray ( typedArray  , onlyInt32  );
@@ -12,12 +10,8 @@ function test_validatesharedintegertypedarray( typedArray  , onlyInt32  ){
 			return;
 		}
 	}
-	
-	
 	var typeName = typedArray
-	
 	if  ( onlyInt32 === true  ) { 
-		
 		if (( typeName != "Int32Array" )){
 			 try{
 				var output = new ValidateSharedIntegerTypedArray ( typedArray  , onlyInt32  );
@@ -34,10 +28,7 @@ function test_validatesharedintegertypedarray( typedArray  , onlyInt32  ){
 	else {
 	}
 	
-	
-	
 	var buffer = typedArray
-	
 	if (( IsSharedArrayBuffer ( buffer ) === false )){
 		 try{
 			var output = new ValidateSharedIntegerTypedArray ( typedArray  , onlyInt32  );
@@ -49,6 +40,5 @@ function test_validatesharedintegertypedarray( typedArray  , onlyInt32  ){
 			return;
 		}
 	}
-	
 		console.log("OK Test")
 }

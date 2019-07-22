@@ -14,7 +14,7 @@
       <file leaf-file-name="swami.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/swami.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="425">
+            <state relative-caret-position="1156">
               <caret line="78" column="82" selection-start-line="78" selection-start-column="16" selection-end-line="78" selection-end-column="82" />
             </state>
           </provider>
@@ -23,7 +23,7 @@
       <file leaf-file-name="extractRelevantSections.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/extractRelevantSections.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
+            <state relative-caret-position="3162">
               <caret line="191" column="40" selection-start-line="191" selection-start-column="40" selection-end-line="191" selection-end-column="40" />
             </state>
           </provider>
@@ -32,8 +32,8 @@
       <file leaf-file-name="generateTestTemplates.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/generateTestTemplates.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="322">
-              <caret line="377" column="29" lean-forward="true" selection-start-line="377" selection-start-column="29" selection-end-line="377" selection-end-column="29" />
+            <state relative-caret-position="75">
+              <caret line="765" column="31" lean-forward="true" selection-start-line="765" selection-start-column="31" selection-end-line="765" selection-end-column="31" />
             </state>
           </provider>
         </entry>
@@ -69,6 +69,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -80,7 +81,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -143,6 +143,27 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/extractRelevantSections.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3247">
+          <caret line="191" column="40" selection-start-line="191" selection-start-column="40" selection-end-line="191" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/generateTestTemplates.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="833">
+          <caret line="49" column="30" selection-start-line="49" selection-start-column="30" selection-end-line="49" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/swami.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1326">
+          <caret line="78" column="82" selection-start-line="78" selection-start-column="16" selection-end-line="78" selection-end-column="82" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/extractRelevantSections.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3247">
@@ -246,22 +267,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/extractRelevantSections.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
+        <state relative-caret-position="3162">
           <caret line="191" column="40" selection-start-line="191" selection-start-column="40" selection-end-line="191" selection-end-column="40" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/swami.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
+        <state relative-caret-position="1156">
           <caret line="78" column="82" selection-start-line="78" selection-start-column="16" selection-end-line="78" selection-end-column="82" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/generateTestTemplates.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="322">
-          <caret line="377" column="29" lean-forward="true" selection-start-line="377" selection-start-column="29" selection-end-line="377" selection-end-column="29" />
+        <state relative-caret-position="75">
+          <caret line="765" column="31" lean-forward="true" selection-start-line="765" selection-start-column="31" selection-end-line="765" selection-end-column="31" />
         </state>
       </provider>
     </entry>

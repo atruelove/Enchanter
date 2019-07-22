@@ -47,6 +47,8 @@ elsePattern = ["RB ,"]
 whilePattern = ["NN", ",", "IN", "NNP"]
 incrementPattern1 = ["IN", "CD", "."]
 incrementPattern2 = ["NN", "NNP", "."]
+assertPattern = ["NN", ":", "."]
+forEachPattern = ["IN", "DT", ",", "VBP"]
 
 class TestTemplate(object):
 	def __init__(self, relspecpath, compiler):
@@ -107,7 +109,7 @@ class TestTemplate(object):
 	
 		expSearch = re.search(r'[0-9]*?--EXP0--[0-9]*?--EXP1--', text, re.M|re.I)
 		if expSearch:
-			print(expSearch.group())
+			# print(expSearch.group())
 			text = re.sub(r'[0-9]*?--EXP0--[0-9]*?--EXP1--', expFunc, text)
 		text = text.replace("--EXP0--", "")
 		text = text.replace("--EXP1--", "")
@@ -473,6 +475,45 @@ class TestTemplate(object):
 				updatedstatement = "--INCDEC-- " + updatedstatement
 				statementAdded = True
 
+			isForEach = False
+			if len(POSElements) >= len(forEachPattern) and "for each" in statement.lower():
+				if POSElements[0] == forEachPattern[0] and POSElements[1] == forEachPattern[1] and POSElements[-1] == forEachPattern[-1] and POSElements[-2] == forEachPattern[-2]:
+					isForEach = True
+			if isForEach:
+				statementAdded = True
+				fVar = ""
+				fArray = ""
+				tmpStatement = statement.strip()
+				tmpStatement = tmpStatement.replace(",", " ,")
+				tmpStatement = tmpStatement.replace("[", " [ ")
+				tmpStatement = tmpStatement.replace("]", " ] ")
+				tmpStatement = tmpStatement.replace("(", " ( ")
+				tmpStatement = tmpStatement.replace(")", " ) ")
+				tmpStatement = tmpStatement.replace("  ", " ")
+				splitStatement = tmpStatement.split()
+				openBracket = False
+				pIndex = 0
+				print(POSElements)
+				print(splitStatement)
+				while pIndex < len(POSElements) and fVar == "":
+					if POSElements[pIndex] == "(":
+						openBracket = True
+					if POSElements[pIndex] == ")":
+						openBracket = False
+					if POSElements[pIndex] == "NNP" and not openBracket:
+						fVar = splitStatement[pIndex]
+					pIndex += 1
+
+				pIndex = len(POSElements) - 1
+				while pIndex >= 0 and fArray == "":
+					if POSElements[pIndex] == "NNP" or POSElements[pIndex] == "NNS":
+						fArray = splitStatement[pIndex]
+					pIndex -= 1
+				updatedstatement = fArray + ".forEach(function( " + fVar + " )"
+				if "reverse" in statement.lower():
+					updatedstatement = updatedstatement + "--REVERSE--"
+				print(updatedstatement)
+
 
 			# This entire block seems to be unncessary. The pattern caught here is caught elsewhere, and gives the
 			# same output by adding a single line into substituteVars()
@@ -738,13 +779,24 @@ class TestTemplate(object):
 				hlst.append(headingNo)
 				test = "else {"
 				# testfunction += lineTab + str(headingNo) + " " + test
-			testfunction += lineTab + test
+				testfunction += lineTab + test
 
 			if "while" in testcondition.strip():
 				bracketOpen = True
 				isOther = True
 				hlst.append(headingNo)
 				test = self.convertTextToCode(testcondition)
+				testfunction += lineTab + test + " { "
+
+			if ".forEach" in testcondition:
+				print(testcondition)
+				bracketOpen = True
+				isOther = True
+				hlst.append(headingNo)
+				test = self.convertTextToCode(testcondition)
+				print(testcondition)
+				if "--REVERSE--" in testcondition:
+					test = test.replace("--REVERSE--", "")
 				testfunction += lineTab + test + " { "
 
 			if "--ASSIGNMENT--" in testcondition.strip().split():
