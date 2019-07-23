@@ -28,6 +28,12 @@ function test_validatesharedintegertypedarray( typedArray  , onlyInt32  ){
 	else {
 	}
 	
+	if (  typedArray instanceof ArrayBuffer === true ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
 	var buffer = typedArray;
 	if (( IsSharedArrayBuffer ( buffer ) === false )){
 		 try{

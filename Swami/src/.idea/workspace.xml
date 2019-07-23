@@ -32,8 +32,8 @@
       <file leaf-file-name="generateTestTemplates.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/generateTestTemplates.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="316">
-              <caret line="685" column="45" selection-start-line="685" selection-start-column="45" selection-end-line="685" selection-end-column="45" />
+            <state relative-caret-position="568">
+              <caret line="534" lean-forward="true" selection-start-line="534" selection-end-line="534" />
             </state>
           </provider>
         </entry>
@@ -306,8 +306,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/generateTestTemplates.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="316">
-          <caret line="685" column="45" selection-start-line="685" selection-start-column="45" selection-end-line="685" selection-end-column="45" />
+        <state relative-caret-position="568">
+          <caret line="534" lean-forward="true" selection-start-line="534" selection-end-line="534" />
         </state>
       </provider>
     </entry>

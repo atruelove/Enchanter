@@ -48,7 +48,7 @@ elsePattern = ["RB ,"]
 whilePattern = ["NN", ",", "IN", "NNP"]
 incrementPattern1 = ["IN", "CD", "."]
 incrementPattern2 = ["NN", "NNP", "."]
-assertPattern = ["NN", ":", "."]
+assertPattern = ["NN", ":", "NN", "."]
 forEachPattern = ["IN", "DT", ",", "VBP"]
 
 class TestTemplate(object):
@@ -521,6 +521,18 @@ class TestTemplate(object):
 					updatedstatement = updatedstatement + "--REVERSE--"
 				# print(updatedstatement)
 
+			isAssert = False
+			if len(POSElements) >= len(assertPattern):
+				if POSElements[0] == assertPattern[0] and POSElements[1] == assertPattern[1]:
+					if assertPattern[2] in POSElements[2] and POSElements[-1] == assertPattern[-1] and "assert" in statement.lower():
+						isAssert = True
+			if isAssert:
+				statementAdded = True
+				updatedstatement = statement.replace("Assert:", "").strip()
+				updatedstatement = self.substituteVars(("if " + updatedstatement), sectionid)
+				updatedstatement = "--ASSERT--" + updatedstatement
+				print(updatedstatement)
+
 
 			# This entire block seems to be unncessary. The pattern caught here is caught elsewhere, and gives the
 			# same output by adding a single line into substituteVars()
@@ -629,6 +641,9 @@ class TestTemplate(object):
 		text = text.replace("min (", "Math.min (")
 		text = text.replace("max (", "Math.max (")
 		text = text.replace("abs (", "Math.abs (")
+		text = text.replace("min(", "Math.min (")
+		text = text.replace("max(", "Math.max (")
+		text = text.replace("abs(", "Math.abs (")
 		if "already an integer" in text:
 			var = text.split("===")[0].split("(")[1]
 			text = text.replace("already an integer", "parseInt(" + var +", 10)")
@@ -831,6 +846,20 @@ class TestTemplate(object):
 					testfunction += lineTab + test
 					isOther = True
 
+			if "--ASSERT--" in testcondition.strip():
+				test = testcondition.replace("--ASSERT--", "").strip()
+				test = self.convertTextToCode(test)
+				test = "if ( " + test + " ) {"
+				test += lineTab + "\t" + "console.log(\"Good Test\");"
+				test += lineTab + "}"
+				test += lineTab + "else { "
+				test += lineTab + "\t" + "console.log(\"Bad Test\");"
+				test += lineTab + "} "
+				print(test)
+				isOther = True
+				testfunction = testfunction + lineTab + test
+
+
 			if "if " not in testtemplate[i].lower() and not isOther:
 				# hLast = headingList[hIndex]
 				hIndex += 1
@@ -843,11 +872,7 @@ class TestTemplate(object):
 				hIndex += 1
 				continue
 
-			# testcondition = testtemplate[i]
-			# test = ""
 
-			## Still need to do some work with the multiline statements
-			## If you want to remove multiline material from the templates, comment out all the following lines until you get to the STOP line
 
 			# test = "" + ("\t" * headingList[hIndex])
 			# if headingList[hIndex] != -1 and headingList[hIndex] < hLast:

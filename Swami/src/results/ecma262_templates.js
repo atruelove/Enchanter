@@ -109,6 +109,24 @@ function SameValueZero(x,y){
 
 
 function test_advancestringindex(randominput,S,index,unicode){
+	if (  typeof ( S ) === String ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
+	if (  index === an integer such that 0 <= index <= Math.pow ( 2 , 53 ) - 1 ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
+	if (  typeof ( unicode ) === Boolean ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
 	if (( unicode === false )){
 		var output = new String(randominput).AdvanceStringIndex(S,index,unicode);
 		assert.strictEqual(index + 1, output);
@@ -140,8 +158,94 @@ function test_advancestringindex(randominput,S,index,unicode){
 }
 
 
+function test_allocatearraybuffer(constructor,byteLength){
+	if (  byteLength === an integer value >=  0 ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
+	var block = CreateByteDataBlock(byteLength);
+		console.log("OK Test")
+}
+
+
+function test_allocatesharedarraybuffer(randominput,constructor,byteLength){
+	if (  byteLength === nonnegative integer ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
+	var block = CreateSharedByteDataBlock(byteLength);
+		console.log("OK Test")
+}
+
+
+function test_array( ){
+	var numberOfArgs = arguments.length;
+	if (  numberOfArgs = 0 ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
+	if  ( NewTarget === undefined  ) { 
+	}
+	
+	else {
+		var newTarget = NewTarget;
+	}
+	
+	var proto = GetPrototypeFromConstructor(newTarget, "%ArrayPrototype%");
+		console.log("OK Test")
+}
+
+
+function test_array( items ){
+	var numberOfArgs = arguments.length;
+	if (  numberOfArgs >=  2 ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
+	if  ( NewTarget === undefined  ) { 
+	}
+	
+	else {
+		var newTarget = NewTarget;
+	}
+	
+	var proto = GetPrototypeFromConstructor(newTarget, "%ArrayPrototype%");
+	var array = ArrayCreate(numberOfArgs, proto);
+	var k = 0;
+	var items = a zero-origined List containingargument items in order;
+	while ( k < numberOfArgs ) { 
+		var Pk = ToString(k);
+		var itemK = items[k];
+		var defineStatus = CreateDataProperty(array, Pk, itemK);
+		if (  defineStatus === true ) {
+			console.log("Good Test");
+		}
+		else { 
+			console.log("Bad Test");
+		} 
+		k = k + 1
+	}
+	
+		console.log("OK Test")
+}
+
+
 function test_array( len ){
 	var numberOfArgs = arguments.length;
+	if (  numberOfArgs = 1 ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
 	if  ( NewTarget === undefined  ) { 
 	}
 	
@@ -153,6 +257,12 @@ function test_array( len ){
 	var array = ArrayCreate(0, proto);
 	if  ( typeof ( len ) != "number"  ) { 
 		var defineStatus = CreateDataProperty(array, "0", len);
+		if (  defineStatus === true ) {
+			console.log("Good Test");
+		}
+		else { 
+			console.log("Bad Test");
+		} 
 		var intLen = 1;
 	}
 	
@@ -576,7 +686,7 @@ function test_array_prototype_lastindexof(randominput, searchElement  , fromInde
 		}
 		
 		else {
-			var k = min(n, len - 1);
+			var k = Math.min (n, len - 1);
 	}
 	
 		var k = len + n;
@@ -918,7 +1028,7 @@ function test_arraybuffer_prototype_slice(randominput,start,end){
 	}
 	
 	else {
-		var first = min(relativeStart, len);
+		var first = Math.min (relativeStart, len);
 	}
 	
 	if  ( end === undefined  ) { 
@@ -932,10 +1042,10 @@ function test_arraybuffer_prototype_slice(randominput,start,end){
 	}
 	
 	else {
-		var final = min(relativeEnd, len);
+		var final = Math.min (relativeEnd, len);
 	}
 	
-	var newLen = max(final-first, 0);
+	var newLen = Math.max (final-first, 0);
 	var ctor = SpeciesConstructor(O, %ArrayBuffer%);
 	var new = Construct(ctor, « newLen »);
 	if (( new instanceof ArrayBuffer === false )){
@@ -999,7 +1109,49 @@ function test_arraybuffer_prototype_slice(randominput,start,end){
 }
 
 
+function test_atomics_wait(typedArray,index,value,timeout){
+	var buffer = ValidateSharedIntegerTypedArray(typedArray, true);
+	var i = ValidateAtomicAccess(typedArray, index);
+	var v = ToInt32(value);
+	var q = ToNumber(timeout);
+	else {
+		var t = Math.max (q, 0);
+	}
+	
+	var B = AgentCanSuspend();
+	var block = buffer;
+	var offset = typedArray;
+	var indexedPosition = (i × 4) + offset;
+	var WL = GetWaiterList(block, indexedPosition);
+	var w = AtomicLoad(typedArray, i);
+	var W = AgentSignier();
+	var awoken = Suspend(WL, W, t);
+		if (  W != on list of waiters in WL ) {
+			console.log("Good Test");
+		}
+		else { 
+			console.log("Bad Test");
+		} 
+	else {
+	}
+	
+		console.log("OK Test")
+}
+
+
 function test_clonearraybuffer(srcBuffer,srcByteOffset,srcLength,cloneConstructor){
+	if (  typeof ( srcBuffer ) === "object" && it has an [[ArrayBufferData]] internal slot ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
+	if (  IsConstructor ( cloneConstructor ) === true ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
 	var targetBuffer = AllocateArrayBuffer(cloneConstructor, srcLength);
 	if (( IsDetachedBuffer ( srcBuffer ) === true )){
 		 try{
@@ -1014,6 +1166,17 @@ function test_clonearraybuffer(srcBuffer,srcByteOffset,srcLength,cloneConstructo
 	}
 	var srcBlock = srcBuffer;
 	var targetBlock = targetBuffer;
+		console.log("OK Test")
+}
+
+
+function test_createarrayiterator( array, kind ){
+	if (  typeof ( array ) === Object ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
 		console.log("OK Test")
 }
 
@@ -1057,6 +1220,126 @@ function test_createsetiterator(randominput,set,kind){
 			return;
 		}
 	}
+		console.log("OK Test")
+}
+
+
+function test_createstringiterator(randominput,string){
+	if (  typeof ( string ) === String ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
+		console.log("OK Test")
+}
+
+
+function test_date(randominput){
+	var numberOfArgs = arguments.length;
+	if (  numberOfArgs = 0 ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
+	if  ( NewTarget === undefined  ) { 
+		var now =Number that istime value (UTC) identyingcurrent time;
+	}
+	
+	else {
+		var O = OrdinaryCreateFromConstructor(NewTarget, "%DatePrototype%", « [[DateValue]] »);
+		console.log("OK Test")
+}
+
+
+function test_date(randominput,value){
+	var numberOfArgs = arguments.length;
+	if (  numberOfArgs = 1 ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
+	if  ( NewTarget === undefined  ) { 
+		var now =Number that istime value (UTC) identyingcurrent time;
+	}
+	
+	else {
+		if  ( typeof ( value ) === "object" && value has [[DateValue]] internal slot  ) { 
+			var tv = thisTimeValue(value);
+		}
+		
+		else {
+			var v = ToPrimitive(value);
+			if  ( typeof ( v ) === String  ) { 
+			}
+			
+			else {
+				var tv = ToNumber(v);
+		}
+		
+		var O = OrdinaryCreateFromConstructor(NewTarget, "%DatePrototype%", « [[DateValue]] »);
+		}
+		
+		console.log("OK Test")
+}
+
+
+function test_date(randominput,year,month,date,hours,minutes,seconds,ms){
+	var numberOfArgs = arguments.length;
+	if (  numberOfArgs >=  2 ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
+	if  ( NewTarget === undefined  ) { 
+		var now =Number that istime value (UTC) identyingcurrent time;
+	}
+	
+	else {
+		var y = ToNumber(year);
+		var m = ToNumber(month);
+		if  ( date === present  ) { 
+		}
+		
+		else {
+			var dt = 1;
+		}
+		
+		if  ( hours === present  ) { 
+		}
+		
+		else {
+			var h = 0;
+		}
+		
+		if  ( minutes === present  ) { 
+		}
+		
+		else {
+			var min = 0;
+		}
+		
+		if  ( seconds === present  ) { 
+		}
+		
+		else {
+		}
+		
+		if  ( ms === present  ) { 
+		}
+		
+		else {
+			var milli = 0;
+		}
+		
+		if  ( y != NaN && 0 <=  ToInteger ( y ) <=  99  ) { 
+		}
+		
+		var finalDate = MakeDate(MakeDay(yr, m, dt), MakeTime(h, min, s, milli));
+		var O = OrdinaryCreateFromConstructor(NewTarget, "%DatePrototype%", « [[DateValue]] »);
 		console.log("OK Test")
 }
 
@@ -1304,6 +1587,92 @@ function test_date_prototype_toutcstring(randominput){
 		}
 	var weekday =Name ofentry in Table 46 withNumber WeekDay(tv);
 	var month =Name ofentry in Table 47 withNumber MonthFromTime(tv);
+		console.log("OK Test")
+}
+
+
+function test_detacharraybuffer(arrayBuffer,key){
+	if (  IsSharedArrayBuffer ( arrayBuffer ) === false ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
+		console.log("OK Test")
+}
+
+
+function test_getmodifysetvalueinbuffer(randominput,arrayBuffer,byteIndex,type,value,op,isLittleEndian){
+	if (  IsSharedArrayBuffer ( arrayBuffer ) === true ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
+	if (  byteIndex === an integer value >=  0 ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
+	if (  typeof ( value ) === Number ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
+	var block = arrayBuffer;
+	var rawBytes = NumberToRawBytes(type, value, isLittleEndian);
+	var execution =[[CandidateExecution]] field ofsurrounding agent's Agent Record;
+	var rawBytesRead = a List of length elementSize of nondeterministically chosen byte values;
+		console.log("OK Test")
+}
+
+
+function test_getvaluefrombuffer( arrayBuffer, byteIndex, type, isTypedArray, order  , isLittleEndian  ){
+	if (  IsDetachedBuffer ( arrayBuffer ) === false ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
+	if (  byteIndex === an integer value >=  0 ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
+	var block = arrayBuffer;
+	if  ( IsSharedArrayBuffer ( arrayBuffer ) === true  ) { 
+		var execution =[[CandidateExecution]] field ofsurrounding agent's Agent Record;
+		if  ( isTypedArray === true && type === "Int8" , "Uint8" , "Int16" , "Uint16" , "Int32" , or "Uint32"  ) { 
+			var noTear = true; otherwise let noTear;
+		}
+		
+		var rawValue = a List of length elementSize of nondeterministically chosen byte values;
+	}
+	
+	else {
+	}
+	
+		console.log("OK Test")
+}
+
+
+function test_issharedarraybuffer(randominput,obj){
+	if (  typeof ( obj ) === "object" && it has an [[ArrayBufferData]] internal slot ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
+	var bufferData = obj;
+	if (  bufferData === Shared Data Block ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
 		console.log("OK Test")
 }
 
@@ -1689,6 +2058,12 @@ function test_number_issafeinteger(number){
 function test_number_prototype_toexponential(randominput,fractionDigits){
 	var x = thisNumberValue(randominput);
 	var f = ToInteger(fractionDigits);
+	if (  f === 0 , when fractionDigits === undefined ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
 	if (Object.is( x,NaN )){
 		var output = Number(randominput).toExponential(fractionDigits);
 		assert.strictEqual("NaN", output);
@@ -1767,6 +2142,12 @@ function test_number_prototype_toprecision(randominput,precision){
 	}
 	
 		if  ( e < - 6 || e >=  p  ) { 
+			if (  e!= 0 ) {
+				console.log("Good Test");
+			}
+			else { 
+				console.log("Bad Test");
+			} 
 			if  ( p!= 1  ) { 
 				var a =first element of m, and let b;
 				var m =string-concatenation of a, ";
@@ -1892,6 +2273,40 @@ function test_set(randominput,iterable){
 }
 
 
+function test_setvalueinbuffer( arrayBuffer, byteIndex, type, value, isTypedArray, order  , isLittleEndian  ){
+	if (  IsDetachedBuffer ( arrayBuffer ) === false ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
+	if (  byteIndex === an integer value >=  0 ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
+	if (  typeof ( value ) === Number ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
+	var block = arrayBuffer;
+	var rawBytes = NumberToRawBytes(type, value, isLittleEndian);
+	if  ( IsSharedArrayBuffer ( arrayBuffer ) === true  ) { 
+		var execution =[[CandidateExecution]] field ofsurrounding agent's Agent Record;
+		if  ( isTypedArray === true && type === "Int8" , "Uint8" , "Int16" , "Uint16" , "Int32" , or "Uint32"  ) { 
+			var noTear = true; otherwise let noTear;
+	}
+	
+	else {
+	}
+	
+		console.log("OK Test")
+}
+
+
 function test_setviewvalue(randominput,view,requestIndex,isLittleEndian,type,value){
 	if (( typeof ( view ) != "object" )){
 		 try{
@@ -1904,6 +2319,12 @@ function test_setviewvalue(randominput,view,requestIndex,isLittleEndian,type,val
 			return;
 		}
 	}
+	if (  view instanceof ArrayBuffer === true ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
 	var getIndex = ToIndex(requestIndex);
 	var numberValue = ToNumber(value);
 	var buffer = view;
@@ -2052,7 +2473,7 @@ function test_string_prototype_endswith(randominput,searchString,endPosition){
 		var pos = ToInteger(endPosition);
 	}
 	
-	var end = min(max(pos, 0), len);
+	var end = Math.min (Math.max (pos, 0), len);
 	var searchLength =length of searchStr;
 	var start = end - searchLength;
 	if (( start < 0 )){
@@ -2083,7 +2504,7 @@ function test_string_prototype_includes(randominput,searchString,position){
 	var searchStr = ToString(searchString);
 	var pos = ToInteger(position);
 	var len =length of S;
-	var start = min(max(pos, 0), len);
+	var start = Math.min (Math.max (pos, 0), len);
 	var searchLen =length of searchStr;
 		console.log("OK Test")
 }
@@ -2272,13 +2693,19 @@ function test_string_prototype_startswith(randominput,searchString,position){
 	var searchStr = ToString(searchString);
 	var pos = ToInteger(position);
 	var len =length of S;
-	var start = min(max(pos, 0), len);
+	var start = Math.min (Math.max (pos, 0), len);
 	var searchLength =length of searchStr;
 		console.log("OK Test")
 }
 
 
 function test_typedarray( buffer  , byteOffset  , length   ){
+	if (  typeof ( buffer ) === "object" && buffer has an [[ArrayBufferData]] internal slot ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
 	var O = AllocateTypedArray(constructorName, NewTarget, "%TypedArrayPrototype%");
 	var elementSize =Number value ofElement Size value in Table 56 for constructorName;
 	var offset = ToIndex(byteOffset);
@@ -2351,7 +2778,59 @@ function test_typedarray( buffer  , byteOffset  , length   ){
 }
 
 
+function test_typedarray( length ){
+	if (  typeof ( length ) != Object ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
+	var elementLength = ToIndex(length);
+		console.log("OK Test")
+}
+
+
+function test_typedarray( object ){
+	var O = AllocateTypedArray(constructorName, NewTarget, "%TypedArrayPrototype%");
+	var usingIterator = GetMethod(object, @@iterator);
+	if  ( usingIterator != undefined  ) { 
+		var values = IterableToList(object, usingIterator);
+		var len = values.length;
+		var k = 0;
+		while ( k < len ) { 
+			var Pk = ToString(k);
+			var kValue =first element of values and remove that element from values;
+			k = k + 1
+		}
+		
+		if (  values === now an empty List ) {
+			console.log("Good Test");
+		}
+		else { 
+			console.log("Bad Test");
+		} 
+	}
+	
+	var arrayLike = object;
+	var len = ToLength( Get(arrayLike, "length"));
+	var k = 0;
+	while ( k < len ) { 
+		var Pk = ToString(k);
+		var kValue = Get(arrayLike, Pk);
+		k = k + 1
+	}
+	
+		console.log("OK Test")
+}
+
+
 function test_typedarray( typedArray ){
+	if (  typeof ( typedArray ) === "object" && typedArray has [[TypedArrayName]] internal slot ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
 	var O = AllocateTypedArray(constructorName, NewTarget, "%TypedArrayPrototype%");
 	var srcArray = typedArray;
 	var srcData = srcArray;
@@ -2424,9 +2903,33 @@ function test_typedarray( typedArray ){
 }
 
 
+function test_typedarrayspeciescreate( exemplar, argumentList ){
+	if (  exemplar === an "object" that has [[TypedArrayName]] internal slot ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
+	var constructor = SpeciesConstructor(exemplar, defaultConstructor);
+		console.log("OK Test")
+}
+
+
 function test_validateatomicaccess( typedArray, requestIndex ){
+	if (  typedArray === an "object" that instanceof ArrayBuffer === true ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
 	var accessIndex = ToIndex(requestIndex);
 	var length = typedArray;
+	if (  accessIndex >=  0 ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
 	if (( accessIndex >=  length )){
 		 try{
 			var output = new ValidateAtomicAccess ( typedArray, requestIndex );
@@ -2472,6 +2975,12 @@ function test_validatesharedintegertypedarray( typedArray  , onlyInt32  ){
 	else {
 	}
 	
+	if (  typedArray instanceof ArrayBuffer === true ) {
+		console.log("Good Test");
+	}
+	else { 
+		console.log("Bad Test");
+	} 
 	var buffer = typedArray;
 	if (( IsSharedArrayBuffer ( buffer ) === false )){
 		 try{
