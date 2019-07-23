@@ -43,6 +43,7 @@ relevantstmtpattern2 = re.compile("If .* the result is .*")
 letPOSPatterns = ["VB", "NNP", "VB", "."]
 ifResultPOSPatterns = ["IN", "NNP", "."]
 multiStepIfPatterns = ["IN", "NNP", ",", "RB"]
+# altMultiStepIfPattern = ["IN", "DT", "VBZ", "JJ", ",", "RB"]
 elsePattern = ["RB ,"]
 whilePattern = ["NN", ",", "IN", "NNP"]
 incrementPattern1 = ["IN", "CD", "."]
@@ -348,7 +349,7 @@ class TestTemplate(object):
 		numvars = 0
 		index = 0
 		POS = bodyPOS.split("\n")
-		print(sectionid)
+		# print(sectionid)
 		for statement in body.split("\n"):
 			statementAdded = False
 			if len(statement) > 100 or statement == "":
@@ -386,6 +387,11 @@ class TestTemplate(object):
 					value = value.split(".")[0]
 				if "the number of elements in" in value:
 					value = value.replace("the number of elements in", "").strip() + ".length"
+				if "the number of arguments passed to this function call" in value:
+					value = "arguments.length"
+				if "number of code units in" in value:
+					value = value.replace("number of code units in", " ").strip()
+					value += ".length"
 				self.variable_dataset[var,sectionid] = value
 				updatedstatement = "--ASSIGNMENT-- " + str(var) + " = " + str(value)
 				# print(updatedstatement)
@@ -394,9 +400,10 @@ class TestTemplate(object):
 
 			isMultiStepIf = False
 			if len(POSElements) >= len(multiStepIfPatterns):
-				if POSElements[0] == multiStepIfPatterns[0] and POSElements[1] == multiStepIfPatterns[1]:
-					if POSElements[-1] == multiStepIfPatterns[-1] and POSElements[-2] == multiStepIfPatterns[-2]:
-						isMultiStepIf = True
+				if POSElements[0] == multiStepIfPatterns[0]:
+					if POSElements[1] == multiStepIfPatterns[1] or POSElements[1]=="DT":
+						if POSElements[-1] == multiStepIfPatterns[-1] and POSElements[-2] == multiStepIfPatterns[-2]:
+							isMultiStepIf = True
 			# for m in multiStepIfPatterns:
 			# 	if POS[index].strip() == m:
 			# 		isMultiStepIf = True
@@ -493,8 +500,8 @@ class TestTemplate(object):
 				splitStatement = tmpStatement.split()
 				openBracket = False
 				pIndex = 0
-				print(POSElements)
-				print(splitStatement)
+				# print(POSElements)
+				# print(splitStatement)
 				while pIndex < len(POSElements) and fVar == "":
 					if POSElements[pIndex] == "(":
 						openBracket = True
@@ -509,10 +516,10 @@ class TestTemplate(object):
 					if POSElements[pIndex] == "NNP" or POSElements[pIndex] == "NNS":
 						fArray = splitStatement[pIndex]
 					pIndex -= 1
-				updatedstatement = fArray + ".forEach(function( " + fVar + " )"
+				updatedstatement = fArray + ".forEach(function( " + fVar + " ) ) "
 				if "reverse" in statement.lower():
 					updatedstatement = updatedstatement + "--REVERSE--"
-				print(updatedstatement)
+				# print(updatedstatement)
 
 
 			# This entire block seems to be unncessary. The pattern caught here is caught elsewhere, and gives the
@@ -673,6 +680,10 @@ class TestTemplate(object):
 				rhs = text.split("===")[1].strip()
 				text = "Object.is" + lhs + "," + rhs
 		text = re.sub(r',\s*?,\s*?then\s*?,\s*?,', " ) { ", text)
+		newSearch = re.search(r'a newly created .*? object', text, re.I | re.M)
+		if newSearch:
+			text = text.replace("a newly created", "")
+			text = text.replace("object)", ")")
 		return text
 
 
@@ -745,6 +756,7 @@ class TestTemplate(object):
 		hLast = headingList[hIndex]
 		bracketOpen = False
 		hlst = []
+		usesNode = False
 		# print(header)
 		for i in range(1, len(testtemplate)):
 			templatecount += 1
@@ -789,12 +801,11 @@ class TestTemplate(object):
 				testfunction += lineTab + test + " { "
 
 			if ".forEach" in testcondition:
-				print(testcondition)
+				# print(testcondition)
 				bracketOpen = True
 				isOther = True
 				hlst.append(headingNo)
 				test = self.convertTextToCode(testcondition)
-				print(testcondition)
 				if "--REVERSE--" in testcondition:
 					test = test.replace("--REVERSE--", "")
 				testfunction += lineTab + test + " { "
@@ -810,7 +821,7 @@ class TestTemplate(object):
 					# if currVar + " = " not in testfunction:
 					# 	vPrefix = "var "
 					vPrefix = "var "
-					testfunction += lineTab + vPrefix + test
+					testfunction += lineTab + vPrefix + test + ";"
 					isOther = True
 
 			if "--INCDEC--" in testcondition.strip().split():
@@ -820,7 +831,7 @@ class TestTemplate(object):
 					testfunction += lineTab + test
 					isOther = True
 
-			if "if " not in testtemplate[i] and not isOther:
+			if "if " not in testtemplate[i].lower() and not isOther:
 				# hLast = headingList[hIndex]
 				hIndex += 1
 				continue
@@ -878,6 +889,7 @@ class TestTemplate(object):
 				if self.compiler == "rhino":
 					test = "if (" + expectedinput + "){" + lineTab + "\t try{" + lineTab + "\t\t" + vardecl + lineTab + "\t\t return;"  + lineTab + "\t}catch(e){" + lineTab + "\t\t" + "new TestCase(\"" + testname + "\", \"" + testname + "\", true, eval(e instanceof "  + expectedoutput + "));" + lineTab + "\t\ttest();" + lineTab + "\t\treturn;" + lineTab + "\t}" + lineTab + "}"
 				elif self.compiler == "node":
+					usesNode = True
 					test = "if (" + expectedinput + "){" + lineTab + "\t try{" + lineTab + "\t\t" + vardecl + lineTab + "\t\tconsole.log(\"Bad Test/Failed Test\");" + lineTab + "\t\t return;"  + lineTab + "\t}catch(e){" + lineTab + "\t\t" + "assert.strictEqual(true, eval(e instanceof "  + expectedoutput + "));" + lineTab + "\t\tconsole.log(\"Good Test\");" + lineTab + "\t\treturn;" + lineTab + "\t}" + lineTab + "}"
 				if test.count("(")!=test.count(")") or "performing" in test or "implementation" in test or "@@" in test or "«" in test or "[" in test or "either " in test or "finite " in test or  "atomics_wait" in test or "concatenation" in test or "filler" in test or "searchLength" in test or "-searchStr" in test or " not " in test or "unit value of" in test:
 					# hLast = headingList[hIndex]
@@ -889,15 +901,62 @@ class TestTemplate(object):
 		if self.compiler == "node":
 			testfunction = testfunction + "\n\t\tconsole.log(\"OK Test\")\n}"  
 		elif self.compiler == "rhino":	
-			testfunction = testfunction + "\n}"  
+			testfunction = testfunction + "\n}"
+
+		# def writeToTemplate(newTemplate, tmpTemplates, index, openB, tmpLines):
+		# 	if index == len(tmpTemplates):
+		# 		newTemplate = newTemplate + tmpTemplates[index]
+		# 		return newTemplate
+		# 	if (index == 0):
+		# 		newTemplate = newTemplate + tmpTemplates[0]  + "\n"
+		# 		out = writeToTemplate(newTemplate, tmpTemplates, index + 1, False, "")
+		# 		return out
+		# 	else:
+		# 		currentLine = tmpTemplates[index].strip()
+		# 		if openB:
+		# 			if currentLine[-1] == ';':
+		# 				tmpLines = tmpLines + tmpTemplates[index] + "\n"
+		# 				return
+		# 		if not openB:
+		# 			if currentLine[-1] == ';':
+		# 				newTemplate = newTemplate + tmpTemplates[index]  + "\n"
+		# 				return writeToTemplate(newTemplate, tmpTemplates, index + 1, False, "")
+		# 			elif currentLine[-1] == '{':
+		# 				tmpLines = tmpTemplates[index]  + "\n"
+		# 				out = writeToTemplate(newTemplate, tmpTemplates, index + 1, True, tmpLines)
+		# 				if out != "":
+		# 					newTemplate
+
+		tmpTemplates = testfunction.split("\n")
+		newTemplate = ""
+		index = 1
+		openB = False
+		tmpLines = ""
+		# hasContent = False
+		# writeToTemplate(newTemplate, tmpTemplates, index, openB, hasContent)
+		# newTemplate += tmpTemplates[0] + "\n"
+		# while index < len(tmpTemplates):
+		# 	currentLine = tmpTemplates[index].strip()
+		# 	if not openB:
+		# 		if currentLine[-1] == ";":
+		#
+
+
 		templates.append(testfunction)
+		# print(templates)
+		# print(len(templates))
+		finalTemplates = []
 		# tIndex = 1
 		# for t in range(1, len(templates)):
 		# 	print(tIndex, ": ", templates[t])
 		template = ''.join(templates)
 		# if len(testtemplate) > 1 and "if" in template and "unknown" not in template.split("){")[0] and  "NewTarget" not in template:
 		if len(testtemplate) > 1 and "if" in template and "unknown" not in template.split("){")[0]:
-			self.test_templates[header] = template
+			# if usesNode:
+			if "console.log(\"Good Test\");" in template or "console.log(\"Bad Test/Failed Test\");" in template:
+				self.test_templates[header] = template
+			# else:
+			# 	self.test_templates[header] = template
 
 	# method to filter out sections that do not encode 
 	# testable behavior or that cannot be invoked directly

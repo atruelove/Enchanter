@@ -10,7 +10,7 @@ function test_validatesharedintegertypedarray( typedArray  , onlyInt32  ){
 			return;
 		}
 	}
-	var typeName = typedArray
+	var typeName = typedArray;
 	if  ( onlyInt32 === true  ) { 
 		if (( typeName != "Int32Array" )){
 			 try{
@@ -28,7 +28,7 @@ function test_validatesharedintegertypedarray( typedArray  , onlyInt32  ){
 	else {
 	}
 	
-	var buffer = typedArray
+	var buffer = typedArray;
 	if (( IsSharedArrayBuffer ( buffer ) === false )){
 		 try{
 			var output = new ValidateSharedIntegerTypedArray ( typedArray  , onlyInt32  );
