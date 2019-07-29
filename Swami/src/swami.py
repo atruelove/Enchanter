@@ -119,8 +119,8 @@ class Swami(object):
 						outLine = [spl1]
 						writeSubSections(outLine, level + 1)
 					elif " else" in cleaned.lower():
-						cleaned2 = cleaned.replace(", else", "--SPLIT--Else, ")
-						cleaned2 = cleaned2.replace("; else", "--SPLIT--Else, ")
+						cleaned2 = cleaned.replace(", else", ".--SPLIT--Else, ")
+						cleaned2 = cleaned2.replace("; else", ".--SPLIT--Else, ")
 						cleanedSpl = cleaned2.split("--SPLIT--")
 						outFile.write(headingStr)
 						outFile.write(cleanedSpl[0])

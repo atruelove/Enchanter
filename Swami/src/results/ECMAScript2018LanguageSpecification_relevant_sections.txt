@@ -1726,7 +1726,7 @@ Description= The ResolveBinding abstract operation is used to determine the bind
 *1*Set VARenv to the running execution context's LexicalEnvironment. 
 *0*Assert: VARenv is a Lexical Environment. 
 *0*If the code matching the syntactic production that is being evaluated is contained in strict mode code, then
-*1*Let VARstrict be true
+*1*Let VARstrict be true.
 *0*Else,
 *1*let VARstrict be false.
 *0*Return ? FUNCGetIdentifierReference(VARenv, VARname, VARstrict).    
@@ -5199,7 +5199,7 @@ ID= 19.3.3.2
 Summary= Boolean.prototype.toString ( )
 Description= The following steps are taken:
 *0*Let VARb be ? thisBooleanValue(this value). 
-*0*If VARb is true, return "true"
+*0*If VARb is true, return "true".
 *0*Else,
 *1*return "false".
 
@@ -5286,7 +5286,7 @@ ID= 19.5.1.1
 Summary= Error ( message )
 Description= When the Error function is called with argument message, the following steps are taken:
 *0*If NewTarget is undefined, then
-*1*Let VARnewTarget be the active function object
+*1*Let VARnewTarget be the active function object.
 *0*Else,
 *1*let VARnewTarget be NewTarget.
 *0*Let VARO be ? FUNCOrdinaryCreateFromConstructor(VARnewTarget, "%ErrorPrototype%", « [[VARErrorData]] »). 
@@ -5319,7 +5319,7 @@ ID= 19.5.6.1.1
 Summary= NativeError ( message )
 Description= When a NativeError function is called with argument message, the following steps are taken:
 *0*If NewTarget is undefined, then
-*1*Let VARnewTarget be the active function object
+*1*Let VARnewTarget be the active function object.
 *0*Else,
 *1*let VARnewTarget be NewTarget.
 *0*Let VARO be ? FUNCOrdinaryCreateFromConstructor(VARnewTarget, "%VARNativeErrorPrototype%", « [[VARErrorData]] »). 
@@ -5623,23 +5623,23 @@ Description= This description applies only if the Date constructor is called wit
 *1*Let VARy be ? FUNCToNumber(VARyear). 
 *1*Let VARm be ? FUNCToNumber(VARmonth). 
 *1*If VARdate is present, then
-*2*Let VARdt be ? FUNCToNumber(VARdate)
+*2*Let VARdt be ? FUNCToNumber(VARdate).
 *1*Else,
 *2*let VARdt be 1.
 *1*If VARhours is present, then
-*2*Let VARh be ? FUNCToNumber(VARhours)
+*2*Let VARh be ? FUNCToNumber(VARhours).
 *1*Else,
 *2*let VARh be 0.
 *1*If VARminutes is present, then
-*2*Let VARmin be ? FUNCToNumber(VARminutes)
+*2*Let VARmin be ? FUNCToNumber(VARminutes).
 *1*Else,
 *2*let VARmin be 0.
 *1*If VARseconds is present, then
-*2*Let VARs be ? FUNCToNumber(VARseconds)
+*2*Let VARs be ? FUNCToNumber(VARseconds).
 *1*Else,
 *2*let VARs be 0.
 *1*If VARms is present, then
-*2*Let VARmilli be ? FUNCToNumber(VARms)
+*2*Let VARmilli be ? FUNCToNumber(VARms).
 *1*Else,
 *2*let VARmilli be 0.
 *1*If VARy is not NaN and 0 ≤ FUNCToInteger(VARy) ≤ 99, then
@@ -5695,27 +5695,27 @@ Summary= Date.UTC ( year [ , month [ , date [ , hours [ , minutes [ , seconds [ 
 Description= When the UTC function is called, the following steps are taken:
 *0*Let VARy be ? FUNCToNumber(VARyear). 
 *0*If VARmonth is present, then
-*1*Let VARm be ? FUNCToNumber(VARmonth)
+*1*Let VARm be ? FUNCToNumber(VARmonth).
 *0*Else,
 *1*let VARm be 0.
 *0*If VARdate is present, then
-*1*Let VARdt be ? FUNCToNumber(VARdate)
+*1*Let VARdt be ? FUNCToNumber(VARdate).
 *0*Else,
 *1*let VARdt be 1.
 *0*If VARhours is present, then
-*1*Let VARh be ? FUNCToNumber(VARhours)
+*1*Let VARh be ? FUNCToNumber(VARhours).
 *0*Else,
 *1*let VARh be 0.
 *0*If VARminutes is present, then
-*1*Let VARmin be ? FUNCToNumber(VARminutes)
+*1*Let VARmin be ? FUNCToNumber(VARminutes).
 *0*Else,
 *1*let VARmin be 0.
 *0*If VARseconds is present, then
-*1*Let VARs be ? FUNCToNumber(VARseconds)
+*1*Let VARs be ? FUNCToNumber(VARseconds).
 *0*Else,
 *1*let VARs be 0.
 *0*If VARms is present, then
-*1*Let VARmilli be ? FUNCToNumber(VARms)
+*1*Let VARmilli be ? FUNCToNumber(VARms).
 *0*Else,
 *1*let VARmilli be 0.
 *0*If VARy is not NaN and 0 ≤ FUNCToInteger(VARy) ≤ 99, then
@@ -6376,7 +6376,7 @@ Description= The following steps are taken:
 *0*Let VARsearchStr be ? FUNCToString(VARsearchString). 
 *0*Let VARlen be the length of VARS. 
 *0*If VARendPosition is undefined, then
-*1*Let VARpos be VARlen
+*1*Let VARpos be VARlen.
 *0*Else,
 *1*let VARpos be ? FUNCToInteger(VARendPosition).
 *0*Let VARend be min(max(VARpos, 0), VARlen). 
@@ -6590,7 +6590,7 @@ Description= The slice method takes two arguments, start and end, and returns a 
 *0*Let VARlen be the length of VARS. 
 *0*Let VARintStart be ? FUNCToInteger(VARstart). 
 *0*If VARend is undefined, then
-*1*Let VARintEnd be VARlen
+*1*Let VARintEnd be VARlen.
 *0*Else,
 *1*let VARintEnd be ? FUNCToInteger(VARend).
 *0*If VARintStart &lt; 0, then
@@ -6614,7 +6614,7 @@ Description= Returns an Array object into which substrings of the result of conv
 *0*Let VARA be ! FUNCArrayCreate(0). 
 *0*Let VARlengthA be 0. 
 *0*If VARlimit is undefined, then
-*1*Let VARlim be 2--EXP0--32--EXP1---1
+*1*Let VARlim be 2--EXP0--32--EXP1---1.
 *0*Else,
 *1*let VARlim be ? FUNCToUint32(VARlimit).
 *0*Let VARs be the length of VARS. 
@@ -6688,7 +6688,7 @@ Description= The substring method takes two arguments, start and end, and return
 *0*Let VARlen be the length of VARS. 
 *0*Let VARintStart be ? FUNCToInteger(VARstart). 
 *0*If VARend is undefined, then
-*1*Let VARintEnd be VARlen
+*1*Let VARintEnd be VARlen.
 *0*Else,
 *1*let VARintEnd be ? FUNCToInteger(VARend).
 *0*Let VARfinalStart be min(max(VARintStart, 0), VARlen). 
@@ -6975,7 +6975,7 @@ Description= When the abstract operation RegExpInitialize with arguments obj, pa
 *1*let VARF be ? FUNCToString(VARflags).
 *0*If VARF contains any code unit other than "g", "i", "m", "s", "u", or "y" or if it contains the same code unit more than once, throw a SyntaxError exception. 
 *0*If VARF contains "u", then
-*1*Let VARBMP be false
+*1*Let VARBMP be false.
 *0*Else,
 *1*let VARBMP be true.
 *0*If VARBMP is true, then
@@ -7044,17 +7044,17 @@ Description= The abstract operation RegExpBuiltinExec with arguments R and S per
 *0*Let VARlastIndex be ? FUNCToLength(? FUNCGet(VARR, "lastIndex")). 
 *0*Let VARflags be VARR.[[VAROriginalFlags]]. 
 *0*If VARflags contains "g", then
-*1*Let VARglobal be true
+*1*Let VARglobal be true.
 *0*Else,
 *1*let VARglobal be false.
 *0*If VARflags contains "y", then
-*1*Let VARsticky be true
+*1*Let VARsticky be true.
 *0*Else,
 *1*let VARsticky be false.
 *0*If VARglobal is false and VARsticky is false, set VARlastIndex to 0. 
 *0*Let VARmatcher be VARR.[[VARRegExpMatcher]]. 
 *0*If VARflags contains "u", then
-*1*Let VARfullUnicode be true
+*1*Let VARfullUnicode be true.
 *0*Else,
 *1*let VARfullUnicode be false.
 *0*Let VARmatchSucceeded be false. 
@@ -7260,7 +7260,7 @@ Description= Returns an Array object into which substrings of the result of conv
 *0*Let VARA be ! FUNCArrayCreate(0). 
 *0*Let VARlengthA be 0. 
 *0*If VARlimit is undefined, then
-*1*Let VARlim be 2--EXP0--32--EXP1---1
+*1*Let VARlim be 2--EXP0--32--EXP1---1.
 *0*Else,
 *1*let VARlim be ? FUNCToUint32(VARlimit).
 *0*Let VARsize be the length of VARS. 
@@ -7311,7 +7311,7 @@ Description= The following steps are taken:
 *0*If FUNCType(VARR) is not Object, throw a TypeError exception. 
 *0*Let VARstring be ? FUNCToString(VARS). 
 *0*Let VARmatch be ? FUNCRegExpExec(VARR, VARstring). 
-*0*If VARmatch is not null, return true
+*0*If VARmatch is not null, return true.
 *0*Else,
 *1*return false.
 
@@ -7335,7 +7335,7 @@ Description= This description applies if and only if the Array constructor is ca
 *0*Let VARnumberOfArgs be the number of arguments passed to this function call. 
 *0*Assert: VARnumberOfArgs = 0. 
 *0*If NewTarget is undefined, then
-*1*Let VARnewTarget be the active function object
+*1*Let VARnewTarget be the active function object.
 *0*Else,
 *1*let VARnewTarget be NewTarget.
 *0*Let VARproto be ? FUNCGetPrototypeFromConstructor(VARnewTarget, "%ArrayPrototype%"). 
@@ -7349,7 +7349,7 @@ Description= This description applies if and only if the Array constructor is ca
 *0*Let VARnumberOfArgs be the number of arguments passed to this function call. 
 *0*Assert: VARnumberOfArgs = 1. 
 *0*If NewTarget is undefined, then
-*1*Let VARnewTarget be the active function object
+*1*Let VARnewTarget be the active function object.
 *0*Else,
 *1*let VARnewTarget be NewTarget.
 *0*Let VARproto be ? FUNCGetPrototypeFromConstructor(VARnewTarget, "%ArrayPrototype%"). 
@@ -7372,7 +7372,7 @@ Description= This description applies if and only if the Array constructor is ca
 *0*Let VARnumberOfArgs be the number of arguments passed to this function call. 
 *0*Assert: VARnumberOfArgs ≥ 2. 
 *0*If NewTarget is undefined, then
-*1*Let VARnewTarget be the active function object
+*1*Let VARnewTarget be the active function object.
 *0*Else,
 *1*let VARnewTarget be NewTarget.
 *0*Let VARproto be ? FUNCGetPrototypeFromConstructor(VARnewTarget, "%ArrayPrototype%"). 
@@ -7399,7 +7399,7 @@ Description= When the from method is called with argument items and optional arg
 *0*Else,
 *1*If FUNCIsCallable(VARmapfn) is false, throw a TypeError exception. 
 *1*If VARthisArg is present, then
-*2*Let VART be VARthisArg
+*2*Let VART be VARthisArg.
 *1*Else,
 *2*let VART be undefined.
 *1*Let VARmapping be true. 
@@ -7528,20 +7528,20 @@ Description= The copyWithin method takes up to three arguments target, start and
 *0*Let VARlen be ? FUNCToLength(? FUNCGet(VARO, "length")). 
 *0*Let VARrelativeTarget be ? FUNCToInteger(VARtarget). 
 *0*If VARrelativeTarget &lt; 0, then
-*1*Let VARto be max((VARlen + VARrelativeTarget), 0)
+*1*Let VARto be max((VARlen + VARrelativeTarget), 0).
 *0*Else,
 *1*let VARto be min(VARrelativeTarget, VARlen).
 *0*Let VARrelativeStart be ? FUNCToInteger(VARstart). 
 *0*If VARrelativeStart &lt; 0, then
-*1*Let VARfrom be max((VARlen + VARrelativeStart), 0)
+*1*Let VARfrom be max((VARlen + VARrelativeStart), 0).
 *0*Else,
 *1*let VARfrom be min(VARrelativeStart, VARlen).
 *0*If VARend is undefined, then
-*1*Let VARrelativeEnd be VARlen
+*1*Let VARrelativeEnd be VARlen.
 *0*Else,
 *1*let VARrelativeEnd be ? FUNCToInteger(VARend).
 *0*If VARrelativeEnd &lt; 0, then
-*1*Let VARfinal be max((VARlen + VARrelativeEnd), 0)
+*1*Let VARfinal be max((VARlen + VARrelativeEnd), 0).
 *0*Else,
 *1*let VARfinal be min(VARrelativeEnd, VARlen).
 *0*Let VARcount be min(VARfinal-VARfrom, VARlen-VARto). 
@@ -7582,7 +7582,7 @@ Description= callbackfn should be a function that accepts three arguments and re
 *0*Let VARlen be ? FUNCToLength(? FUNCGet(VARO, "length")). 
 *0*If FUNCIsCallable(VARcallbackfn) is false, throw a TypeError exception. 
 *0*If VARthisArg is present, then
-*1*Let VART be VARthisArg
+*1*Let VART be VARthisArg.
 *0*Else,
 *1*let VART be undefined.
 *0*Let VARk be 0. 
@@ -7605,15 +7605,15 @@ Description= The fill method takes up to three arguments value, start and end.
 *0*Let VARlen be ? FUNCToLength(? FUNCGet(VARO, "length")). 
 *0*Let VARrelativeStart be ? FUNCToInteger(VARstart). 
 *0*If VARrelativeStart &lt; 0, then
-*1*Let VARk be max((VARlen + VARrelativeStart), 0)
+*1*Let VARk be max((VARlen + VARrelativeStart), 0).
 *0*Else,
 *1*let VARk be min(VARrelativeStart, VARlen).
 *0*If VARend is undefined, then
-*1*Let VARrelativeEnd be VARlen
+*1*Let VARrelativeEnd be VARlen.
 *0*Else,
 *1*let VARrelativeEnd be ? FUNCToInteger(VARend).
 *0*If VARrelativeEnd &lt; 0, then
-*1*Let VARfinal be max((VARlen + VARrelativeEnd), 0)
+*1*Let VARfinal be max((VARlen + VARrelativeEnd), 0).
 *0*Else,
 *1*let VARfinal be min(VARrelativeEnd, VARlen).
 *0*Repeat, while VARk &lt; VARfinal
@@ -7631,7 +7631,7 @@ Description= callbackfn should be a function that accepts three arguments and re
 *0*Let VARlen be ? FUNCToLength(? FUNCGet(VARO, "length")). 
 *0*If FUNCIsCallable(VARcallbackfn) is false, throw a TypeError exception. 
 *0*If VARthisArg is present, then
-*1*Let VART be VARthisArg
+*1*Let VART be VARthisArg.
 *0*Else,
 *1*let VART be undefined.
 *0*Let VARA be ? FUNCArraySpeciesCreate(VARO, 0). 
@@ -7658,7 +7658,7 @@ Description= The find method is called with one or two arguments, predicate and 
 *0*Let VARlen be ? FUNCToLength(? FUNCGet(VARO, "length")). 
 *0*If FUNCIsCallable(VARpredicate) is false, throw a TypeError exception. 
 *0*If VARthisArg is present, then
-*1*Let VART be VARthisArg
+*1*Let VART be VARthisArg.
 *0*Else,
 *1*let VART be undefined.
 *0*Let VARk be 0. 
@@ -7679,7 +7679,7 @@ Description= predicate should be a function that accepts three arguments and ret
 *0*Let VARlen be ? FUNCToLength(? FUNCGet(VARO, "length")). 
 *0*If FUNCIsCallable(VARpredicate) is false, throw a TypeError exception. 
 *0*If VARthisArg is present, then
-*1*Let VART be VARthisArg
+*1*Let VART be VARthisArg.
 *0*Else,
 *1*let VART be undefined.
 *0*Let VARk be 0. 
@@ -7700,7 +7700,7 @@ Description= callbackfn should be a function that accepts three arguments. forEa
 *0*Let VARlen be ? FUNCToLength(? FUNCGet(VARO, "length")). 
 *0*If FUNCIsCallable(VARcallbackfn) is false, throw a TypeError exception. 
 *0*If VARthisArg is present, then
-*1*Let VART be VARthisArg
+*1*Let VART be VARthisArg.
 *0*Else,
 *1*let VART be undefined.
 *0*Let VARk be 0. 
@@ -7746,7 +7746,7 @@ Description= indexOf compares searchElement to the elements of the array, in asc
 *0*If VARn ≥ VARlen, return -1. 
 *0*If VARn ≥ 0, then
 *1*If VARn is -0, then
-*2*Let VARk be +0
+*2*Let VARk be +0.
 *1*Else,
 *2*let VARk be VARn.
 *0*Else VARn &lt; 0,
@@ -7802,12 +7802,12 @@ Description= lastIndexOf compares searchElement to the elements of the array in 
 *0*Let VARlen be ? FUNCToLength(? FUNCGet(VARO, "length")). 
 *0*If VARlen is 0, return -1. 
 *0*If VARfromIndex is present, then
-*1*Let VARn be ? FUNCToInteger(VARfromIndex)
+*1*Let VARn be ? FUNCToInteger(VARfromIndex).
 *0*Else,
 *1*let VARn be VARlen-1.
 *0*If VARn ≥ 0, then
 *1*If VARn is -0, then
-*2*Let VARk be +0
+*2*Let VARk be +0.
 *1*Else,
 *2*let VARk be min(VARn, VARlen - 1).
 *0*Else VARn &lt; 0,
@@ -7830,7 +7830,7 @@ Description= callbackfn should be a function that accepts three arguments. map c
 *0*Let VARlen be ? FUNCToLength(? FUNCGet(VARO, "length")). 
 *0*If FUNCIsCallable(VARcallbackfn) is false, throw a TypeError exception. 
 *0*If VARthisArg is present, then
-*1*Let VART be VARthisArg
+*1*Let VART be VARthisArg.
 *0*Else,
 *1*let VART be undefined.
 *0*Let VARA be ? FUNCArraySpeciesCreate(VARO, VARlen). 
@@ -8010,15 +8010,15 @@ Description= The slice method takes two arguments, start and end, and returns an
 *0*Let VARlen be ? FUNCToLength(? FUNCGet(VARO, "length")). 
 *0*Let VARrelativeStart be ? FUNCToInteger(VARstart). 
 *0*If VARrelativeStart &lt; 0, then
-*1*Let VARk be max((VARlen + VARrelativeStart), 0)
+*1*Let VARk be max((VARlen + VARrelativeStart), 0).
 *0*Else,
 *1*let VARk be min(VARrelativeStart, VARlen).
 *0*If VARend is undefined, then
-*1*Let VARrelativeEnd be VARlen
+*1*Let VARrelativeEnd be VARlen.
 *0*Else,
 *1*let VARrelativeEnd be ? FUNCToInteger(VARend).
 *0*If VARrelativeEnd &lt; 0, then
-*1*Let VARfinal be max((VARlen + VARrelativeEnd), 0)
+*1*Let VARfinal be max((VARlen + VARrelativeEnd), 0).
 *0*Else,
 *1*let VARfinal be min(VARrelativeEnd, VARlen).
 *0*Let VARcount be max(VARfinal - VARk, 0). 
@@ -8044,7 +8044,7 @@ Description= callbackfn should be a function that accepts three arguments and re
 *0*Let VARlen be ? FUNCToLength(? FUNCGet(VARO, "length")). 
 *0*If FUNCIsCallable(VARcallbackfn) is false, throw a TypeError exception. 
 *0*If VARthisArg is present, then
-*1*Let VART be VARthisArg
+*1*Let VART be VARthisArg.
 *0*Else,
 *1*let VART be undefined.
 *0*Let VARk be 0. 
@@ -8096,7 +8096,7 @@ Description= When the splice method is called with two or more arguments start, 
 *0*Let VARlen be ? FUNCToLength(? FUNCGet(VARO, "length")). 
 *0*Let VARrelativeStart be ? FUNCToInteger(VARstart). 
 *0*If VARrelativeStart &lt; 0, then
-*1*Let VARactualStart be max((VARlen + VARrelativeStart), 0)
+*1*Let VARactualStart be max((VARlen + VARrelativeStart), 0).
 *0*Else,
 *1*let VARactualStart be min(VARrelativeStart, VARlen).
 *0*If the number of actual arguments is 0, then
@@ -8290,7 +8290,7 @@ Description= When the from method is called with argument source, and optional a
 *0*Else,
 *1*let VARmapping be false.
 *0*If VARthisArg is present, then
-*1*Let VART be VARthisArg
+*1*Let VART be VARthisArg.
 *0*Else,
 *1*let VART be undefined.
 *0*Let VARusingIterator be ? FUNCGetMethod(VARsource, @@iterator). 
@@ -8369,20 +8369,20 @@ Description= The interpretation and use of the arguments of %TypedArray%.prototy
 *0*Let VARlen be VARO.[[VARArrayLength]]. 
 *0*Let VARrelativeTarget be ? FUNCToInteger(VARtarget). 
 *0*If VARrelativeTarget &lt; 0, then
-*1*Let VARto be max((VARlen + VARrelativeTarget), 0)
+*1*Let VARto be max((VARlen + VARrelativeTarget), 0).
 *0*Else,
 *1*let VARto be min(VARrelativeTarget, VARlen).
 *0*Let VARrelativeStart be ? FUNCToInteger(VARstart). 
 *0*If VARrelativeStart &lt; 0, then
-*1*Let VARfrom be max((VARlen + VARrelativeStart), 0)
+*1*Let VARfrom be max((VARlen + VARrelativeStart), 0).
 *0*Else,
 *1*let VARfrom be min(VARrelativeStart, VARlen).
 *0*If VARend is undefined, then
-*1*Let VARrelativeEnd be VARlen
+*1*Let VARrelativeEnd be VARlen.
 *0*Else,
 *1*let VARrelativeEnd be ? FUNCToInteger(VARend).
 *0*If VARrelativeEnd &lt; 0, then
-*1*Let VARfinal be max((VARlen + VARrelativeEnd), 0)
+*1*Let VARfinal be max((VARlen + VARrelativeEnd), 0).
 *0*Else,
 *1*let VARfinal be min(VARrelativeEnd, VARlen).
 *0*Let VARcount be min(VARfinal-VARfrom, VARlen-VARto). 
@@ -8442,15 +8442,15 @@ Description= The interpretation and use of the arguments of %TypedArray%.prototy
 *0*Let VARvalue be ? FUNCToNumber(VARvalue). 
 *0*Let VARrelativeStart be ? FUNCToInteger(VARstart). 
 *0*If VARrelativeStart &lt; 0, then
-*1*Let VARk be max((VARlen + VARrelativeStart), 0)
+*1*Let VARk be max((VARlen + VARrelativeStart), 0).
 *0*Else,
 *1*let VARk be min(VARrelativeStart, VARlen).
 *0*If VARend is undefined, then
-*1*Let VARrelativeEnd be VARlen
+*1*Let VARrelativeEnd be VARlen.
 *0*Else,
 *1*let VARrelativeEnd be ? FUNCToInteger(VARend).
 *0*If VARrelativeEnd &lt; 0, then
-*1*Let VARfinal be max((VARlen + VARrelativeEnd), 0)
+*1*Let VARfinal be max((VARlen + VARrelativeEnd), 0).
 *0*Else,
 *1*let VARfinal be min(VARrelativeEnd, VARlen).
 *0*If FUNCIsDetachedBuffer(VARO.[[VARViewedArrayBuffer]]) is true, throw a TypeError exception. 
@@ -8470,7 +8470,7 @@ Description= The interpretation and use of the arguments of %TypedArray%.prototy
 *0*Let VARlen be VARO.[[VARArrayLength]]. 
 *0*If FUNCIsCallable(VARcallbackfn) is false, throw a TypeError exception. 
 *0*If VARthisArg is present, then
-*1*Let VART be VARthisArg
+*1*Let VART be VARthisArg.
 *0*Else,
 *1*let VART be undefined.
 *0*Let VARkept be a new empty List. 
@@ -8510,7 +8510,7 @@ Description= The interpretation and use of the arguments of %TypedArray%.prototy
 *0*Let VARlen be VARO.[[VARArrayLength]]. 
 *0*If FUNCIsCallable(VARcallbackfn) is false, throw a TypeError exception. 
 *0*If VARthisArg is present, then
-*1*Let VART be VARthisArg
+*1*Let VART be VARthisArg.
 *0*Else,
 *1*let VART be undefined.
 *0*Let VARA be ? TypedArraySpeciesCreate(VARO, « VARlen »). 
@@ -8620,7 +8620,7 @@ Description= Sets multiple values in this TypedArray, reading the values from th
 *0*If VARsrcLength + VARtargetOffset &gt; VARtargetLength, throw a RangeError exception. 
 *0*If both FUNCIsSharedArrayBuffer(VARsrcBuffer) and FUNCIsSharedArrayBuffer(VARtargetBuffer) are true, then
 *1*If VARsrcBuffer.[[VARArrayBufferData]] and VARtargetBuffer.[[VARArrayBufferData]] are the same Shared Data Block values, then
-*2*Let VARsame be true
+*2*Let VARsame be true.
 *1*Else,
 *2*let VARsame be false.
 *0*Else,
@@ -8659,15 +8659,15 @@ Description= The interpretation and use of the arguments of %TypedArray%.prototy
 *0*Let VARlen be VARO.[[VARArrayLength]]. 
 *0*Let VARrelativeStart be ? FUNCToInteger(VARstart). 
 *0*If VARrelativeStart &lt; 0, then
-*1*Let VARk be max((VARlen + VARrelativeStart), 0)
+*1*Let VARk be max((VARlen + VARrelativeStart), 0).
 *0*Else,
 *1*let VARk be min(VARrelativeStart, VARlen).
 *0*If VARend is undefined, then
-*1*Let VARrelativeEnd be VARlen
+*1*Let VARrelativeEnd be VARlen.
 *0*Else,
 *1*let VARrelativeEnd be ? FUNCToInteger(VARend).
 *0*If VARrelativeEnd &lt; 0, then
-*1*Let VARfinal be max((VARlen + VARrelativeEnd), 0)
+*1*Let VARfinal be max((VARlen + VARrelativeEnd), 0).
 *0*Else,
 *1*let VARfinal be min(VARrelativeEnd, VARlen).
 *0*Let VARcount be max(VARfinal - VARk, 0). 
@@ -8724,15 +8724,15 @@ Description= Returns a new TypedArray object whose element type is the same as t
 *0*Let VARsrcLength be VARO.[[VARArrayLength]]. 
 *0*Let VARrelativeBegin be ? FUNCToInteger(VARbegin). 
 *0*If VARrelativeBegin &lt; 0, then
-*1*Let VARbeginIndex be max((VARsrcLength + VARrelativeBegin), 0)
+*1*Let VARbeginIndex be max((VARsrcLength + VARrelativeBegin), 0).
 *0*Else,
 *1*let VARbeginIndex be min(VARrelativeBegin, VARsrcLength).
 *0*If VARend is undefined, then
-*1*Let VARrelativeEnd be VARsrcLength
+*1*Let VARrelativeEnd be VARsrcLength.
 *0*Else,
 *1*, then
 *0*If VARrelativeEnd &lt; 0, then
-*1*Let VARendIndex be max((VARsrcLength + VARrelativeEnd), 0)
+*1*Let VARendIndex be max((VARsrcLength + VARrelativeEnd), 0).
 *0*Else,
 *1*let VARendIndex be min(VARrelativeEnd, VARsrcLength).
 *0*Let VARnewLength be max(VARendIndex - VARbeginIndex, 0). 
@@ -9012,7 +9012,7 @@ Description= When the forEach method is called with one or two arguments, the fo
 *0*If VARM does not have a [[VARMapData]] internal slot, throw a TypeError exception. 
 *0*If FUNCIsCallable(VARcallbackfn) is false, throw a TypeError exception. 
 *0*If VARthisArg is present, then
-*1*Let VART be VARthisArg
+*1*Let VART be VARthisArg.
 *0*Else,
 *1*let VART be undefined.
 *0*Let VARentries be the List that is VARM.[[VARMapData]]. 
@@ -9212,7 +9212,7 @@ Description= When the forEach method is called with one or two arguments, the fo
 *0*If VARS does not have a [[VARSetData]] internal slot, throw a TypeError exception. 
 *0*If FUNCIsCallable(VARcallbackfn) is false, throw a TypeError exception. 
 *0*If VARthisArg is present, then
-*1*Let VART be VARthisArg
+*1*Let VART be VARthisArg.
 *0*Else,
 *1*let VART be undefined.
 *0*Let VARentries be the List that is VARS.[[VARSetData]]. 
@@ -9629,15 +9629,15 @@ Description= The following steps are taken:
 *0*Let VARlen be VARO.[[VARArrayBufferByteLength]]. 
 *0*Let VARrelativeStart be ? FUNCToInteger(VARstart). 
 *0*If VARrelativeStart &lt; 0, then
-*1*Let VARfirst be max((VARlen + VARrelativeStart), 0)
+*1*Let VARfirst be max((VARlen + VARrelativeStart), 0).
 *0*Else,
 *1*let VARfirst be min(VARrelativeStart, VARlen).
 *0*If VARend is undefined, then
-*1*Let VARrelativeEnd be VARlen
+*1*Let VARrelativeEnd be VARlen.
 *0*Else,
 *1*let VARrelativeEnd be ? FUNCToInteger(VARend).
 *0*If VARrelativeEnd &lt; 0, then
-*1*Let VARfinal be max((VARlen + VARrelativeEnd), 0)
+*1*Let VARfinal be max((VARlen + VARrelativeEnd), 0).
 *0*Else,
 *1*let VARfinal be min(VARrelativeEnd, VARlen).
 *0*Let VARnewLen be max(VARfinal-VARfirst, 0). 
@@ -9700,15 +9700,15 @@ Description= The following steps are taken:
 *0*Let VARlen be VARO.[[VARArrayBufferByteLength]]. 
 *0*Let VARrelativeStart be ? FUNCToInteger(VARstart). 
 *0*If VARrelativeStart &lt; 0, then
-*1*Let VARfirst be max((VARlen + VARrelativeStart), 0)
+*1*Let VARfirst be max((VARlen + VARrelativeStart), 0).
 *0*Else,
 *1*let VARfirst be min(VARrelativeStart, VARlen).
 *0*If VARend is undefined, then
-*1*Let VARrelativeEnd be VARlen
+*1*Let VARrelativeEnd be VARlen.
 *0*Else,
 *1*let VARrelativeEnd be ? FUNCToInteger(VARend).
 *0*If VARrelativeEnd &lt; 0, then
-*1*Let VARfinal be max((VARlen + VARrelativeEnd), 0)
+*1*Let VARfinal be max((VARlen + VARrelativeEnd), 0).
 *0*Else,
 *1*let VARfinal be min(VARrelativeEnd, VARlen).
 *0*Let VARnewLen be max(VARfinal - VARfirst, 0). 
@@ -10177,7 +10177,7 @@ Description= Atomics.wait puts the calling agent in a wait queue and puts it to 
 *0*Let VARv be ? FUNCToInt32(VARvalue). 
 *0*Let VARq be ? FUNCToNumber(VARtimeout). 
 *0*If VARq is NaN, then
-*1*Let VARt be +∞
+*1*Let VARt be +∞.
 *0*Else,
 *1*let VARt be max(VARq, 0).
 *0*Let VARB be FUNCAgentCanSuspend(). 

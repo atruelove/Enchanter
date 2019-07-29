@@ -42,7 +42,7 @@ relevantstmtpattern2 = re.compile("If .* the result is .*")
 # multiStepIfPatterns = ["IN NNP VBZ JJ , RB", "IN NNP ( NNP ) VBZ JJ , RB", "IN NNP VBZ RB JJ , RB", "IN NNP VBZ VBN , RB"]
 letPOSPatterns = ["VB", "NNP", "VB", "."]
 ifResultPOSPatterns = ["IN", "NNP", "."]
-multiStepIfPatterns = ["IN", "NNP", ",", "RB"]
+multiStepIfPatterns = ["IN", "NNP", "DT", ",", "RB"]
 # altMultiStepIfPattern = ["IN", "DT", "VBZ", "JJ", ",", "RB"]
 elsePattern = ["RB ,"]
 whilePattern = ["NN", ",", "IN", "NNP"]
@@ -50,6 +50,8 @@ incrementPattern1 = ["IN", "CD", "."]
 incrementPattern2 = ["NN", "NNP", "."]
 assertPattern = ["NN", ":", "NN", "."]
 forEachPattern = ["IN", "DT", ",", "VBP"]
+performReturnPatterns = ["NN", ".", "NNP", "."]
+punct = ".,"
 
 class TestTemplate(object):
 	def __init__(self, relspecpath, compiler):
@@ -372,15 +374,15 @@ class TestTemplate(object):
 					mCheck = False
 				isassignment = mCheck
 			if isassignment:
-				postags = self.nlp.pos_tag(statement)
-				match = False
-				for i in range(len(postags)):
-					if "NN" in postags[i][1]:
-						match = True
-						break 
-				if not match:
-					index += 1
-					continue
+				# postags = self.nlp.pos_tag(statement)
+				# match = False
+				# for i in range(len(postags)):
+				# 	if "NN" in postags[i][1]:
+				# 		match = True
+				# 		break
+				# if not match:
+				# 	index += 1
+				# 	continue
 				var, value = self.getAssignment(statement)
 				# var = " " + var + " "
 				if "." in value and ".length" not in value:
@@ -392,6 +394,11 @@ class TestTemplate(object):
 				if "number of code units in" in value:
 					value = value.replace("number of code units in", " ").strip()
 					value += ".length"
+				if "the active function object" in statement:
+					funcObj = ' '.join(header.split()[1:])
+					# print(funcObj)
+					# print(value)
+					value = " new " + funcObj
 				self.variable_dataset[var,sectionid] = value
 				updatedstatement = "--ASSIGNMENT-- " + str(var) + " = " + str(value)
 				# print(updatedstatement)
@@ -399,9 +406,10 @@ class TestTemplate(object):
 				numvars += 1
 
 			isMultiStepIf = False
-			if len(POSElements) >= len(multiStepIfPatterns):
+			if len(POSElements) >= len(multiStepIfPatterns) + 1:
 				if POSElements[0] == multiStepIfPatterns[0]:
-					if POSElements[1] == multiStepIfPatterns[1] or POSElements[1]=="DT":
+					if POSElements[1] == multiStepIfPatterns[1] or (POSElements[1] == multiStepIfPatterns[2] and "newtarget" in statement.strip().lower().split()[1]):
+					# if POSElements[1] == multiStepIfPatterns[1] or ("newtarget" in statement.lower().split[1]):
 						if POSElements[-1] == multiStepIfPatterns[-1] and POSElements[-2] == multiStepIfPatterns[-2]:
 							isMultiStepIf = True
 			# for m in multiStepIfPatterns:
@@ -409,15 +417,15 @@ class TestTemplate(object):
 			# 		isMultiStepIf = True
 			if isMultiStepIf:
 				statementAdded = True
-				postags = self.nlp.pos_tag(statement)
-				match = False
-				for i in range(len(postags)):
-					if "NN" in postags[i][1]:
-						match = True
-						break
-				if not match:
-					index += 1
-					continue
+				# postags = self.nlp.pos_tag(statement)
+				# match = False
+				# for i in range(len(postags)):
+				# 	if "NN" in postags[i][1]:
+				# 		match = True
+				# 		break
+				# if not match:
+				# 	index += 1
+				# 	continue
 				updatedstatement = self.substituteVars(statement, sectionid)
 				# tmpvars = numvars
 				# while (updatedstatement != self.substituteVars(updatedstatement, sectionid) and tmpvars > 0):
@@ -450,8 +458,12 @@ class TestTemplate(object):
 				statement = statement.replace("repeat, ", "")
 				statement = statement.replace("Repeat, ", "")
 				statement = statement.replace("while", "while ( ")
+				if statement.strip()[-1] in punct:
+					statement = statement.strip()[:-1]
 				statement = statement + " ) "
 				updatedstatement = self.substituteVars(statement, sectionid)
+				# if POS[index] == "NN , IN NNP CC NN : NNP":
+				# 	print(updatedstatement)
 
 			isIncrement = False
 			incremProv = False
@@ -531,8 +543,33 @@ class TestTemplate(object):
 				updatedstatement = statement.replace("Assert:", "").strip()
 				updatedstatement = self.substituteVars(("if " + updatedstatement), sectionid)
 				updatedstatement = "--ASSERT--" + updatedstatement
-				print(updatedstatement)
+				# print(updatedstatement)
 
+			isPerform = False
+			isReturn = False
+			if len(POSElements) >= len(performReturnPatterns)-1:
+				if POSElements[-1] == performReturnPatterns[-1] and POSElements[0] == performReturnPatterns[0]:
+					if POSElements[1] == performReturnPatterns[1] or POSElements[1] == performReturnPatterns[2]:
+						# print(statement)
+						if "perform" in statement.lower():
+							isPerform = True
+						elif "return" in statement.lower():
+							isReturn = True
+				if not isPerform and not isReturn and POSElements[-1] == performReturnPatterns[-1] and POSElements[0] == performReturnPatterns[0]:
+					if "return" in statement.lower():
+						isReturn = True
+			if isPerform:
+				statementAdded = True
+				updatedstatement = statement.replace("Perform", "")
+				updatedstatement = self.substituteVars(updatedstatement.strip(), sectionid)
+				updatedstatement = "--PERFORM--" + updatedstatement
+
+			if isReturn:
+				statementAdded = True
+				updatedstatement = statement.replace("Return", "")# + "."
+				updatedstatement = self.substituteVars(updatedstatement.strip(), sectionid)
+				updatedstatement = "--RETURN--" + updatedstatement
+				# print(updatedstatement)
 
 			# This entire block seems to be unncessary. The pattern caught here is caught elsewhere, and gives the
 			# same output by adding a single line into substituteVars()
@@ -566,19 +603,21 @@ class TestTemplate(object):
 			isinputoutput = False
 			# if POS[index].strip() in ifResultPOSPatterns:
 			# 	isinputoutput = True
-			if len(POSElements) >= len(ifResultPOSPatterns) and POSElements[0] == ifResultPOSPatterns[0] and POSElements[1] == ifResultPOSPatterns[1] and POSElements[-1] == ifResultPOSPatterns[-1]:
-				isinputoutput = True
+			if len(POSElements) >= len(ifResultPOSPatterns) and POSElements[0] == ifResultPOSPatterns[0] and POSElements[-1] == ifResultPOSPatterns[-1]:
+				if POSElements[1] == ifResultPOSPatterns[1] or (POSElements[1] == "DT" and "newtarget" in statement.lower().split()[1]):
+				# if POSElements[1] == ifResultPOSPatterns[1] or ("newtarget" in statement.lower()):
+					isinputoutput = True
 			if isinputoutput:
 				statementAdded = True
-				postags = self.nlp.pos_tag(statement)
-				match = False
-				for i in range(len(postags)):
-					if "NN" in postags[i][1]:
-						match = True
-						break 
-				if not match:
-					index += 1
-					continue
+				# postags = self.nlp.pos_tag(statement)
+				# match = False
+				# for i in range(len(postags)):
+				# 	if "NN" in postags[i][1]:
+				# 		match = True
+				# 		break
+				# if not match:
+				# 	index += 1
+				# 	continue
 				updatedstatement = self.substituteVars(statement, sectionid)
 				tmpvars = numvars
 				# while(updatedstatement != self.substituteVars(updatedstatement, sectionid) and tmpvars > 0):
@@ -587,6 +626,13 @@ class TestTemplate(object):
 				# if header not in self.template_content:
 				# 	self.template_content[header] = [methodsignature]
 				# self.template_content[header].append(updatedstatement)
+
+			if not statementAdded:
+				stripLine = statement.strip()
+				if stripLine[-1] == ',':
+					statementAdded = True
+					updatedstatement = "{"
+
 			if statementAdded:
 				# tmpvars = numvars
 				# while (updatedstatement != self.substituteVars(updatedstatement, sectionid) and tmpvars > 0):
@@ -650,8 +696,9 @@ class TestTemplate(object):
 		if "number of elements in" in text:
 			text =  text.split("number of elements in")[0] + text.split("number of elements in")[1].replace(") ) )", ") ).length )")		
 
-		if text[-1]==".":
-			text = text[:-1]
+		if (len(text) > 1):
+			if text[-1] == ".":
+				text = text[:-1]
 	
 		if "===" in text and ("NaN" in text or "-0" in text or "+ 0" in text):
 			if "&&" in text:
@@ -707,6 +754,65 @@ class TestTemplate(object):
 	# the method call and natural language conditional statements identified 
 	# identified using above defined methods for a given relevant section
 	def generateCompilableTemplate(self, header, headingList):
+
+		def writeCompleteBlocks(tmpLines, emptyBlock, lineTab, levels, lastLevel):
+			if not tmpLines:
+				diff = 0
+				diffTab = "\n"
+				nLine = ""
+				while diff < lastLevel:
+					i = diff
+					while i < lastLevel:
+						diffTab += "\t"
+						i += 1
+					nLine = diffTab + "}\n" + nLine
+					diff += 1
+				outLine = nLine# + "\n\t}"
+				# outLine = "\n\t}"
+				# return lineTab + "}"
+				return outLine
+			if emptyBlock[0] != 0:
+				# outLine = "\n" + str(levels[0]) + " " + tmpLines[0]
+				outLine = tmpLines[0]
+				# print("")
+				# print(levels[0])
+				# print(lastLevel)
+				# print(outLine)
+				if levels[0] < lastLevel:
+					# print("TRUE")
+					diff = abs(lastLevel - levels[0])
+					i = diff
+					diffTab = "\n\t"
+					while i < lastLevel:
+						diffTab += "\t"
+						i += 1
+					# outLine = diffTab + "}" + lineTab + outLine
+					outLine = diffTab + "}" + lineTab + outLine
+					# print(outLine)
+				# print(outLine)
+				newEmptyBlock = emptyBlock[1:]
+				newTmpLines = tmpLines[1:]
+				newLevels = levels[1:]
+				# newLastLevel = lastLevel
+				# if emptyBlock[0] == 1:
+				newLastLevel = levels[0]
+				newTab = lineTab + "\t"
+				outLine += writeCompleteBlocks(newTmpLines, newEmptyBlock, newTab, newLevels, newLastLevel)
+				# if emptyBlock[0] == 1:
+				# 	print(tmpLines[0])
+				# 	outLine += newTab + "}"
+				return outLine
+			return ""
+
+		def notEmptyBlock(emptyBlock, levels):
+			i = 0
+			while i < len(emptyBlock):
+				if emptyBlock[i] == 0 and levels[i] < levels[-1]:
+					emptyBlock[i] = 1
+				i += 1
+			emptyBlock[-1] = 1
+			return emptyBlock
+
 		# testtemplate = self.template_content[header]
 		testtemplate = self.template_content.get(header)
 		if testtemplate == None:
@@ -770,7 +876,10 @@ class TestTemplate(object):
 		hIndex = 0
 		hLast = headingList[hIndex]
 		bracketOpen = False
+		emptyBlock = []
+		tmpLines = []
 		hlst = []
+		levels = []
 		usesNode = False
 		# print(header)
 		for i in range(1, len(testtemplate)):
@@ -796,24 +905,64 @@ class TestTemplate(object):
 
 			if bracketOpen and headingNo <= hlst[-1]:
 				# print(testcondition)
-				testfunction += test + lineTab + "}" + lineTab
+				# if emptyBlock[-1]:
+				# 	del emptyBlock[-1]
+				# 	del tmpLines[-1]
 				del hlst[-1]
+				# 	# tmpLines[-1] += tmpLines + lineTab  + "}" + lineTab
+				# 	transfer = tmpLines[-1] + lineTab + "}" + lineTab
+				# 	if len(tmpLines) > 1:
+				# if emptyBlock[-1]:
+				# 	del emptyBlock[-1]
+				# 	del tmpLines[-1]
+				# 	del hlst[-1]
 				if not hlst:
+					# print("tmpLines :", len(tmpLines))
+					# print("emptyBlock :",	len(emptyBlock))
+					test = writeCompleteBlocks(tmpLines, emptyBlock, lineTab, levels, -1)
+					# print(test)
+					testfunction += test
 					bracketOpen = False
+					del tmpLines[:]
+					del emptyBlock[:]
+					del levels[:]
+					tmpLines = []
+					emptyBlock = []
+					levels = []
 
 			if testcondition.strip() == "else":
 				bracketOpen = True
 				hlst.append(headingNo)
 				test = "else {"
-				# testfunction += lineTab + str(headingNo) + " " + test
-				testfunction += lineTab + test
+				test = lineTab + test
+				# testfunction += lineTab + test
+				tmpLines.append(test)
+				emptyBlock.append(0)
+				levels.append(headingNo)
 
 			if "while" in testcondition.strip():
 				bracketOpen = True
 				isOther = True
 				hlst.append(headingNo)
 				test = self.convertTextToCode(testcondition)
-				testfunction += lineTab + test + " { "
+				# print(test)
+				# testfunction += lineTab + test + " { "
+				test = lineTab + test + " { "
+				tmpLines.append(test)
+				emptyBlock.append(0)
+				levels.append(headingNo)
+
+			if testcondition.strip() == "{":
+				bracketOpen = True
+				isOther = True
+				hlst.append(headingNo)
+				test = "{" #self.convertTextToCode(testcondition)
+				# print(test)
+				# testfunction += lineTab + test + " { "
+				test = lineTab + test
+				tmpLines.append(test)
+				emptyBlock.append(0)
+				levels.append(headingNo)
 
 			if ".forEach" in testcondition:
 				# print(testcondition)
@@ -823,7 +972,11 @@ class TestTemplate(object):
 				test = self.convertTextToCode(testcondition)
 				if "--REVERSE--" in testcondition:
 					test = test.replace("--REVERSE--", "")
-				testfunction += lineTab + test + " { "
+				# testfunction += lineTab + test + " { "
+				test = lineTab + test + " { "
+				tmpLines.append(test)
+				emptyBlock.append(0)
+				levels.append(headingNo)
 
 			if "--ASSIGNMENT--" in testcondition.strip().split():
 				if "=" in testcondition.strip():
@@ -836,15 +989,27 @@ class TestTemplate(object):
 					# if currVar + " = " not in testfunction:
 					# 	vPrefix = "var "
 					vPrefix = "var "
-					testfunction += lineTab + vPrefix + test + ";"
 					isOther = True
+					if not bracketOpen:
+						testfunction += lineTab + vPrefix + test + ";"
+					elif test.strip() != "":
+						emptyBlock = notEmptyBlock(emptyBlock, levels)
+						emptyBlock.append(2)
+						tmpLines.append(lineTab + vPrefix + test + ";")
+						levels.append(headingNo)
 
 			if "--INCDEC--" in testcondition.strip().split():
 				if "=" in testcondition.strip():
 					test = testcondition.replace("--INCDEC--", "").strip()
 					test = self.convertTextToCode(test)
-					testfunction += lineTab + test
 					isOther = True
+					if not bracketOpen:
+						testfunction += lineTab + test
+					elif test.strip() != "":
+						emptyBlock = notEmptyBlock(emptyBlock, levels)
+						emptyBlock.append(2)
+						tmpLines.append(lineTab + test)
+						levels.append(headingNo)
 
 			if "--ASSERT--" in testcondition.strip():
 				test = testcondition.replace("--ASSERT--", "").strip()
@@ -855,9 +1020,47 @@ class TestTemplate(object):
 				test += lineTab + "else { "
 				test += lineTab + "\t" + "console.log(\"Bad Test\");"
 				test += lineTab + "} "
-				print(test)
+				# print(test)
 				isOther = True
-				testfunction = testfunction + lineTab + test
+				if not bracketOpen:
+					testfunction = testfunction + lineTab + test
+				elif test.strip() != "":
+					emptyBlock = notEmptyBlock(emptyBlock, levels)
+					emptyBlock.append(2)
+					tmpLines.append(lineTab + test)
+					levels.append(headingNo)
+
+			if "--PERFORM--" in testcondition.strip():
+				# print(testcondition)
+				test = testcondition.replace("--PERFORM--", "").strip()
+				# test = test.replace("! ", "")
+				# test = test.replace("? ", "")
+				# test = test.strip()
+				test = self.convertTextToCode(test)
+				# print(test)
+				isOther = True
+				if not bracketOpen:
+					testfunction += lineTab + test
+				elif test.strip() != "":
+					emptyBlock = notEmptyBlock(emptyBlock, levels)
+					emptyBlock.append(2)
+					tmpLines.append(lineTab + test)
+					levels.append(headingNo)
+
+			if "--RETURN--" in testcondition.strip():
+				expectedoutput = testcondition.replace("--RETURN--", "").strip()
+				# print("Var: ", expectedoutput)
+				expectedoutput = self.convertTextToCode(expectedoutput)
+				test = vardecl + "" + lineTab + "\t" + "assert.strictEqual(" + expectedoutput + ", output);" + lineTab + "\tconsole.log(\"Good Test\");" + lineTab + "\treturn;"
+				# print(test)
+				isOther = True
+				if not bracketOpen:
+					testfunction += lineTab + test
+				elif test.strip() != "":
+					emptyBlock = notEmptyBlock(emptyBlock, levels)
+					emptyBlock.append(2)
+					tmpLines.append(lineTab + test)
+					levels.append(headingNo)
 
 
 			if "if " not in testtemplate[i].lower() and not isOther:
@@ -886,7 +1089,11 @@ class TestTemplate(object):
 				test = self.convertTextToCode(testcondition)
 				# print(test)
 				# testfunction += lineTab + str(headingNo) + " " + "if " + test
-				testfunction += lineTab + "if " + test
+				# testfunction += lineTab + "if " + test
+				test = lineTab + "if " + test
+				tmpLines.append(test)
+				emptyBlock.append(0)
+				levels.append(headingNo)
 
 
 			if "return" in testcondition and not isOther:
@@ -906,7 +1113,13 @@ class TestTemplate(object):
 					# hLast = headingList[hIndex]
 					hIndex += 1
 					continue
-				testfunction = testfunction + lineTab + test
+				if not bracketOpen:
+					testfunction = testfunction + lineTab + test
+				elif test.strip() != "":
+					emptyBlock = notEmptyBlock(emptyBlock, levels)
+					emptyBlock.append(2)
+					tmpLines.append(lineTab + test)
+					levels.append(headingNo)
 			if "throw" in testcondition and not isOther:
 				expectedinput = testcondition.split("throw")[0].split("if")[1].strip()
 				expectedinput = self.convertTextToCode(expectedinput)
@@ -920,7 +1133,13 @@ class TestTemplate(object):
 					# hLast = headingList[hIndex]
 					hIndex += 1
 					continue
-				testfunction = testfunction + lineTab + test
+				if not bracketOpen:
+					testfunction = testfunction + lineTab + test
+				elif test.strip() != "":
+					emptyBlock = notEmptyBlock(emptyBlock, levels)
+					emptyBlock.append(2)
+					tmpLines.append(lineTab + test)
+					levels.append(headingNo)
 			# hLast = headingList[hIndex]
 			hIndex += 1
 		if self.compiler == "node":

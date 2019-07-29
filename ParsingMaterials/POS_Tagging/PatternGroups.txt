@@ -80,3 +80,22 @@ NN : NNP ( NNP ) VBZ VBG .
 NN : NNP VBZ DT JJ NN NN .
 NN : NNP VBZ JJ .
 NN : NNP VBZ CD .
+
+perform
+NN . NNP ( NNP , NNP ) . 
+NN NNP ( NNP ) .
+NN . NNP ( NNP , NNP , NNP ) .
+NN . NNP ( NNP ) .
+NN NNP ( NNP , NNP ) .
+NN . NNP ( NNP , NNP , NNP , JJ ) . (only perform)
+NN . NNP ( NNP , `` NN '' , NNP , JJ ) . (only perform)
+NN . NNP ( NNP , . NNP ( NNP ) , NNP ) . (only perform)
+NN . NNP ( NNP . VB JJ NNP NNP NNP , VBD , NNP NNP NNP ) . (only perform)
+NN . NNP ( NNP , RB ) . (only perform)
+
+return only
+NN NNP .
+NN JJ .
+NN NNP . VB JJ NNP NNP NNP .
+NN VBD .
+NN NNP ( JJ ) .
