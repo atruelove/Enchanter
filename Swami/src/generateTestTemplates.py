@@ -51,7 +51,10 @@ incrementPattern2 = ["NN", "NNP", "."]
 assertPattern = ["NN", ":", "NN", "."]
 forEachPattern = ["IN", "DT", ",", "VBP"]
 performReturnPatterns = ["NN", ".", "NNP", "."]
+elseIfPattern = ["RB", "NNP"]
+plainRepeatPattern = "NN ,"
 punct = ".,"
+returnPunct = "!?"
 
 class TestTemplate(object):
 	def __init__(self, relspecpath, compiler):
@@ -449,21 +452,45 @@ class TestTemplate(object):
 				# 	self.template_content[header] = [methodsignature]
 				# self.template_content[header].append(updatedstatement)
 
+			isElseIf = False
+			if POSElements[0] == elseIfPattern[0] and POSElements[1] == elseIfPattern[1] and "else" in statement.split()[0].lower():
+				isElseIf = True
+			if isElseIf:
+				statementAdded = True
+				updatedstatement = statement.strip()
+				updatedstatement = updatedstatement.replace("Else ", "( ")
+				if updatedstatement.strip()[-1] in punct:
+					updatedstatement = updatedstatement.strip()[:-1]
+				if updatedstatement.strip()[-1] != ')':
+					updatedstatement = updatedstatement + " ) { "
+				updatedstatement = self.substituteVars(updatedstatement, sectionid)
+				updatedstatement = "--ELSEIF--" + updatedstatement
+				print(updatedstatement)
+
 			isWhile = False
 			if len(POSElements) >= len(whilePattern):
 				if POSElements[0] == whilePattern[0] and POSElements[1] == whilePattern[1] and POSElements[2] == whilePattern[2] and POSElements[3] == whilePattern[3]:
 					isWhile = True
 			if isWhile:
 				statementAdded = True
-				statement = statement.replace("repeat, ", "")
-				statement = statement.replace("Repeat, ", "")
-				statement = statement.replace("while", "while ( ")
-				if statement.strip()[-1] in punct:
-					statement = statement.strip()[:-1]
-				statement = statement + " ) "
-				updatedstatement = self.substituteVars(statement, sectionid)
+				updatedstatement = statement.replace("repeat, ", "")
+				updatedstatement = updatedstatement.replace("Repeat, ", "")
+				updatedstatement = updatedstatement.replace("while", "while ( ")
+				if updatedstatement.strip()[-1] in punct:
+					updatedstatement = updatedstatement.strip()[:-1]
+				if updatedstatement.strip()[-1] != ')':
+					updatedstatement = updatedstatement + " ) "
+				updatedstatement = self.substituteVars(updatedstatement, sectionid)
 				# if POS[index] == "NN , IN NNP CC NN : NNP":
 				# 	print(updatedstatement)
+
+			isPlainWhile = False
+			if POS[index] == plainRepeatPattern:
+				isPlainWhile = True
+			if isPlainWhile:
+				statementAdded = True
+				updatedstatement = "while ( true ) {"
+
 
 			isIncrement = False
 			incremProv = False
@@ -562,6 +589,9 @@ class TestTemplate(object):
 				statementAdded = True
 				updatedstatement = statement.replace("Perform", "")
 				updatedstatement = self.substituteVars(updatedstatement.strip(), sectionid)
+				updatedstatement = updatedstatement.strip()
+				if updatedstatement[0] in returnPunct:
+					updatedstatement = updatedstatement[1:]
 				updatedstatement = "--PERFORM--" + updatedstatement
 
 			if isReturn:
@@ -666,6 +696,7 @@ class TestTemplate(object):
 		text = text.replace("Type (", "typeof (")
 		text = text.replace(" Object ", " \"object\" ")
 		text = text.replace(" Number ", " \"number\" ")
+		text = text.replace(" Boolean ", " \"boolean\" ")
 		text = text.replace("empty String", "\"\"")
 		text = text.replace("empty string", "\"\"")
 		text = text.replace("String \"NaN\"", "\"NaN\"")
@@ -880,7 +911,6 @@ class TestTemplate(object):
 		tmpLines = []
 		hlst = []
 		levels = []
-		usesNode = False
 		# print(header)
 		for i in range(1, len(testtemplate)):
 			templatecount += 1
@@ -944,10 +974,14 @@ class TestTemplate(object):
 				bracketOpen = True
 				isOther = True
 				hlst.append(headingNo)
-				test = self.convertTextToCode(testcondition)
-				# print(test)
-				# testfunction += lineTab + test + " { "
-				test = lineTab + test + " { "
+				if "while ( true )" in testcondition:
+					test = testcondition.strip()
+					test = lineTab + test
+				else:
+					test = self.convertTextToCode(testcondition)
+					# print(test)
+					# testfunction += lineTab + test + " { "
+					test = lineTab + test + " { "
 				tmpLines.append(test)
 				emptyBlock.append(0)
 				levels.append(headingNo)
@@ -1014,14 +1048,28 @@ class TestTemplate(object):
 			if "--ASSERT--" in testcondition.strip():
 				test = testcondition.replace("--ASSERT--", "").strip()
 				test = self.convertTextToCode(test)
-				test = "if ( " + test + " ) {"
-				test += lineTab + "\t" + "console.log(\"Good Test\");"
-				test += lineTab + "}"
-				test += lineTab + "else { "
-				test += lineTab + "\t" + "console.log(\"Bad Test\");"
-				test += lineTab + "} "
-				# print(test)
 				isOther = True
+				if self.compiler == "node":
+					test = "if ( " + test + " ) {"
+					test += lineTab + "\t" + "console.log(\"Good Test\");"
+					test += lineTab + "}"
+					test += lineTab + "else { "
+					test += lineTab + "\t" + "console.log(\"Bad Test\");"
+					test += lineTab + "\t" + "return;"
+					test += lineTab + "} "
+				elif self.compiler == "rhino":
+					splitElements = ["=", "==", "===", "<", ">", "!=", "<=", ">="]
+					splitter = ""
+					# testSpl = test.split()
+					for s in splitElements:
+						if s in test:
+							splitter = s
+					if splitter == "":
+						continue
+					testRefinedSplit = test.split(splitter)
+					newTest  = "new TestCase(\"" + testname + "\", \"" + testname + "\", " + testRefinedSplit[0] + ", " + testRefinedSplit[1] + ");"
+					newTest += lineTab + "\ttest();" + lineTab + "\treturn;"
+					test = newTest
 				if not bracketOpen:
 					testfunction = testfunction + lineTab + test
 				elif test.strip() != "":
@@ -1051,16 +1099,32 @@ class TestTemplate(object):
 				expectedoutput = testcondition.replace("--RETURN--", "").strip()
 				# print("Var: ", expectedoutput)
 				expectedoutput = self.convertTextToCode(expectedoutput)
-				test = vardecl + "" + lineTab + "\t" + "assert.strictEqual(" + expectedoutput + ", output);" + lineTab + "\tconsole.log(\"Good Test\");" + lineTab + "\treturn;"
+				if self.compiler == "node":
+					test = vardecl + "" + lineTab + "\t" + "assert.strictEqual(" + expectedoutput + ", output);" + lineTab + "\tconsole.log(\"Good Test\");" + lineTab + "\treturn;"
+				if self.compiler == "rhino":
+					test = vardecl + lineTab + "\t" + "new TestCase(\"" + testname + "\", \"" + testname + "\", " + expectedoutput + ", output);" + lineTab + "\ttest();" + lineTab + "\treturn;"
 				# print(test)
 				isOther = True
-				if not bracketOpen:
-					testfunction += lineTab + test
-				elif test.strip() != "":
-					emptyBlock = notEmptyBlock(emptyBlock, levels)
-					emptyBlock.append(2)
-					tmpLines.append(lineTab + test)
-					levels.append(headingNo)
+				if headingNo != 0:
+					if not bracketOpen:
+						testfunction += lineTab + test
+					elif test.strip() != "":
+						emptyBlock = notEmptyBlock(emptyBlock, levels)
+						emptyBlock.append(2)
+						tmpLines.append(lineTab + test)
+						levels.append(headingNo)
+
+			if "--ELSEIF--" in testcondition.strip():
+				bracketOpen = True
+				isOther = True
+				hlst.append(headingNo)
+				test = testcondition.replace("--ELSEIF--", "")
+				test = "else if " + self.convertTextToCode(test)
+				print(test)
+				test = lineTab + test
+				tmpLines.append(test)
+				emptyBlock.append(0)
+				levels.append(headingNo)
 
 
 			if "if " not in testtemplate[i].lower() and not isOther:
@@ -1074,8 +1138,6 @@ class TestTemplate(object):
 				# hLast = headingList[hIndex]
 				hIndex += 1
 				continue
-
-
 
 			# test = "" + ("\t" * headingList[hIndex])
 			# if headingList[hIndex] != -1 and headingList[hIndex] < hLast:
@@ -1194,13 +1256,22 @@ class TestTemplate(object):
 		# for t in range(1, len(templates)):
 		# 	print(tIndex, ": ", templates[t])
 		template = ''.join(templates)
+		addTemplate = False
 		# if len(testtemplate) > 1 and "if" in template and "unknown" not in template.split("){")[0] and  "NewTarget" not in template:
 		if len(testtemplate) > 1 and "if" in template and "unknown" not in template.split("){")[0]:
+			if self.compiler == "node":
+				if "console.log(\"Good Test\");" in template or "console.log(\"Bad Test/Failed Test\");" in template:
+					addTemplate = True
+			elif self.compiler == "rhino":
+				if "new TestCase(" in template and "test();" in template:
+					addTemplate = True
 			# if usesNode:
-			if "console.log(\"Good Test\");" in template or "console.log(\"Bad Test/Failed Test\");" in template:
-				self.test_templates[header] = template
+			# if "console.log(\"Good Test\");" in template or "console.log(\"Bad Test/Failed Test\");" in template:
+			# 	self.test_templates[header] = template
 			# else:
 			# 	self.test_templates[header] = template
+		if addTemplate:
+			self.test_templates[header] = template
 
 	# method to filter out sections that do not encode 
 	# testable behavior or that cannot be invoked directly

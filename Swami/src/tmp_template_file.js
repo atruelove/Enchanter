@@ -30,6 +30,7 @@ function test_validatesharedintegertypedarray( typedArray  , onlyInt32  ){
 	}
 	else { 
 		console.log("Bad Test");
+		return;
 	} 
 	var buffer = typedArray;
 	if (( IsSharedArrayBuffer ( buffer ) === false )){
@@ -43,9 +44,5 @@ function test_validatesharedintegertypedarray( typedArray  , onlyInt32  ){
 			return;
 		}
 	}
-	var output = new ValidateSharedIntegerTypedArray ( typedArray  , onlyInt32  );
-		assert.strictEqual(buffer, output);
-		console.log("Good Test");
-		return;
 		console.log("OK Test")
 }

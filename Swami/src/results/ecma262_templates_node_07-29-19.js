@@ -763,7 +763,7 @@ function test_array_prototype_reduce(randominput, callbackfn  , initialValue  ){
 	}
 	var k = 0;
 	var accumulator = undefined;
-	else if ( initialValue != present ) {
+	{
 		var kPresent = false;
 		while ( kPresent === false && k < len ) { 
 			var Pk = ToString(k);
@@ -826,7 +826,7 @@ function test_array_prototype_reduceright(randominput, callbackfn  , initialValu
 	}
 	var k = len-1;
 	var accumulator = undefined;
-	else if ( initialValue != present ) {
+	{
 		var kPresent = false;
 		while ( kPresent === false && k >=  0 ) { 
 			var Pk = ToString(k);
@@ -884,7 +884,7 @@ function test_array_prototype_shift(randominput, ){
 			Set ( O , to , fromVal , true )
 		}
 								
-		else if ( fromPresent === false ) {
+		{
 			DeletePropertyOrThrow ( O , to )
 		}
 										
@@ -967,7 +967,7 @@ function test_array_prototype_unshift(randominput, items ){
 				Set ( O , to , fromValue , true )
 			}
 											
-			else if ( fromPresent === false ) {
+			{
 				DeletePropertyOrThrow ( O , to )
 			}
 													
@@ -2139,7 +2139,7 @@ function test_number_prototype_toprecision(randominput,precision){
 		var e = 0;
 	}
 
-	else if ( x!= 0 ) {
+	{
 		if  ( e < - 6 || e >=  p  ) { 
 			if (  e!= 0 ) {
 				console.log("Good Test");
@@ -2157,7 +2157,7 @@ function test_number_prototype_toprecision(randominput,precision){
 				var c =code unit 0x002B (PLUS SIGN);
 			}
 									
-			else if ( e < 0 ) {
+			{
 				var c =code unit 0x002D (HYPHEN-MINUS);
 				var e = -e;
 						}

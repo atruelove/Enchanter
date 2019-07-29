@@ -108,6 +108,8 @@ class Swami(object):
 						outFile.write("\n")
 						outLine = [cleanedSpl[1]]
 						writeSubSections(outLine, level + 1)
+					# elif "else" in cleaned.split()[0].lower() and len(cleaned.split()) > 1 and ',' not in cleaned.strip().split[-1]:
+					# 	cleaned2 = cleaned.replace("Else ", "Else if ")
 					elif "else" in cleaned.split()[0].lower() and len(cleaned.split()) > 1:
 						spl0 = cleaned.split()[0]
 						outFile.write(headingStr)
