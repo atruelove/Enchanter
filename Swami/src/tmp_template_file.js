@@ -25,7 +25,7 @@ function test_validatesharedintegertypedarray( typedArray  , onlyInt32  ){
 		}
 	}
 
-	if (  typedArray instanceof ArrayBuffer === true ) {
+	if ( typedArray instanceof ArrayBuffer === true ) {
 		console.log("Good Test");
 	}
 	else { 

@@ -55,6 +55,7 @@ elseIfPattern = ["RB", "NNP"]
 plainRepeatPattern = "NN ,"
 punct = ".,"
 returnPunct = "!?"
+splitElements = ["=", "==", "===", "<", ">", "!=", "<=", ">="]
 
 class TestTemplate(object):
 	def __init__(self, relspecpath, compiler):
@@ -95,6 +96,13 @@ class TestTemplate(object):
 		else:
 			return variable, value
 
+	def checkOperators(self, text):
+		spl = ""
+		textSpl = text.split()
+		for i in splitElements:
+			if i in textSpl:
+				spl = i
+		return spl
 
 	# method to simplify the conditional statements extracted from the body of
 	# relevant sections by translating English phrases in to syntaxtically valid code
@@ -402,6 +410,18 @@ class TestTemplate(object):
 					# print(funcObj)
 					# print(value)
 					value = " new " + funcObj
+				if "the numeric value of the code unit at" in statement:
+					tmpValue = value.replace("the numeric value of the code unit at index", "").strip()
+					valSpl = tmpValue.split()
+					valPos = valSpl[0]
+					valArr = valSpl[-1]
+					if valArr[-1] in punct:
+						valArr = valArr[:-1]
+					value = valArr + "[" + valPos + "].charCodeAt()"
+				# if "undefined" in value.lower():
+				# 	value = value.replace("undefined", "'undefined'")
+				# 	value = value.replace("Undefined", "'undefined'")
+				# 	var  = "typeof " + var
 				self.variable_dataset[var,sectionid] = value
 				updatedstatement = "--ASSIGNMENT-- " + str(var) + " = " + str(value)
 				# print(updatedstatement)
@@ -465,7 +485,6 @@ class TestTemplate(object):
 					updatedstatement = updatedstatement + " ) { "
 				updatedstatement = self.substituteVars(updatedstatement, sectionid)
 				updatedstatement = "--ELSEIF--" + updatedstatement
-				print(updatedstatement)
 
 			isWhile = False
 			if len(POSElements) >= len(whilePattern):
@@ -568,7 +587,36 @@ class TestTemplate(object):
 			if isAssert:
 				statementAdded = True
 				updatedstatement = statement.replace("Assert:", "").strip()
-				updatedstatement = self.substituteVars(("if " + updatedstatement), sectionid)
+				updatedstatement = self.substituteVars(updatedstatement, sectionid)
+				updatedstatement = updatedstatement.replace("< =", "<= ")
+				updatedstatement = updatedstatement.replace("> =", ">= ")
+				equalCheck = re.search(r'===', updatedstatement, re.M|re.I)
+				if equalCheck:
+					splAssert = updatedstatement.split("===")
+					if "nonnegative integer" in updatedstatement.lower():
+						updatedstatement = splAssert[0] + " > 0"
+					else:
+						if "such that" in splAssert[1]:
+							tmpStatement = re.sub(r'^.*?such that', "", splAssert[1])
+							print(tmpStatement)
+							spl = self.checkOperators(tmpStatement)
+							if spl != "":
+								splAssert2 = tmpStatement.split(spl)
+								print(splAssert2)
+							updatedstatement = splAssert2[0] + " " + spl + " " + splAssert2[1] + " && " + splAssert2[1] + " " + spl + " " + splAssert2[-1]
+						else:
+							spl = self.checkOperators(splAssert[1])
+							if spl != "":
+								splAssert2 = splAssert[1].split(spl)
+								# spl2 = self.checkOperators(splAssert2[1])
+								# if spl2 != "":
+								# 	print(splAssert[0])
+								# 	print(splAssert[1])
+								# 	print(splAssert2[0])
+								# 	print(splAssert2[1])
+								# 	print(spl)
+								# 	print(spl2)
+								updatedstatement = splAssert[0] + " " + spl + " " + splAssert2[1]
 				updatedstatement = "--ASSERT--" + updatedstatement
 				# print(updatedstatement)
 
@@ -696,7 +744,6 @@ class TestTemplate(object):
 		text = text.replace("Type (", "typeof (")
 		text = text.replace(" Object ", " \"object\" ")
 		text = text.replace(" Number ", " \"number\" ")
-		text = text.replace(" Boolean ", " \"boolean\" ")
 		text = text.replace("empty String", "\"\"")
 		text = text.replace("empty string", "\"\"")
 		text = text.replace("String \"NaN\"", "\"NaN\"")
@@ -721,6 +768,26 @@ class TestTemplate(object):
 		text = text.replace("min(", "Math.min (")
 		text = text.replace("max(", "Math.max (")
 		text = text.replace("abs(", "Math.abs (")
+		if "undefined" in text.lower():
+			spl = self.checkOperators(text)
+			if spl != "" and spl != "=" and spl != "==":
+				text = text.replace("undefined", "'undefined'")
+				text = text.replace("Undefined", "'undefined'")
+				if text.strip()[0] != '(':
+					text = "typeof " + text
+				else:
+					text = "( typeof " + text.strip()[1:]
+		if "typeof" in text.lower() and "===" in text:
+			checkText = text.split("===")[1].split()
+			if "Boolean" in checkText:
+				text = text.replace("Boolean", " \"boolean\" ")
+			if "String" in checkText:
+				text = text.replace("String", " \"string\" ")
+			if "Object" in checkText:
+				text = text.replace("Object", " \"object\" ")
+			if "Number" in checkText:
+				text = text.replace("Number", " \"number\" ")
+
 		if "already an integer" in text:
 			var = text.split("===")[0].split("(")[1]
 			text = text.replace("already an integer", "parseInt(" + var +", 10)")
@@ -1058,7 +1125,7 @@ class TestTemplate(object):
 					test += lineTab + "\t" + "return;"
 					test += lineTab + "} "
 				elif self.compiler == "rhino":
-					splitElements = ["=", "==", "===", "<", ">", "!=", "<=", ">="]
+					# splitElements = ["=", "==", "===", "<", ">", "!=", "<=", ">="]
 					splitter = ""
 					# testSpl = test.split()
 					for s in splitElements:
@@ -1120,7 +1187,6 @@ class TestTemplate(object):
 				hlst.append(headingNo)
 				test = testcondition.replace("--ELSEIF--", "")
 				test = "else if " + self.convertTextToCode(test)
-				print(test)
 				test = lineTab + test
 				tmpLines.append(test)
 				emptyBlock.append(0)
@@ -1171,7 +1237,7 @@ class TestTemplate(object):
 					else:
 						test = "if (" + expectedinput + "){" + lineTab + "\t" + vardecl + "" + lineTab + "\t" + "assert.strictEqual(" + expectedoutput + ", output);" + lineTab + "\tconsole.log(\"Good Test\");" + lineTab + "\treturn;" + lineTab + "\t}"
 				
-				if test.count("(")!=test.count(")") or "performing" in test or "implementation" in test or "@@" in test or "«" in test or "[" in test or "either " in test or "finite " in test or "atomics_wait" in test or "concatenation" in test or "filler" in test or "searchLength" in test or "-searchStr" in test or " not " in test or "unit value of" in test:
+				if test.count("(")!=test.count(")") or "performing" in test or "implementtion" in test or "@@" in test or "«" in test or "[" in test or "either " in test or "finite " in test or "atomics_wait" in test or "concatenation" in test or "filler" in test or "searchLength" in test or "-searchStr" in test or " not " in test or "unit value of" in test:
 					# hLast = headingList[hIndex]
 					hIndex += 1
 					continue
