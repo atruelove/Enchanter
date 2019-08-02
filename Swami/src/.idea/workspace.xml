@@ -14,8 +14,8 @@
       <file leaf-file-name="swami.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/swami.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="111" column="71" selection-start-line="111" selection-start-column="71" selection-end-line="111" selection-end-column="71" />
+            <state relative-caret-position="1814">
+              <caret line="329" column="50" selection-start-line="329" selection-start-column="30" selection-end-line="329" selection-end-column="50" />
             </state>
           </provider>
         </entry>
@@ -29,14 +29,23 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="generateTestTemplates.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="generateTestTemplates.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/generateTestTemplates.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="764">
-              <caret line="639" column="49" selection-start-line="639" selection-start-column="49" selection-end-line="639" selection-end-column="49" />
+            <state relative-caret-position="-1688">
+              <caret line="1120" column="78" selection-start-line="1120" selection-start-column="78" selection-end-line="1120" selection-end-column="78" />
               <folding>
-                <marker date="1564692857814" expanded="true" signature="47364:47402" ph="..." />
+                <marker date="1564768006001" expanded="true" signature="47373:47411" ph="..." />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="generateExecutableTests.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/generateExecutableTests.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="352">
+              <caret line="147" column="54" selection-start-line="147" selection-start-column="54" selection-end-line="147" selection-end-column="54" />
             </state>
           </provider>
         </entry>
@@ -66,6 +75,7 @@
       <list>
         <option value="$PROJECT_DIR$/swami.py" />
         <option value="$PROJECT_DIR$/generateTestTemplates.py" />
+        <option value="$PROJECT_DIR$/generateExecutableTests.py" />
       </list>
     </option>
   </component>
@@ -80,7 +90,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -92,6 +101,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -156,8 +166,8 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/swami.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1870">
-          <caret line="110" column="20" selection-start-line="110" selection-start-column="22" selection-end-line="111" selection-end-column="71" />
+        <state relative-caret-position="1887">
+          <caret line="111" column="71" selection-start-line="111" selection-start-column="71" selection-end-line="111" selection-end-column="71" />
         </state>
       </provider>
     </entry>
@@ -170,10 +180,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/generateTestTemplates.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="12835">
-          <caret line="755" column="53" selection-start-line="755" selection-start-column="53" selection-end-line="755" selection-end-column="53" />
+        <state relative-caret-position="10863">
+          <caret line="639" column="49" selection-start-line="639" selection-start-column="49" selection-end-line="639" selection-end-column="49" />
           <folding>
-            <marker date="1564692857814" expanded="true" signature="47364:47402" ph="..." />
+            <marker date="1564768006001" expanded="true" signature="47373:47411" ph="..." />
           </folding>
         </state>
       </provider>
@@ -197,7 +207,31 @@
         <state relative-caret-position="12835">
           <caret line="755" column="53" selection-start-line="755" selection-start-column="53" selection-end-line="755" selection-end-column="53" />
           <folding>
-            <marker date="1564692857814" expanded="true" signature="47364:47402" ph="..." />
+            <marker date="1564768006001" expanded="true" signature="47373:47411" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/swami.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1870">
+          <caret line="110" column="20" selection-start-line="110" selection-start-column="22" selection-end-line="111" selection-end-column="71" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/extractRelevantSections.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3247">
+          <caret line="191" column="40" selection-start-line="191" selection-start-column="40" selection-end-line="191" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/generateTestTemplates.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="12835">
+          <caret line="755" column="53" selection-start-line="755" selection-start-column="53" selection-end-line="755" selection-end-column="53" />
+          <folding>
+            <marker date="1564768006001" expanded="true" signature="47373:47411" ph="..." />
           </folding>
         </state>
       </provider>
@@ -221,7 +255,7 @@
         <state relative-caret-position="19057">
           <caret line="1121" column="64" selection-start-line="1121" selection-start-column="64" selection-end-line="1121" selection-end-column="64" />
           <folding>
-            <marker date="1564692857814" expanded="true" signature="47364:47402" ph="..." />
+            <marker date="1564768006001" expanded="true" signature="47373:47411" ph="..." />
           </folding>
         </state>
       </provider>
@@ -245,7 +279,7 @@
         <state relative-caret-position="14688">
           <caret line="864" column="30" lean-forward="true" selection-start-line="864" selection-start-column="30" selection-end-line="864" selection-end-column="30" />
           <folding>
-            <marker date="1564692857814" expanded="true" signature="47364:47402" ph="..." />
+            <marker date="1564768006001" expanded="true" signature="47373:47411" ph="..." />
           </folding>
         </state>
       </provider>
@@ -269,7 +303,7 @@
         <state relative-caret-position="9673">
           <caret line="569" column="33" selection-start-line="569" selection-start-column="33" selection-end-line="569" selection-end-column="33" />
           <folding>
-            <marker date="1564692857814" expanded="true" signature="47364:47402" ph="..." />
+            <marker date="1564768006001" expanded="true" signature="47373:47411" ph="..." />
           </folding>
         </state>
       </provider>
@@ -293,7 +327,7 @@
         <state relative-caret-position="14467">
           <caret line="851" column="20" selection-start-line="851" selection-start-column="22" selection-end-line="852" selection-end-column="60" />
           <folding>
-            <marker date="1564692857814" expanded="true" signature="47364:47402" ph="..." />
+            <marker date="1564768006001" expanded="true" signature="47373:47411" ph="..." />
           </folding>
         </state>
       </provider>
@@ -317,7 +351,7 @@
         <state relative-caret-position="8483">
           <caret line="499" column="42" lean-forward="true" selection-start-line="499" selection-start-column="42" selection-end-line="499" selection-end-column="42" />
           <folding>
-            <marker date="1564692857814" expanded="true" signature="47364:47402" ph="..." />
+            <marker date="1564768006001" expanded="true" signature="47373:47411" ph="..." />
           </folding>
         </state>
       </provider>
@@ -451,20 +485,27 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/swami.py">
+    <entry file="file://$PROJECT_DIR$/generateTestTemplates.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="111" column="71" selection-start-line="111" selection-start-column="71" selection-end-line="111" selection-end-column="71" />
+        <state relative-caret-position="-1688">
+          <caret line="1120" column="78" selection-start-line="1120" selection-start-column="78" selection-end-line="1120" selection-end-column="78" />
+          <folding>
+            <marker date="1564768006001" expanded="true" signature="47373:47411" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/generateTestTemplates.py">
+    <entry file="file://$PROJECT_DIR$/swami.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="764">
-          <caret line="639" column="49" selection-start-line="639" selection-start-column="49" selection-end-line="639" selection-end-column="49" />
-          <folding>
-            <marker date="1564692857814" expanded="true" signature="47364:47402" ph="..." />
-          </folding>
+        <state relative-caret-position="1814">
+          <caret line="329" column="50" selection-start-line="329" selection-start-column="30" selection-end-line="329" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/generateExecutableTests.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="352">
+          <caret line="147" column="54" selection-start-line="147" selection-start-column="54" selection-end-line="147" selection-end-column="54" />
         </state>
       </provider>
     </entry>

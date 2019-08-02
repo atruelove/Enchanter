@@ -1118,7 +1118,7 @@ class TestTemplate(object):
 				isOther = True
 				if self.compiler == "node":
 					test = "if ( " + test + " ) {"
-					test += lineTab + "\t" + "console.log(\"Good Test\");"
+					test += lineTab + "\t" + "console.log(\"Good Test - Assert\");"
 					test += lineTab + "}"
 					test += lineTab + "else { "
 					test += lineTab + "\t" + "console.log(\"Bad Test\");"
