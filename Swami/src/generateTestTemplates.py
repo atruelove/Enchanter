@@ -56,6 +56,7 @@ plainRepeatPattern = "NN ,"
 punct = ".,"
 returnPunct = "!?"
 splitElements = ["=", "==", "===", "<", ">", "!=", "<=", ">="]
+excludedAbstractFunctions = []
 
 class TestTemplate(object):
 	def __init__(self, relspecpath, compiler):
@@ -65,6 +66,7 @@ class TestTemplate(object):
 		self.relevant_spec_path = relspecpath
 		self.compiler = compiler
 		self.nlp = StanfordCoreNLP(r'lib/stanford-corenlp-full-2018-02-27')
+		self.bannedVariables = []
 
 	# method to check if a statement is an assignment
 	# and if it is then store the variable and its value
@@ -127,7 +129,7 @@ class TestTemplate(object):
 			text = re.sub(r'[0-9]*?--EXP0--[0-9]*?--EXP1--', expFunc, text)
 		text = text.replace("--EXP0--", "")
 		text = text.replace("--EXP1--", "")
-
+		text = text.replace("ToNumber", "ToInteger")
 		if "If" in text:
 			text = text.replace("If", "if (");
 		if ", the result is" in text:
@@ -364,6 +366,7 @@ class TestTemplate(object):
 		POS = bodyPOS.split("\n")
 		# print(sectionid)
 		for statement in body.split("\n"):
+			hasAbstractCall = False
 			statementAdded = False
 			if len(statement) > 100 or statement == "":
 				index += 1
@@ -423,6 +426,23 @@ class TestTemplate(object):
 				# 	value = value.replace("Undefined", "'undefined'")
 				# 	var  = "typeof " + var
 				self.variable_dataset[var,sectionid] = value
+				abstractCheck = value.replace("  ", "").strip()
+				abstractCheck = abstractCheck.replace(" (", "(")
+				abstractCheck = abstractCheck.replace("(", "( ")
+				if "(" in abstractCheck:
+					abstractSplit = abstractCheck.split()
+					for i in abstractSplit:
+						if "(" in i:
+							# funcName = re.sub(r'\(.*?\)', "", i)
+							funcName = i.replace("(", "").strip()
+							if funcName in excludedAbstractFunctions:
+								hasAbstractCall = True
+								if var not in self.bannedVariables:
+									self.bannedVariables.append(var)
+									# print(var)
+				# if hasAbstractCall:
+				# 	index += 1
+				# 	continue
 				updatedstatement = "--ASSIGNMENT-- " + str(var) + " = " + str(value)
 				# print(updatedstatement)
 				statementAdded = True
@@ -598,7 +618,7 @@ class TestTemplate(object):
 					else:
 						if "such that" in splAssert[1]:
 							tmpStatement = re.sub(r'^.*?such that', "", splAssert[1])
-							print(tmpStatement)
+							# print(tmpStatement)
 							spl = self.checkOperators(tmpStatement)
 							if spl != "":
 								splAssert2 = tmpStatement.split(spl)
@@ -640,6 +660,9 @@ class TestTemplate(object):
 				updatedstatement = updatedstatement.strip()
 				if updatedstatement[0] in returnPunct:
 					updatedstatement = updatedstatement[1:]
+				absFuncCheck = updatedstatement.split()
+				if absFuncCheck[0].strip() in excludedAbstractFunctions:
+					statementAdded = False
 				updatedstatement = "--PERFORM--" + updatedstatement
 
 			if isReturn:
@@ -711,6 +734,18 @@ class TestTemplate(object):
 					statementAdded = True
 					updatedstatement = "{"
 
+			usesBannedVar = False
+			# if statementAdded:
+			# 	bannedVarLine = updatedstatement.replace("  ", " ").strip()
+			# 	bannedVarLine = re.sub(r'--.*?--', "", bannedVarLine)
+			# 	# print(bannedVarLine)
+			# 	bannedVarSpl = bannedVarLine.split()
+			# 	for i in bannedVarSpl:
+			# 		if i in self.bannedVariables:
+			# 			usesBannedVar = True
+			if usesBannedVar:
+				print(updatedstatement)
+				updatedstatement += "--HASABSTRACT--"
 			if statementAdded:
 				# tmpvars = numvars
 				# while (updatedstatement != self.substituteVars(updatedstatement, sectionid) and tmpvars > 0):
@@ -991,6 +1026,9 @@ class TestTemplate(object):
 			headingStr = headingStr.replace("*", "")
 			headingNo = int(headingStr)
 			testcondition = re.sub(r'\*\*\*[0-9]*?\*\*\*', "", testcondition)
+			hasAbstract = False
+			if "--HASABSTRACT--" in testcondition.strip():
+				hasAbstract = True
 
 			lineTab = "\n\t"
 			addTab = 0
@@ -1121,7 +1159,7 @@ class TestTemplate(object):
 					test += lineTab + "\t" + "console.log(\"Good Test - Assert\");"
 					test += lineTab + "}"
 					test += lineTab + "else { "
-					test += lineTab + "\t" + "console.log(\"Bad Test\");"
+					test += lineTab + "\t" + "console.log(\"Bad Test/Failed Test\");"
 					test += lineTab + "\t" + "return;"
 					test += lineTab + "} "
 				elif self.compiler == "rhino":
@@ -1139,7 +1177,7 @@ class TestTemplate(object):
 					test = newTest
 				if not bracketOpen:
 					testfunction = testfunction + lineTab + test
-				elif test.strip() != "":
+				elif test.strip() != "" and not hasAbstract:
 					emptyBlock = notEmptyBlock(emptyBlock, levels)
 					emptyBlock.append(2)
 					tmpLines.append(lineTab + test)
@@ -1326,7 +1364,7 @@ class TestTemplate(object):
 		# if len(testtemplate) > 1 and "if" in template and "unknown" not in template.split("){")[0] and  "NewTarget" not in template:
 		if len(testtemplate) > 1 and "if" in template and "unknown" not in template.split("){")[0]:
 			if self.compiler == "node":
-				if "console.log(\"Good Test\");" in template or "console.log(\"Bad Test/Failed Test\");" in template:
+				if "console.log(\"Good Test" in template or "console.log(\"Bad Test/Failed Test\");" in template:
 					addTemplate = True
 			elif self.compiler == "rhino":
 				if "new TestCase(" in template and "test();" in template:
@@ -1349,9 +1387,11 @@ class TestTemplate(object):
 			return False
 		if (")" in header and header.split(")")[1].strip() != ""):
 			return False
-		if "The abstract operation " in body:
-			if body.split("The abstract operation")[1].split()[0].strip() in header:
-				return False
+		# if "The abstract operation " in body:
+		# 	if body.split("The abstract operation")[1].split()[0].strip() in header:
+		# 		return False
+		if "---ABSTRACT---" in body:
+			return False
 		return True
 		
 
@@ -1361,16 +1401,49 @@ class TestTemplate(object):
 	# Next, if the section is testable, it extracts the method signature,
 	# extracts the assignments and conditional statements, and finally
 	# uses these to produce combilable test templates
-	def generateTestTemplates(self, extracted_sections):
+	def generateTestTemplates(self, extracted_sections, included_abstract_functions):
 		numofsec = len(extracted_sections.keys())
 		# printProgressBar(0, numofsec, prefix = 'Generating Test Templates Progress:', suffix = 'Complete', length = 50)
 		# for idx, header in enumerate(sorted(extracted_sections)):
+		# for i in included_abstract_functions:
+		# 	print(i)
+		# print("Len: ", len(included_abstract_functions))
+		for idx, header0 in enumerate(extracted_sections):
+			header0 = header0.replace("\xa0", " ")
+			headerNo = header0.split()[0].strip()
+			functionNameFull = header0.split()[1].strip()
+			sectionNo = headerNo.split('.')[0].strip()
+			sectionNo = int(sectionNo)
+			functionName = functionNameFull.split('(')[0].strip()
+			# print(sectionNo)
+			# print(functionName)
+			tmpBody = extracted_sections[header0]
+			# saysAbstract = False
+			# if "---ABSTRACT---" in tmpBody:
+			# 	print(header0)
+			# 	if tmpBody.split("The abstract operation")[1].split()[0].strip() in header0:
+			# 		# print("Yes")
+			# 		saysAbstract = True
+			# absSearch = re.search(r'---ABSTRACT---', tmpBody, re.M|re.I)
+			# if absSearch:
+			# 	print(functionName)
+			# if "---ABSTRACT---" in tmpBody:
+			# 	print(functionName)
+			if sectionNo == 7 or "---ABSTRACT---" in tmpBody:
+				# print(functionName)
+				if functionName not in included_abstract_functions:
+					excludedAbstractFunctions.append(functionName)
+		# 		else:
+		# 			print(functionName)
+		print(excludedAbstractFunctions)
 		for idx, header in enumerate(extracted_sections):
 			header = header.replace("\xa0", " ")
+			# print(header)
 			body0 = extracted_sections[header]
 			bodyPOS = ""
 			body = ""
 			headingList = []
+			self.bannedVariables = []
 			for l in body0.split('\n'):
 				line2 = l.replace("VAR", "")
 				line2 = line2.replace("FUNC", "")

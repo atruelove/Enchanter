@@ -108,92 +108,13 @@ function SameValueZero(x,y){
 
 
 
-function test_advancestringindex(randominput,S,index,unicode){
-	if ( typeof ( S ) ===  "string"  ) {
-		console.log("Good Test");
-	}
-	else { 
-		console.log("Bad Test");
-		return;
-	} 
-	if ( 0 <= index && index <= Math.pow ( 2 , 53 ) - 1 ) {
-		console.log("Good Test");
-	}
-	else { 
-		console.log("Bad Test");
-		return;
-	} 
-	if ( typeof ( unicode ) ===  "boolean"  ) {
-		console.log("Good Test");
-	}
-	else { 
-		console.log("Bad Test");
-		return;
-	} 
-	if (( unicode === false )){
-		var output = new String(randominput).AdvanceStringIndex(S,index,unicode);
-		assert.strictEqual(index + 1, output);
-		console.log("Good Test");
-		return;
-		}
-	var length =S.length;
-	if (( index + 1 >=  length )){
-		var output = new String(randominput).AdvanceStringIndex(S,index,unicode);
-		assert.strictEqual(index + 1, output);
-		console.log("Good Test");
-		return;
-		}
-	var first = S[index].charCodeAt();
-	if (( first < 0xD800 || first > 0xDBFF )){
-		var output = new String(randominput).AdvanceStringIndex(S,index,unicode);
-		assert.strictEqual(index + 1, output);
-		console.log("Good Test");
-		return;
-		}
-	var second = S[index+1].charCodeAt();
-	if (( second < 0xDC00 || second > 0xDFFF )){
-		var output = new String(randominput).AdvanceStringIndex(S,index,unicode);
-		assert.strictEqual(index + 1, output);
-		console.log("Good Test");
-		return;
-		}
-		console.log("OK Test")
-}
-
-
-function test_allocatearraybuffer(constructor,byteLength){
-	if ( byteLength >= 0 ) {
-		console.log("Good Test");
-	}
-	else { 
-		console.log("Bad Test");
-		return;
-	} 
-	var block = CreateByteDataBlock(byteLength);
-		console.log("OK Test")
-}
-
-
-function test_allocatesharedarraybuffer(randominput,constructor,byteLength){
-	if ( byteLength > 0 ) {
-		console.log("Good Test");
-	}
-	else { 
-		console.log("Bad Test");
-		return;
-	} 
-	var block = CreateSharedByteDataBlock(byteLength);
-		console.log("OK Test")
-}
-
-
 function test_array( ){
 	var numberOfArgs = arguments.length;
 	if ( numberOfArgs = 0 ) {
-		console.log("Good Test");
+		console.log("Good Test - Assert");
 	}
 	else { 
-		console.log("Bad Test");
+		console.log("Bad Test/Failed Test");
 		return;
 	} 
 	if ( typeof  NewTarget === 'undefined'  ) { 
@@ -212,10 +133,10 @@ function test_array( ){
 function test_array( items ){
 	var numberOfArgs = arguments.length;
 	if ( numberOfArgs >= 2 ) {
-		console.log("Good Test");
+		console.log("Good Test - Assert");
 	}
 	else { 
-		console.log("Bad Test");
+		console.log("Bad Test/Failed Test");
 		return;
 	} 
 	if ( typeof  NewTarget === 'undefined'  ) { 
@@ -235,10 +156,10 @@ function test_array( items ){
 		var itemK = items[k];
 		var defineStatus = CreateDataProperty(array, Pk, itemK);
 		if ( defineStatus === true ) {
-			console.log("Good Test");
+			console.log("Good Test - Assert");
 		}
 		else { 
-			console.log("Bad Test");
+			console.log("Bad Test/Failed Test");
 			return;
 		} 
 		k = k + 1
@@ -251,10 +172,10 @@ function test_array( items ){
 function test_array( len ){
 	var numberOfArgs = arguments.length;
 	if ( numberOfArgs = 1 ) {
-		console.log("Good Test");
+		console.log("Good Test - Assert");
 	}
 	else { 
-		console.log("Bad Test");
+		console.log("Bad Test/Failed Test");
 		return;
 	} 
 	if ( typeof  NewTarget === 'undefined'  ) { 
@@ -270,10 +191,10 @@ function test_array( len ){
 	if  ( typeof ( len ) != "number"  ) { 
 		var defineStatus = CreateDataProperty(array, "0", len);
 		if ( defineStatus === true ) {
-			console.log("Good Test");
+			console.log("Good Test - Assert");
 		}
 		else { 
-			console.log("Bad Test");
+			console.log("Bad Test/Failed Test");
 			return;
 		} 
 		var intLen = 1;
@@ -294,7 +215,6 @@ function test_array( len ){
 		}
 	}
 
-	Set ( array , "length" , intLen , true )
 		console.log("OK Test")
 }
 
@@ -352,13 +272,12 @@ function test_array_from(items,mapfn,thisArg){
 			var Pk = ToString(k);
 			var next = IteratorStep(iteratorRecord);
 			if  ( next === false  ) { 
-				Set ( A , "length" , k , true )
 				var output = Array.from(items,mapfn,thisArg);
 					assert.strictEqual(A, output);
 					console.log("Good Test");
 					return;
 			}
-																	
+																
 			var nextValue = IteratorValue(next);
 			if  ( mapping === true  ) { 
 				var mappedValue = Call(mapfn, T, « nextValue, k »);
@@ -370,11 +289,11 @@ function test_array_from(items,mapfn,thisArg){
 					}
 				var mappedValue = mappedValue;
 			}
-																						
+																					
 			else {
 				var mappedValue = nextValue;
 			}
-																								
+																							
 			var defineStatus = CreateDataPropertyOrThrow(A, Pk, mappedValue);
 			if (( defineStatus === an abrupt completion )){
 				var output = Array.from(items,mapfn,thisArg);
@@ -409,11 +328,9 @@ function test_array_from(items,mapfn,thisArg){
 			var mappedValue = kValue;
 		}
 								
-		CreateDataPropertyOrThrow ( A , Pk , mappedValue )
 		k = k + 1
 	}
 
-	Set ( A , "length" , len , true )
 		console.log("OK Test")
 }
 
@@ -493,10 +410,9 @@ function test_array_prototype_filter(randominput, callbackfn  , thisArg  ){
 		if  ( kPresent === true  ) { 
 			var kValue = Get(O, Pk);
 			var selected = ToBoolean( Call(callbackfn, T, « kValue, k, O »));
-				CreateDataPropertyOrThrow ( A , ToString ( to ) , kValue )
 				to = to + 1
 		}
-									
+								
 		k = k + 1
 	}
 
@@ -612,9 +528,8 @@ function test_array_prototype_foreach(randominput, callbackfn  , thisArg  ){
 		var kPresent = HasProperty(O, Pk);
 		if  ( kPresent === true  ) { 
 			var kValue = Get(O, Pk);
-			Call ( callbackfn , T , « kValue , k , O » )
 		}
-							
+						
 		k = k + 1
 	}
 
@@ -711,9 +626,8 @@ function test_array_prototype_map(randominput, callbackfn  , thisArg  ){
 		if  ( kPresent === true  ) { 
 			var kValue = Get(O, Pk);
 			var mappedValue = Call(callbackfn, T, « kValue, k, O »);
-			CreateDataPropertyOrThrow ( A , Pk , mappedValue )
 		}
-								
+							
 		k = k + 1
 	}
 
@@ -725,7 +639,6 @@ function test_array_prototype_pop(randominput, ){
 	var O = ToObject(randominput);
 	var len = ToLength( Get(O, "length"));
 	if  ( len === zero  ) { 
-		Set ( O , "length" , 0 , true )
 		var output = new Array(randominput).pop( );
 			assert.strictEqual(undefined, output);
 			console.log("Good Test");
@@ -866,7 +779,6 @@ function test_array_prototype_shift(randominput, ){
 	var O = ToObject(randominput);
 	var len = ToLength( Get(O, "length"));
 	if  ( len === zero  ) { 
-		Set ( O , "length" , 0 , true )
 		var output = new Array(randominput).shift( );
 			assert.strictEqual(undefined, output);
 			console.log("Good Test");
@@ -881,18 +793,12 @@ function test_array_prototype_shift(randominput, ){
 		var fromPresent = HasProperty(O, from);
 		if  ( fromPresent === true  ) { 
 			var fromVal = Get(O, from);
-			Set ( O , to , fromVal , true )
 		}
-								
+							
 		else if ( fromPresent === false ) {
-			DeletePropertyOrThrow ( O , to )
-		}
-										
 		k = k + 1
 	}
 
-	DeletePropertyOrThrow ( O , ToString ( len- 1 ) )
-	Set ( O , "length" , len- 1 , true )
 		console.log("OK Test")
 }
 
@@ -964,23 +870,19 @@ function test_array_prototype_unshift(randominput, items ){
 			var fromPresent = HasProperty(O, from);
 			if  ( fromPresent === true  ) { 
 				var fromValue = Get(O, from);
-				Set ( O , to , fromValue , true )
 			}
-											
+										
 			else if ( fromPresent === false ) {
-				DeletePropertyOrThrow ( O , to )
-			}
-													
 			k = k - 1
 		}
-														
+												
 		var j = 0;
 		while ( items != empty ) { 
-			Set ( O , ToString ( j ) , E , true )
 			j = j + 1
-	}
-																		
-	Set ( O , "length" , len + argCount , true )
+			}
+
+		}
+
 		console.log("OK Test")
 }
 
@@ -1170,67 +1072,26 @@ function test_atomics_wait(typedArray,index,value,timeout){
 	var offset = typedArray;
 	var indexedPosition = (i × 4) + offset;
 	var WL = GetWaiterList(block, indexedPosition);
-	EnterCriticalSection ( WL )
 	var w = AtomicLoad(typedArray, i);
-		LeaveCriticalSection ( WL )
 	var W = AgentSignier();
-	AddWaiter ( WL , W )
 	var awoken = Suspend(WL, W, t);
 		if ( W != on list of waiters in WL ) {
-			console.log("Good Test");
+			console.log("Good Test - Assert");
 		}
 		else { 
-			console.log("Bad Test");
+			console.log("Bad Test/Failed Test");
 			return;
 		} 
-	else {
-		RemoveWaiter ( WL , W )
-	}
-
-	LeaveCriticalSection ( WL )
-		console.log("OK Test")
-}
-
-
-function test_clonearraybuffer(srcBuffer,srcByteOffset,srcLength,cloneConstructor){
-	if ( typeof ( srcBuffer ) === "object" && it has an [[ArrayBufferData]] internal slot ) {
-		console.log("Good Test");
-	}
-	else { 
-		console.log("Bad Test");
-		return;
-	} 
-	if ( IsConstructor ( cloneConstructor ) === true ) {
-		console.log("Good Test");
-	}
-	else { 
-		console.log("Bad Test");
-		return;
-	} 
-	var targetBuffer = AllocateArrayBuffer(cloneConstructor, srcLength);
-	if (( IsDetachedBuffer ( srcBuffer ) === true )){
-		 try{
-			var output = ArrayBuffer.CloneArrayBuffer(srcBuffer,srcByteOffset,srcLength,cloneConstructor);
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof TypeError));
-			console.log("Good Test");
-			return;
-		}
-	}
-	var srcBlock = srcBuffer;
-	var targetBlock = targetBuffer;
 		console.log("OK Test")
 }
 
 
 function test_createarrayiterator( array, kind ){
 	if ( typeof ( array ) ===  "object"  ) {
-		console.log("Good Test");
+		console.log("Good Test - Assert");
 	}
 	else { 
-		console.log("Bad Test");
+		console.log("Bad Test/Failed Test");
 		return;
 	} 
 		console.log("OK Test")
@@ -1282,10 +1143,10 @@ function test_createsetiterator(randominput,set,kind){
 
 function test_createstringiterator(randominput,string){
 	if ( typeof ( string ) ===  "string"  ) {
-		console.log("Good Test");
+		console.log("Good Test - Assert");
 	}
 	else { 
-		console.log("Bad Test");
+		console.log("Bad Test/Failed Test");
 		return;
 	} 
 		console.log("OK Test")
@@ -1295,10 +1156,10 @@ function test_createstringiterator(randominput,string){
 function test_date(randominput){
 	var numberOfArgs = arguments.length;
 	if ( numberOfArgs = 0 ) {
-		console.log("Good Test");
+		console.log("Good Test - Assert");
 	}
 	else { 
-		console.log("Bad Test");
+		console.log("Bad Test/Failed Test");
 		return;
 	} 
 	if ( typeof  NewTarget === 'undefined'  ) { 
@@ -1316,10 +1177,10 @@ function test_date(randominput){
 function test_date(randominput,value){
 	var numberOfArgs = arguments.length;
 	if ( numberOfArgs = 1 ) {
-		console.log("Good Test");
+		console.log("Good Test - Assert");
 	}
 	else { 
-		console.log("Bad Test");
+		console.log("Bad Test/Failed Test");
 		return;
 	} 
 	if ( typeof  NewTarget === 'undefined'  ) { 
@@ -1337,10 +1198,10 @@ function test_date(randominput,value){
 function test_date(randominput,year,month,date,hours,minutes,seconds,ms){
 	var numberOfArgs = arguments.length;
 	if ( numberOfArgs >= 2 ) {
-		console.log("Good Test");
+		console.log("Good Test - Assert");
 	}
 	else { 
-		console.log("Bad Test");
+		console.log("Bad Test/Failed Test");
 		return;
 	} 
 	if ( typeof  NewTarget === 'undefined'  ) { 
@@ -1602,91 +1463,86 @@ function test_date_prototype_toutcstring(randominput){
 }
 
 
-function test_detacharraybuffer(arrayBuffer,key){
-	if ( IsSharedArrayBuffer ( arrayBuffer ) === false ) {
-		console.log("Good Test");
-	}
-	else { 
-		console.log("Bad Test");
-		return;
-	} 
-		console.log("OK Test")
-}
-
-
-function test_getmodifysetvalueinbuffer(randominput,arrayBuffer,byteIndex,type,value,op,isLittleEndian){
-	if ( IsSharedArrayBuffer ( arrayBuffer ) === true ) {
-		console.log("Good Test");
-	}
-	else { 
-		console.log("Bad Test");
-		return;
-	} 
-	if ( byteIndex >= 0 ) {
-		console.log("Good Test");
-	}
-	else { 
-		console.log("Bad Test");
-		return;
-	} 
-	if ( typeof ( value ) ===  "number"  ) {
-		console.log("Good Test");
-	}
-	else { 
-		console.log("Bad Test");
-		return;
-	} 
-	var block = arrayBuffer;
-	var rawBytes = NumberToRawBytes(type, value, isLittleEndian);
-	var execution =[[CandidateExecution]] field ofsurrounding agent's Agent Record;
-	var rawBytesRead = a List of length elementSize of nondeterministically chosen byte values;
-		console.log("OK Test")
-}
-
-
-function test_getvaluefrombuffer( arrayBuffer, byteIndex, type, isTypedArray, order  , isLittleEndian  ){
-	if ( IsDetachedBuffer ( arrayBuffer ) === false ) {
-		console.log("Good Test");
-	}
-	else { 
-		console.log("Bad Test");
-		return;
-	} 
-	if ( byteIndex >= 0 ) {
-		console.log("Good Test");
-	}
-	else { 
-		console.log("Bad Test");
-		return;
-	} 
-	var block = arrayBuffer;
-	if  ( IsSharedArrayBuffer ( arrayBuffer ) === true  ) { 
-		var execution =[[CandidateExecution]] field ofsurrounding agent's Agent Record;
-		if  ( isTypedArray === true && type === "Int8" , "Uint8" , "Int16" , "Uint16" , "Int32" , or "Uint32"  ) { 
-			var noTear = true; otherwise let noTear;
+function test_get_arraybuffer_prototype_bytelength(randominput){
+	var O =randominput;
+	if (( typeof ( O ) != "object" )){
+		 try{
+			var output = randominput.byteLength;
+			console.log("Bad Test/Failed Test");
+			 return;
+		}catch(e){
+			assert.strictEqual(true, eval(e instanceof TypeError));
+			console.log("Good Test");
+			return;
 		}
-					
-		var rawValue = a List of length elementSize of nondeterministically chosen byte values;
 	}
+	if (( O instanceof ArrayBuffer === false )){
+		 try{
+			var output = randominput.byteLength;
+			console.log("Bad Test/Failed Test");
+			 return;
+		}catch(e){
+			assert.strictEqual(true, eval(e instanceof TypeError));
+			console.log("Good Test");
+			return;
+		}
+	}
+	if (( IsSharedArrayBuffer ( O ) === true )){
+		 try{
+			var output = randominput.byteLength;
+			console.log("Bad Test/Failed Test");
+			 return;
+		}catch(e){
+			assert.strictEqual(true, eval(e instanceof TypeError));
+			console.log("Good Test");
+			return;
+		}
+	}
+	if (( IsDetachedBuffer ( O ) === true )){
+		 try{
+			var output = randominput.byteLength;
+			console.log("Bad Test/Failed Test");
+			 return;
+		}catch(e){
+			assert.strictEqual(true, eval(e instanceof TypeError));
+			console.log("Good Test");
+			return;
+		}
+	}
+	var length = O;
+		console.log("OK Test")
+}
 
+
+function test_get_regexp_prototype_source(randominput){
+	var R =randominput;
+	if ( R has an [[OriginalFlags]] internal slot ) {
+		console.log("Good Test - Assert");
+	}
+	else { 
+		console.log("Bad Test/Failed Test");
+		return;
+	} 
+	var src = R;
+	var flags = R;
 		console.log("OK Test")
 }
 
 
 function test_issharedarraybuffer(randominput,obj){
 	if ( typeof ( obj ) === "object" && it has an [[ArrayBufferData]] internal slot ) {
-		console.log("Good Test");
+		console.log("Good Test - Assert");
 	}
 	else { 
-		console.log("Bad Test");
+		console.log("Bad Test/Failed Test");
 		return;
 	} 
 	var bufferData = obj;
 	if ( bufferData === Shared Data Block ) {
-		console.log("Good Test");
+		console.log("Good Test - Assert");
 	}
 	else { 
-		console.log("Bad Test");
+		console.log("Bad Test/Failed Test");
 		return;
 	} 
 		console.log("OK Test")
@@ -1822,12 +1678,6 @@ function test_map_prototype_foreach(randominput,callbackfn,thisArg){
 		var T = undefined;
 	}
 
-		if  ( e.[[Key]] != empty  ) { 
-			Call ( callbackfn , T , « e.[[Value]] , e.[[Key]] , M » )
-			}
-
-		}
-
 		console.log("OK Test")
 }
 
@@ -1929,6 +1779,567 @@ function test_map_prototype_set(randominput,key,value){
 }
 
 
+function test_math_abs(x){
+	if (Object.is( x,NaN )){
+		var output = Math.abs(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - 0 )){
+		var output = Math.abs(x);
+		assert.strictEqual(+ 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - Infinity )){
+		var output = Math.abs(x);
+		assert.strictEqual(+ Infinity, output);
+		console.log("Good Test");
+		return;
+		}
+		console.log("OK Test")
+}
+
+
+function test_math_acos(x){
+	if (Object.is( x,NaN )){
+		var output = Math.acos(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (( x > 1 )){
+		var output = Math.acos(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (( x < - 1 )){
+		var output = Math.acos(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === 1 )){
+		var output = Math.acos(x);
+		assert.strictEqual(+ 0, output);
+		console.log("Good Test");
+		return;
+		}
+		console.log("OK Test")
+}
+
+
+function test_math_acosh(x){
+	if (Object.is( x,NaN )){
+		var output = Math.acosh(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === 1 )){
+		var output = Math.acosh(x);
+		assert.strictEqual(+ 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === + Infinity )){
+		var output = Math.acosh(x);
+		assert.strictEqual(+ Infinity, output);
+		console.log("Good Test");
+		return;
+		}
+		console.log("OK Test")
+}
+
+
+function test_math_asin(x){
+	if (Object.is( x,NaN )){
+		var output = Math.asin(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (( x > 1 )){
+		var output = Math.asin(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (( x < - 1 )){
+		var output = Math.asin(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (Object.is( x,+ 0 )){
+		var output = Math.asin(x);
+		assert.strictEqual(+ 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - 0 )){
+		var output = Math.asin(x);
+		assert.strictEqual(- 0, output);
+		console.log("Good Test");
+		return;
+		}
+		console.log("OK Test")
+}
+
+
+function test_math_asinh(x){
+	if (Object.is( x,NaN )){
+		var output = Math.asinh(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (Object.is( x,+ 0 )){
+		var output = Math.asinh(x);
+		assert.strictEqual(+ 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - 0 )){
+		var output = Math.asinh(x);
+		assert.strictEqual(- 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === + Infinity )){
+		var output = Math.asinh(x);
+		assert.strictEqual(+ Infinity, output);
+		console.log("Good Test");
+		return;
+		}
+		console.log("OK Test")
+}
+
+
+function test_math_atan(x){
+	if (Object.is( x,NaN )){
+		var output = Math.atan(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (Object.is( x,+ 0 )){
+		var output = Math.atan(x);
+		assert.strictEqual(+ 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - 0 )){
+		var output = Math.atan(x);
+		assert.strictEqual(- 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === + Infinity )){
+		var output = Math.atan(x);
+		assert.strictEqual(an implementation- dependent approximation to + π/2, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - Infinity )){
+		var output = Math.atan(x);
+		assert.strictEqual(an implementation- dependent approximation to - π/2, output);
+		console.log("Good Test");
+		return;
+		}
+		console.log("OK Test")
+}
+
+
+function test_math_atan2(y,x){
+	if (( y > 0 && x === - 0 )){
+		var output = Math.atan2(y,x);
+		assert.strictEqual(an implementation- dependent approximation to + π/2, output);
+		console.log("Good Test");
+		return;
+		}
+	if ((Object.is( y,+ 0) &&  x > 0 )){
+		var output = Math.atan2(y,x);
+		assert.strictEqual(+ 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if ((Object.is( y,+ 0) && Object.is(x,+ 0 ))){
+		var output = Math.atan2(y,x);
+		assert.strictEqual(+ 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if ((Object.is( y,+ 0) &&  x === - 0 )){
+		var output = Math.atan2(y,x);
+		assert.strictEqual(an implementation- dependent approximation to + π, output);
+		console.log("Good Test");
+		return;
+		}
+	if ((Object.is( y,+ 0) &&  x < 0 )){
+		var output = Math.atan2(y,x);
+		assert.strictEqual(an implementation- dependent approximation to + π, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( y === - 0 && x > 0 )){
+		var output = Math.atan2(y,x);
+		assert.strictEqual(- 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( y === - 0 && x === - 0 )){
+		var output = Math.atan2(y,x);
+		assert.strictEqual(an implementation- dependent approximation to - π, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( y === - 0 && x < 0 )){
+		var output = Math.atan2(y,x);
+		assert.strictEqual(an implementation- dependent approximation to - π, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( y < 0 && x === - 0 )){
+		var output = Math.atan2(y,x);
+		assert.strictEqual(an implementation- dependent approximation to - π/2, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( y === + Infinity && x === + Infinity )){
+		var output = Math.atan2(y,x);
+		assert.strictEqual(an implementation- dependent approximation to + π/4, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( y === + Infinity && x === - Infinity )){
+		var output = Math.atan2(y,x);
+		assert.strictEqual(an implementation- dependent approximation to + 3π/4, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( y === - Infinity && x === + Infinity )){
+		var output = Math.atan2(y,x);
+		assert.strictEqual(an implementation- dependent approximation to - π/4, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( y === - Infinity && x === - Infinity )){
+		var output = Math.atan2(y,x);
+		assert.strictEqual(an implementation- dependent approximation to - 3π/4, output);
+		console.log("Good Test");
+		return;
+		}
+		console.log("OK Test")
+}
+
+
+function test_math_atanh(x){
+	if (Object.is( x,NaN )){
+		var output = Math.atanh(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (( x < - 1 )){
+		var output = Math.atanh(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (( x > 1 )){
+		var output = Math.atanh(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - 1 )){
+		var output = Math.atanh(x);
+		assert.strictEqual(- Infinity, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === + 1 )){
+		var output = Math.atanh(x);
+		assert.strictEqual(+ Infinity, output);
+		console.log("Good Test");
+		return;
+		}
+	if (Object.is( x,+ 0 )){
+		var output = Math.atanh(x);
+		assert.strictEqual(+ 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - 0 )){
+		var output = Math.atanh(x);
+		assert.strictEqual(- 0, output);
+		console.log("Good Test");
+		return;
+		}
+		console.log("OK Test")
+}
+
+
+function test_math_cbrt(x){
+	if (Object.is( x,NaN )){
+		var output = Math.cbrt(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (Object.is( x,+ 0 )){
+		var output = Math.cbrt(x);
+		assert.strictEqual(+ 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - 0 )){
+		var output = Math.cbrt(x);
+		assert.strictEqual(- 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === + Infinity )){
+		var output = Math.cbrt(x);
+		assert.strictEqual(+ Infinity, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - Infinity )){
+		var output = Math.cbrt(x);
+		assert.strictEqual(- Infinity, output);
+		console.log("Good Test");
+		return;
+		}
+		console.log("OK Test")
+}
+
+
+function test_math_ceil(x){
+	if (Object.is( x,NaN )){
+		var output = Math.ceil(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (Object.is( x,+ 0 )){
+		var output = Math.ceil(x);
+		assert.strictEqual(+ 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - 0 )){
+		var output = Math.ceil(x);
+		assert.strictEqual(- 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === + Infinity )){
+		var output = Math.ceil(x);
+		assert.strictEqual(+ Infinity, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - Infinity )){
+		var output = Math.ceil(x);
+		assert.strictEqual(- Infinity, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x < 0 && x > - 1 )){
+		var output = Math.ceil(x);
+		assert.strictEqual(- 0, output);
+		console.log("Good Test");
+		return;
+		}
+		console.log("OK Test")
+}
+
+
+function test_math_cos(x){
+	if (Object.is( x,NaN )){
+		var output = Math.cos(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (Object.is( x,+ 0 )){
+		var output = Math.cos(x);
+		assert.strictEqual(1, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - 0 )){
+		var output = Math.cos(x);
+		assert.strictEqual(1, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === + Infinity )){
+		var output = Math.cos(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - Infinity )){
+		var output = Math.cos(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+		console.log("OK Test")
+}
+
+
+function test_math_cosh(x){
+	if (Object.is( x,NaN )){
+		var output = Math.cosh(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (Object.is( x,+ 0 )){
+		var output = Math.cosh(x);
+		assert.strictEqual(1, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - 0 )){
+		var output = Math.cosh(x);
+		assert.strictEqual(1, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === + Infinity )){
+		var output = Math.cosh(x);
+		assert.strictEqual(+ Infinity, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - Infinity )){
+		var output = Math.cosh(x);
+		assert.strictEqual(+ Infinity, output);
+		console.log("Good Test");
+		return;
+		}
+		console.log("OK Test")
+}
+
+
+function test_math_exp(x){
+	if (Object.is( x,NaN )){
+		var output = Math.exp(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (Object.is( x,+ 0 )){
+		var output = Math.exp(x);
+		assert.strictEqual(1, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - 0 )){
+		var output = Math.exp(x);
+		assert.strictEqual(1, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === + Infinity )){
+		var output = Math.exp(x);
+		assert.strictEqual(+ Infinity, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - Infinity )){
+		var output = Math.exp(x);
+		assert.strictEqual(+ 0, output);
+		console.log("Good Test");
+		return;
+		}
+		console.log("OK Test")
+}
+
+
+function test_math_expm1(x){
+	if (Object.is( x,NaN )){
+		var output = Math.expm1(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (Object.is( x,+ 0 )){
+		var output = Math.expm1(x);
+		assert.strictEqual(+ 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - 0 )){
+		var output = Math.expm1(x);
+		assert.strictEqual(- 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === + Infinity )){
+		var output = Math.expm1(x);
+		assert.strictEqual(+ Infinity, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - Infinity )){
+		var output = Math.expm1(x);
+		assert.strictEqual(- 1, output);
+		console.log("Good Test");
+		return;
+		}
+		console.log("OK Test")
+}
+
+
+function test_math_floor(x){
+	if (Object.is( x,NaN )){
+		var output = Math.floor(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (Object.is( x,+ 0 )){
+		var output = Math.floor(x);
+		assert.strictEqual(+ 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - 0 )){
+		var output = Math.floor(x);
+		assert.strictEqual(- 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === + Infinity )){
+		var output = Math.floor(x);
+		assert.strictEqual(+ Infinity, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - Infinity )){
+		var output = Math.floor(x);
+		assert.strictEqual(- Infinity, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x > 0 && x < 1 )){
+		var output = Math.floor(x);
+		assert.strictEqual(+ 0, output);
+		console.log("Good Test");
+		return;
+		}
+		console.log("OK Test")
+}
+
+
 function test_math_fround(x){
 	if (Object.is( x,NaN )){
 		var output = Math.fround(x);
@@ -1954,6 +2365,438 @@ function test_math_imul(x,y){
 	if (( product >=  Math.pow ( 2 , 31 ) )){
 		var output = Math.imul(x,y);
 		assert.strictEqual(product - Math.pow ( 2 , 32 ) ; else, output);
+		console.log("Good Test");
+		return;
+		}
+		console.log("OK Test")
+}
+
+
+function test_math_log(x){
+	if (Object.is( x,NaN )){
+		var output = Math.log(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (( x < 0 )){
+		var output = Math.log(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if ((Object.is( x,+ 0) &&  x === - 0 )){
+		var output = Math.log(x);
+		assert.strictEqual(- Infinity, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === 1 )){
+		var output = Math.log(x);
+		assert.strictEqual(+ 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === + Infinity )){
+		var output = Math.log(x);
+		assert.strictEqual(+ Infinity, output);
+		console.log("Good Test");
+		return;
+		}
+		console.log("OK Test")
+}
+
+
+function test_math_log10(x){
+	if (Object.is( x,NaN )){
+		var output = Math.log10(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (( x < 0 )){
+		var output = Math.log10(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (Object.is( x,+ 0 )){
+		var output = Math.log10(x);
+		assert.strictEqual(- Infinity, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - 0 )){
+		var output = Math.log10(x);
+		assert.strictEqual(- Infinity, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === 1 )){
+		var output = Math.log10(x);
+		assert.strictEqual(+ 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === + Infinity )){
+		var output = Math.log10(x);
+		assert.strictEqual(+ Infinity, output);
+		console.log("Good Test");
+		return;
+		}
+		console.log("OK Test")
+}
+
+
+function test_math_log1p(x){
+	if (Object.is( x,NaN )){
+		var output = Math.log1p(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (( x < - 1 )){
+		var output = Math.log1p(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (Object.is( x,+ 0 )){
+		var output = Math.log1p(x);
+		assert.strictEqual(+ 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - 0 )){
+		var output = Math.log1p(x);
+		assert.strictEqual(- 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === + Infinity )){
+		var output = Math.log1p(x);
+		assert.strictEqual(+ Infinity, output);
+		console.log("Good Test");
+		return;
+		}
+		console.log("OK Test")
+}
+
+
+function test_math_log2(x){
+	if (Object.is( x,NaN )){
+		var output = Math.log2(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (( x < 0 )){
+		var output = Math.log2(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (Object.is( x,+ 0 )){
+		var output = Math.log2(x);
+		assert.strictEqual(- Infinity, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - 0 )){
+		var output = Math.log2(x);
+		assert.strictEqual(- Infinity, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === 1 )){
+		var output = Math.log2(x);
+		assert.strictEqual(+ 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === + Infinity )){
+		var output = Math.log2(x);
+		assert.strictEqual(+ Infinity, output);
+		console.log("Good Test");
+		return;
+		}
+		console.log("OK Test")
+}
+
+
+function test_math_round(x){
+	if (Object.is( x,NaN )){
+		var output = Math.round(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (Object.is( x,+ 0 )){
+		var output = Math.round(x);
+		assert.strictEqual(+ 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - 0 )){
+		var output = Math.round(x);
+		assert.strictEqual(- 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === + Infinity )){
+		var output = Math.round(x);
+		assert.strictEqual(+ Infinity, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - Infinity )){
+		var output = Math.round(x);
+		assert.strictEqual(- Infinity, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x > 0 && x < 0.5 )){
+		var output = Math.round(x);
+		assert.strictEqual(+ 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x < 0 && x >=  - 0.5 )){
+		var output = Math.round(x);
+		assert.strictEqual(- 0, output);
+		console.log("Good Test");
+		return;
+		}
+		console.log("OK Test")
+}
+
+
+function test_math_sign(x){
+	if (Object.is( x,NaN )){
+		var output = Math.sign(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - 0 )){
+		var output = Math.sign(x);
+		assert.strictEqual(- 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (Object.is( x,+ 0 )){
+		var output = Math.sign(x);
+		assert.strictEqual(+ 0, output);
+		console.log("Good Test");
+		return;
+		}
+		console.log("OK Test")
+}
+
+
+function test_math_sin(x){
+	if (Object.is( x,NaN )){
+		var output = Math.sin(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (Object.is( x,+ 0 )){
+		var output = Math.sin(x);
+		assert.strictEqual(+ 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - 0 )){
+		var output = Math.sin(x);
+		assert.strictEqual(- 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === + Infinity || x === - Infinity )){
+		var output = Math.sin(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+		console.log("OK Test")
+}
+
+
+function test_math_sinh(x){
+	if (Object.is( x,NaN )){
+		var output = Math.sinh(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (Object.is( x,+ 0 )){
+		var output = Math.sinh(x);
+		assert.strictEqual(+ 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - 0 )){
+		var output = Math.sinh(x);
+		assert.strictEqual(- 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === + Infinity )){
+		var output = Math.sinh(x);
+		assert.strictEqual(+ Infinity, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - Infinity )){
+		var output = Math.sinh(x);
+		assert.strictEqual(- Infinity, output);
+		console.log("Good Test");
+		return;
+		}
+		console.log("OK Test")
+}
+
+
+function test_math_sqrt(x){
+	if (Object.is( x,NaN )){
+		var output = Math.sqrt(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (( x < 0 )){
+		var output = Math.sqrt(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (Object.is( x,+ 0 )){
+		var output = Math.sqrt(x);
+		assert.strictEqual(+ 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - 0 )){
+		var output = Math.sqrt(x);
+		assert.strictEqual(- 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === + Infinity )){
+		var output = Math.sqrt(x);
+		assert.strictEqual(+ Infinity, output);
+		console.log("Good Test");
+		return;
+		}
+		console.log("OK Test")
+}
+
+
+function test_math_tan(x){
+	if (Object.is( x,NaN )){
+		var output = Math.tan(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (Object.is( x,+ 0 )){
+		var output = Math.tan(x);
+		assert.strictEqual(+ 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - 0 )){
+		var output = Math.tan(x);
+		assert.strictEqual(- 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === + Infinity || x === - Infinity )){
+		var output = Math.tan(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+		console.log("OK Test")
+}
+
+
+function test_math_tanh(x){
+	if (Object.is( x,NaN )){
+		var output = Math.tanh(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (Object.is( x,+ 0 )){
+		var output = Math.tanh(x);
+		assert.strictEqual(+ 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - 0 )){
+		var output = Math.tanh(x);
+		assert.strictEqual(- 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === + Infinity )){
+		var output = Math.tanh(x);
+		assert.strictEqual(+ 1, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - Infinity )){
+		var output = Math.tanh(x);
+		assert.strictEqual(- 1, output);
+		console.log("Good Test");
+		return;
+		}
+		console.log("OK Test")
+}
+
+
+function test_math_trunc(x){
+	if (Object.is( x,NaN )){
+		var output = Math.trunc(x);
+		assert.strictEqual(isNaN(output), true);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - 0 )){
+		var output = Math.trunc(x);
+		assert.strictEqual(- 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (Object.is( x,+ 0 )){
+		var output = Math.trunc(x);
+		assert.strictEqual(+ 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === + Infinity )){
+		var output = Math.trunc(x);
+		assert.strictEqual(+ Infinity, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x === - Infinity )){
+		var output = Math.trunc(x);
+		assert.strictEqual(- Infinity, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x > 0 && x < 1 )){
+		var output = Math.trunc(x);
+		assert.strictEqual(+ 0, output);
+		console.log("Good Test");
+		return;
+		}
+	if (( x < 0 && x > - 1 )){
+		var output = Math.trunc(x);
+		assert.strictEqual(- 0, output);
 		console.log("Good Test");
 		return;
 		}
@@ -2064,10 +2907,10 @@ function test_number_prototype_toexponential(randominput,fractionDigits){
 	var x = thisNumberValue(randominput);
 	var f = ToInteger(fractionDigits);
 	if ( typeof f === 0 , when fractionDigits === 'undefined' ) {
-		console.log("Good Test");
+		console.log("Good Test - Assert");
 	}
 	else { 
-		console.log("Bad Test");
+		console.log("Bad Test/Failed Test");
 		return;
 	} 
 	if (Object.is( x,NaN )){
@@ -2142,10 +2985,10 @@ function test_number_prototype_toprecision(randominput,precision){
 	else if ( x!= 0 ) {
 		if  ( e < - 6 || e >=  p  ) { 
 			if ( e!= 0 ) {
-				console.log("Good Test");
+				console.log("Good Test - Assert");
 			}
 			else { 
-				console.log("Bad Test");
+				console.log("Bad Test/Failed Test");
 				return;
 			} 
 			if  ( p!= 1  ) { 
@@ -2165,29 +3008,6 @@ function test_number_prototype_toprecision(randominput,precision){
 					}
 
 			}
-
-		console.log("OK Test")
-}
-
-
-function test_rawbytestonumber(type,rawBytes,isLittleEndian){
-	if  ( type === "Float32"  ) { 
-		if (Object.is( value,an IEEE 754- 2008 binary32 NaN value )){
-			var output = Number.RawBytesToNumber(type,rawBytes,isLittleEndian);
-			assert.strictEqual(NaN "number" value, output);
-			console.log("Good Test");
-			return;
-			}
-	}
-
-	if  ( type === "Float64"  ) { 
-		if (Object.is( value,an IEEE 754- 2008 binary64 NaN value )){
-			var output = Number.RawBytesToNumber(type,rawBytes,isLittleEndian);
-			assert.strictEqual(NaN "number" value, output);
-			console.log("Good Test");
-			return;
-			}
-	}
 
 		console.log("OK Test")
 }
@@ -2219,85 +3039,6 @@ function test_set(randominput,iterable){
 		}
 	}
 	var iteratorRecord = GetIterator(iterable);
-		console.log("OK Test")
-}
-
-
-function test_setvalueinbuffer( arrayBuffer, byteIndex, type, value, isTypedArray, order  , isLittleEndian  ){
-	if ( IsDetachedBuffer ( arrayBuffer ) === false ) {
-		console.log("Good Test");
-	}
-	else { 
-		console.log("Bad Test");
-		return;
-	} 
-	if ( byteIndex >= 0 ) {
-		console.log("Good Test");
-	}
-	else { 
-		console.log("Bad Test");
-		return;
-	} 
-	if ( typeof ( value ) ===  "number"  ) {
-		console.log("Good Test");
-	}
-	else { 
-		console.log("Bad Test");
-		return;
-	} 
-	var block = arrayBuffer;
-	var rawBytes = NumberToRawBytes(type, value, isLittleEndian);
-		console.log("OK Test")
-}
-
-
-function test_setviewvalue(randominput,view,requestIndex,isLittleEndian,type,value){
-	if (( typeof ( view ) != "object" )){
-		 try{
-			var output = randominput.SetViewValue(view,requestIndex,isLittleEndian,type,value);
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof TypeError));
-			console.log("Good Test");
-			return;
-		}
-	}
-	if ( view instanceof ArrayBuffer === true ) {
-		console.log("Good Test");
-	}
-	else { 
-		console.log("Bad Test");
-		return;
-	} 
-	var getIndex = ToIndex(requestIndex);
-	var numberValue = ToNumber(value);
-	var buffer = view;
-	if (( IsDetachedBuffer ( buffer ) === true )){
-		 try{
-			var output = randominput.SetViewValue(view,requestIndex,isLittleEndian,type,value);
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof TypeError));
-			console.log("Good Test");
-			return;
-		}
-	}
-	var viewOffset = view;
-	var viewSize = view;
-	if (( getIndex + elementSize > viewSize )){
-		 try{
-			var output = randominput.SetViewValue(view,requestIndex,isLittleEndian,type,value);
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof RangeError));
-			console.log("Good Test");
-			return;
-		}
-	}
-	var bufferIndex = getIndex + viewOffset;
 		console.log("OK Test")
 }
 
@@ -2646,7 +3387,6 @@ function test_string_prototype_split(randominput,separator,limit){
 		return;
 		}
 	if ( typeof  separator === 'undefined'  ) { 
-		CreateDataProperty ( A , "0" , S )
 		var output = new String(randominput).split(separator,limit);
 			assert.strictEqual(A, output);
 			console.log("Good Test");
@@ -2661,7 +3401,6 @@ function test_string_prototype_split(randominput,separator,limit){
 			console.log("Good Test");
 			return;
 			}
-		CreateDataProperty ( A , "0" , S )
 		var output = new String(randominput).split(separator,limit);
 			assert.strictEqual(A, output);
 			console.log("Good Test");
@@ -2715,10 +3454,10 @@ function test_typedarray( ){
 
 function test_typedarray( buffer  , byteOffset  , length   ){
 	if ( typeof ( buffer ) === "object" && buffer has an [[ArrayBufferData]] internal slot ) {
-		console.log("Good Test");
+		console.log("Good Test - Assert");
 	}
 	else { 
-		console.log("Bad Test");
+		console.log("Bad Test/Failed Test");
 		return;
 	} 
 	if (( typeof  NewTarget === 'undefined' )){
@@ -2806,10 +3545,10 @@ function test_typedarray( buffer  , byteOffset  , length   ){
 
 function test_typedarray( length ){
 	if ( typeof ( length ) != Object ) {
-		console.log("Good Test");
+		console.log("Good Test - Assert");
 	}
 	else { 
-		console.log("Bad Test");
+		console.log("Bad Test/Failed Test");
 		return;
 	} 
 	if (( typeof  NewTarget === 'undefined' )){
@@ -2850,15 +3589,14 @@ function test_typedarray( object ){
 		while ( k < len ) { 
 			var Pk = ToString(k);
 			var kValue =first element of values and remove that element from values;
-			Set ( O , Pk , kValue , true )
 			k = k + 1
 		}
-											
+										
 		if ( values === now an empty List ) {
-			console.log("Good Test");
+			console.log("Good Test - Assert");
 		}
 		else { 
-			console.log("Bad Test");
+			console.log("Bad Test/Failed Test");
 			return;
 		} 
 		var output = new TypedArray ( object );
@@ -2874,7 +3612,6 @@ function test_typedarray( object ){
 	while ( k < len ) { 
 		var Pk = ToString(k);
 		var kValue = Get(arrayLike, Pk);
-		Set ( O , Pk , kValue , true )
 		k = k + 1
 	}
 
@@ -2884,10 +3621,10 @@ function test_typedarray( object ){
 
 function test_typedarray( typedArray ){
 	if ( typeof ( typedArray ) === "object" && typedArray has [[TypedArrayName]] internal slot ) {
-		console.log("Good Test");
+		console.log("Good Test - Assert");
 	}
 	else { 
-		console.log("Bad Test");
+		console.log("Bad Test/Failed Test");
 		return;
 	} 
 	if (( typeof  NewTarget === 'undefined' )){
@@ -2964,106 +3701,10 @@ function test_typedarray( typedArray ){
 		var count = elementLength;
 		while ( count > 0 ) { 
 			var value = GetValueFromBuffer(srcData, srcByteIndex, srcType, true, "Unordered");
-			SetValueInBuffer ( data , targetByteIndex , elementType , value , true , "Unordered" )
 			count = count - 1
 			}
 
 		}
 
-		console.log("OK Test")
-}
-
-
-function test_typedarrayspeciescreate( exemplar, argumentList ){
-	if ( exemplar === an "object" that has [[TypedArrayName]] internal slot ) {
-		console.log("Good Test");
-	}
-	else { 
-		console.log("Bad Test");
-		return;
-	} 
-	var constructor = SpeciesConstructor(exemplar, defaultConstructor);
-		console.log("OK Test")
-}
-
-
-function test_validateatomicaccess( typedArray, requestIndex ){
-	if ( typedArray === an "object" that instanceof ArrayBuffer === true ) {
-		console.log("Good Test");
-	}
-	else { 
-		console.log("Bad Test");
-		return;
-	} 
-	var accessIndex = ToIndex(requestIndex);
-	var length = typedArray;
-	if ( accessIndex >= 0 ) {
-		console.log("Good Test");
-	}
-	else { 
-		console.log("Bad Test");
-		return;
-	} 
-	if (( accessIndex >=  length )){
-		 try{
-			var output = new ValidateAtomicAccess ( typedArray, requestIndex );
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof RangeError));
-			console.log("Good Test");
-			return;
-		}
-	}
-		console.log("OK Test")
-}
-
-
-function test_validatesharedintegertypedarray( typedArray  , onlyInt32  ){
-	if (( typeof ( typedArray ) != "object" )){
-		 try{
-			var output = new ValidateSharedIntegerTypedArray ( typedArray  , onlyInt32  );
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof TypeError));
-			console.log("Good Test");
-			return;
-		}
-	}
-	var typeName = typedArray;
-	if  ( onlyInt32 === true  ) { 
-		if (( typeName != "Int32Array" )){
-			 try{
-				var output = new ValidateSharedIntegerTypedArray ( typedArray  , onlyInt32  );
-				console.log("Bad Test/Failed Test");
-				 return;
-			}catch(e){
-				assert.strictEqual(true, eval(e instanceof TypeError));
-				console.log("Good Test");
-				return;
-			}
-		}
-	}
-
-	if ( typedArray instanceof ArrayBuffer === true ) {
-		console.log("Good Test");
-	}
-	else { 
-		console.log("Bad Test");
-		return;
-	} 
-	var buffer = typedArray;
-	if (( IsSharedArrayBuffer ( buffer ) === false )){
-		 try{
-			var output = new ValidateSharedIntegerTypedArray ( typedArray  , onlyInt32  );
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof TypeError));
-			console.log("Good Test");
-			return;
-		}
-	}
 		console.log("OK Test")
 }

@@ -50,6 +50,7 @@ class Swami(object):
 		self.executable_test_generator = ExecutableTest(self.templatefilepath, self.output_dir, compiler)
 		self.extracted_sections = {}
 		self.compiler = compiler
+		self.included_abstract_functions = []
 
 	# returns a dictionary of relevant sections (sections that involve 
 	# exceptions or boundary conditions) where key is the section title  
@@ -82,20 +83,21 @@ class Swami(object):
 			strL = strL.replace("</sup>", "--EXP1--")
 			strL = re.sub(r'<ol>', " ", strL)
 			strL = re.sub(r'</ol>', " ", strL)
+			strL = re.sub(r'<ul>', " ", strL)
+			strL = re.sub(r'</ul>', " ", strL)
 			strL = re.sub(r'</li>', " ", strL)
 			strL = re.sub(r'<.*?>', "", strL)
 			strL = re.sub(r'\[\[.*?\]\]', bracketVAR, strL)
 			strL = strL.replace("  ", " ")
 			return strL
 
-		def writeSubSections(cont, level):
+		def writeSubSections(cont, level, listType):
+			listTag = "<" + listType + ">"
 			for l in cont:
-				strL = str(l)#.lower()
+				strL = str(l)
 				headingStr = '*' + str(level) + '*'
-				if "<ol>" not in strL:
-					cleaned = cleanupText(strL)
-					# print(headingStr, cleaned)
-
+				if listTag not in strL:
+					cleaned = cleanupText(strL).strip()
 					# if ", let" in cleaned and re.sub(r'<.*?>', "", cleaned.split()[0]).lower() == "if":
 					if ", let" in cleaned and cleaned.split()[0].lower() == "if":
 						# print(headingStr, cleaned)
@@ -107,7 +109,7 @@ class Swami(object):
 						outFile.write(cleanedSpl[0])
 						outFile.write("\n")
 						outLine = [cleanedSpl[1]]
-						writeSubSections(outLine, level + 1)
+						writeSubSections(outLine, level + 1, listType)
 					# elif "else" in cleaned.split()[0].lower() and len(cleaned.split()) > 1 and ',' not in cleaned.strip().split[-1]:
 					# 	cleaned2 = cleaned.replace("Else ", "Else if ")
 					elif "else" in cleaned.split()[0].lower() and len(cleaned.split()) > 1:
@@ -119,7 +121,7 @@ class Swami(object):
 						# print(headingStr, cleaned)
 						# print(spl1)
 						outLine = [spl1]
-						writeSubSections(outLine, level + 1)
+						writeSubSections(outLine, level + 1, listType)
 					elif " else" in cleaned.lower():
 						cleaned2 = cleaned.replace(", else", ".--SPLIT--Else, ")
 						cleaned2 = cleaned2.replace("; else", ".--SPLIT--Else, ")
@@ -127,26 +129,26 @@ class Swami(object):
 						outFile.write(headingStr)
 						outFile.write(cleanedSpl[0])
 						outFile.write("\n")
-						print(headingStr, cleaned)
-						print(cleanedSpl[1])
+						# print(headingStr, cleaned)
+						# print(cleanedSpl[1])
 						outLine = [cleanedSpl[1]]
 						outLevel = level - 1
 						if "return" in cleanedSpl[0].lower():
 							outLevel = level
-						writeSubSections(outLine, outLevel)
+						writeSubSections(outLine, outLevel, listType)
 					else:
 						outFile.write(headingStr)
 						outFile.write(cleaned)
 						outFile.write("\n")
 				else:
-					preStr = strL.split("<ol>")[0]
+					preStr = strL.split(listTag)[0]
 					cleaned = cleanupText(preStr)
 					# print(headingStr, cleaned)
 					outFile.write(headingStr)
 					outFile.write(cleaned)
 					outFile.write("\n")
-					cont2 = l.find("ol").contents
-					writeSubSections(cont2, level + 1)
+					cont2 = l.find(listType).contents
+					writeSubSections(cont2, level + 1, listType)
 
 		# inFile = open("ECMAScript2018LanguageSpecification.html", 'r', encoding="utf8")
 		inFile = open(self.input_spec, 'r', encoding="utf8")
@@ -156,11 +158,19 @@ class Swami(object):
 		relSecRaw = []
 		for e in emu:
 			# print(e)
-			eTxt = e.find('h1')
-			eTxt = eTxt.get_text()
+			eTxt0 = e.find('h1')
+			eTxt = eTxt0.get_text()
 			eTxt = eTxt.strip()
+			# print(eTxt)
+			getCheck = False
+			if "get " in eTxt.lower():
+				getSpl = eTxt.split("get ")
+				if len(getSpl) > 1:
+					if "." in getSpl[1]:
+						getCheck = True
 			funcCheck = re.search(r'\(.*\)$', eTxt, re.M | re.I)
-			if funcCheck:
+			# dotCheck = re.search(r'')
+			if funcCheck or getCheck:
 				print(eTxt)
 				relSecRaw.append(e)
 		noFunctions = 0
@@ -183,7 +193,32 @@ class Swami(object):
 			summStr = summStr.replace("\n", "")
 			emuAlg = s.find_all("emu-alg")
 			if not emuAlg:
-				print("ERROR")
+				uList = s.find("ul")
+				if uList and "Math." in lc2[1]:
+					print(lc2[0])
+					print(uList)
+					noFunctions += 1
+					begin = "############# BEGIN ## " + str(noFunctions) + " ###########################\n"
+					end = "\n#############  END  ## " + str(noFunctions) + " ###########################\n"
+					outFile.write(begin)
+					outFile.write("ID= ")
+					outFile.write(lc2[0])
+					outFile.write("\n")
+					outFile.write("Summary= ")
+					outFile.write(lc2[1])
+					outFile.write("\n")
+					outFile.write("Description= ")
+					outFile.write(summStr)
+					outFile.write("\n")
+					cont = uList.contents
+					cont2 = []
+					for l in cont:
+						if "<li>" in str(l):
+							cont2.append(str(l).strip())
+					print(cont2)
+					writeSubSections(cont2, 0, "ul")
+					outFile.write(end)
+				# print("ERROR")
 			else:
 				noFunctions += 1
 				begin = "############# BEGIN ## " + str(noFunctions) + " ###########################\n"
@@ -193,6 +228,7 @@ class Swami(object):
 				outFile.write(lc2[0])
 				outFile.write("\n")
 				outFile.write("Summary= ")
+				# print(lc2[1])
 				outFile.write(lc2[1])
 				outFile.write("\n")
 				# print(summStr)
@@ -201,9 +237,13 @@ class Swami(object):
 				outFile.write("\n")
 				emuAlg = emuAlg[0]
 				ol = emuAlg.find("ol")
+				# print("OL: ", ol)
+				# print("UL: ", ul)
+				# print(type(ol))
+				# print(type(ul))
 				cont = ol.contents
 				# print(cont)
-				writeSubSections(cont, 0)
+				writeSubSections(cont, 0, "ol")
 				outFile.write(end)
 		# print("begin extracting relevant sections .....................................")
 		# rel_sec_file = open(filepath, "w")
@@ -241,14 +281,34 @@ class Swami(object):
 					startsec = True
 					body = ""
 					header = ""
+					tmpSummary = ""
+					tmpDesc = ""
+					isAbstract = False
 				elif "ID= " in line:
-					header += line.split("=")[1].strip()		
+					header += line.split("=")[1].strip()
 				elif "Summary= " in line:
-					header += " " + line.split("=")[1].strip() # + "\n"		
+					tmpSummary = line.split("=")[1].strip()
+					tmpName = re.sub(r'\(.*?\)', "", tmpSummary).strip()
+					header += " " + tmpSummary # + "\n"
 				elif "Description= " in line:
-					continue
-					body += line.split("=")[1].strip() + "\n"
+					tmpDesc = line.split("=")[1].strip()
+					# print(tmpDesc)
+					if "The abstract operation" in tmpDesc:
+						isAbstract = True
+					# body += line.split("=")[1].strip() + "\n"
 				elif "#############  END  ## "in line:
+					if isAbstract:
+						tmpDesc2 = tmpDesc.replace("The abstract operation", "").strip()
+						# print(tmpDesc2)
+						# print(tmpDesc2.split()[0])#[1]#.split()[0].strip())
+						# print("tmpName: ", tmpName)
+						# print(header)
+						if tmpDesc2.split()[0] == tmpName:
+							body += "---ABSTRACT---"
+							# print(body)
+							# print("IS ABSTRACT")
+						# if tmpDesc.split("The abstract operation")[1].split()[0].strip() in header:
+						# 	body += "---ABSTRACT---"
 					if header not in self.extracted_sections:
 						self.extracted_sections[header] = body
 					startsec = False
@@ -267,13 +327,22 @@ class Swami(object):
 		abstract_func_file = open(self.abstractfunc_file_path)
 		abstract_functions = abstract_func_file.read()
 		template_file.write(abstract_functions)
+		absFuncLines = abstract_functions.split("\n")
+		for line in absFuncLines:
+			wLine = line.strip()
+			if " " in wLine:
+				if wLine.split()[0] == "function":
+					fName = wLine.split("function")[1]
+					fName = fName.split("(")[0].strip()
+					# print(fName)
+					self.included_abstract_functions.append(fName)
 		abstract_func_file.close()
 		template_file.close()
 
 	# method to generate test templates from extracted sections 
 	def generateTemplates(self, extracted_sections):
 		self.addAbstractFunctions()
-		templates = self.test_template_generator.generateTestTemplates(extracted_sections)
+		templates = self.test_template_generator.generateTestTemplates(extracted_sections, self.included_abstract_functions)
 		template_file = open(self.templatefilepath, "a", encoding="utf8")
 		template_file.write("\n\n/*TEST TEMPLATES GENERATED AUTOMATICALLY*/\n\n")
 		count = 0
