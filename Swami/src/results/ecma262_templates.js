@@ -125,7 +125,6 @@ function test_array( ){
 		var newTarget = NewTarget;
 	}
 
-	var proto = GetPrototypeFromConstructor(newTarget, "%ArrayPrototype%");
 		console.log("OK Test")
 }
 
@@ -147,21 +146,11 @@ function test_array( items ){
 		var newTarget = NewTarget;
 	}
 
-	var proto = GetPrototypeFromConstructor(newTarget, "%ArrayPrototype%");
-	var array = ArrayCreate(numberOfArgs, proto);
 	var k = 0;
 	var items = a zero-origined List containingargument items in order;
 	while ( k < numberOfArgs ) { 
 		var Pk = ToString(k);
 		var itemK = items[k];
-		var defineStatus = CreateDataProperty(array, Pk, itemK);
-		if ( defineStatus === true ) {
-			console.log("Good Test - Assert");
-		}
-		else { 
-			console.log("Bad Test/Failed Test");
-			return;
-		} 
 		k = k + 1
 	}
 
@@ -186,17 +175,7 @@ function test_array( len ){
 		var newTarget = NewTarget;
 	}
 
-	var proto = GetPrototypeFromConstructor(newTarget, "%ArrayPrototype%");
-	var array = ArrayCreate(0, proto);
 	if  ( typeof ( len ) != "number"  ) { 
-		var defineStatus = CreateDataProperty(array, "0", len);
-		if ( defineStatus === true ) {
-			console.log("Good Test - Assert");
-		}
-		else { 
-			console.log("Bad Test/Failed Test");
-			return;
-		} 
 		var intLen = 1;
 	}
 
@@ -248,86 +227,12 @@ function test_array_from(items,mapfn,thisArg){
 		var mapping = true;
 	}
 
-	var usingIterator = GetMethod(items, @@iterator);
-	if ( typeof  usingIterator != 'undefined'  ) { 
-		if  ( IsConstructor ( C ) === true  ) { 
-			var A = Construct(C);
-		}
-				
-		else {
-			var A = ArrayCreate(0);
-		}
-						
-		var iteratorRecord = GetIterator(items, sync, usingIterator);
-		var k = 0;
-		while ( true ) {
-			if  ( k >=  Math.pow ( 2 , 53 ) - 1  ) { 
-				var error = ThrowCompletion( TypeError );
-				var output = Array.from(items,mapfn,thisArg);
-					assert.strictEqual(? IteratorClose ( iteratorRecord , error ), output);
-					console.log("Good Test");
-					return;
-			}
-												
-			var Pk = ToString(k);
-			var next = IteratorStep(iteratorRecord);
-			if  ( next === false  ) { 
-				var output = Array.from(items,mapfn,thisArg);
-					assert.strictEqual(A, output);
-					console.log("Good Test");
-					return;
-			}
-																
-			var nextValue = IteratorValue(next);
-			if  ( mapping === true  ) { 
-				var mappedValue = Call(mapfn, T, « nextValue, k »);
-				if (( mappedValue === an abrupt completion )){
-					var output = Array.from(items,mapfn,thisArg);
-					assert.strictEqual(? IteratorClose ( iteratorRecord , mappedValue ), output);
-					console.log("Good Test");
-					return;
-					}
-				var mappedValue = mappedValue;
-			}
-																					
-			else {
-				var mappedValue = nextValue;
-			}
-																							
-			var defineStatus = CreateDataPropertyOrThrow(A, Pk, mappedValue);
-			if (( defineStatus === an abrupt completion )){
-				var output = Array.from(items,mapfn,thisArg);
-				assert.strictEqual(? IteratorClose ( iteratorRecord , defineStatus ), output);
-				console.log("Good Test");
-				return;
-				}
-			k = k + 1
-			}
-
-		}
-
 	var arrayLike = ToObject(items);
 	var len = ToLength( Get(arrayLike, "length"));
-	if  ( IsConstructor ( C ) === true  ) { 
-		var A = Construct(C, « len »);
-	}
-
-	else {
-		var A = ArrayCreate(len);
-	}
-
 	var k = 0;
 	while ( k < len ) { 
 		var Pk = ToString(k);
 		var kValue = Get(arrayLike, Pk);
-		if  ( mapping === true  ) { 
-			var mappedValue = Call(mapfn, T, « kValue, k »);
-		}
-						
-		else {
-			var mappedValue = kValue;
-		}
-								
 		k = k + 1
 	}
 
@@ -360,18 +265,6 @@ function test_array_prototype_every(randominput, callbackfn  , thisArg  ){
 	var k = 0;
 	while ( k < len ) { 
 		var Pk = ToString(k);
-		var kPresent = HasProperty(O, Pk);
-		if  ( kPresent === true  ) { 
-			var kValue = Get(O, Pk);
-			var testResult = ToBoolean( Call(callbackfn, T, « kValue, k, O »));
-			if (( testResult === false )){
-				var output = new Array(randominput).every( callbackfn  , thisArg  );
-				assert.strictEqual(false, output);
-				console.log("Good Test");
-				return;
-				}
-		}
-								
 		k = k + 1
 	}
 
@@ -401,18 +294,10 @@ function test_array_prototype_filter(randominput, callbackfn  , thisArg  ){
 		var T = undefined;
 	}
 
-	var A = ArraySpeciesCreate(O, 0);
 	var k = 0;
 	var to = 0;
 	while ( k < len ) { 
 		var Pk = ToString(k);
-		var kPresent = HasProperty(O, Pk);
-		if  ( kPresent === true  ) { 
-			var kValue = Get(O, Pk);
-			var selected = ToBoolean( Call(callbackfn, T, « kValue, k, O »));
-				to = to + 1
-		}
-								
 		k = k + 1
 	}
 
@@ -446,13 +331,6 @@ function test_array_prototype_find(randominput, predicate  , thisArg  ){
 	while ( k < len ) { 
 		var Pk = ToString(k);
 		var kValue = Get(O, Pk);
-		var testResult = ToBoolean( Call(predicate, T, « kValue, k, O »));
-		if (( testResult === true )){
-			var output = new Array(randominput).find( predicate  , thisArg  );
-			assert.strictEqual(kValue, output);
-			console.log("Good Test");
-			return;
-			}
 		k = k + 1
 	}
 
@@ -486,13 +364,6 @@ function test_array_prototype_findindex(randominput, predicate  , thisArg  ){
 	while ( k < len ) { 
 		var Pk = ToString(k);
 		var kValue = Get(O, Pk);
-		var testResult = ToBoolean( Call(predicate, T, « kValue, k, O »));
-		if (( testResult === true )){
-			var output = new Array(randominput).findIndex( predicate  , thisArg  );
-			assert.strictEqual(k, output);
-			console.log("Good Test");
-			return;
-			}
 		k = k + 1
 	}
 
@@ -525,11 +396,6 @@ function test_array_prototype_foreach(randominput, callbackfn  , thisArg  ){
 	var k = 0;
 	while ( k < len ) { 
 		var Pk = ToString(k);
-		var kPresent = HasProperty(O, Pk);
-		if  ( kPresent === true  ) { 
-			var kValue = Get(O, Pk);
-		}
-						
 		k = k + 1
 	}
 
@@ -618,16 +484,9 @@ function test_array_prototype_map(randominput, callbackfn  , thisArg  ){
 		var T = undefined;
 	}
 
-	var A = ArraySpeciesCreate(O, len);
 	var k = 0;
 	while ( k < len ) { 
 		var Pk = ToString(k);
-		var kPresent = HasProperty(O, Pk);
-		if  ( kPresent === true  ) { 
-			var kValue = Get(O, Pk);
-			var mappedValue = Call(callbackfn, T, « kValue, k, O »);
-		}
-							
 		k = k + 1
 	}
 
@@ -680,31 +539,13 @@ function test_array_prototype_reduce(randominput, callbackfn  , initialValue  ){
 		var kPresent = false;
 		while ( kPresent === false && k < len ) { 
 			var Pk = ToString(k);
-			var kPresent = HasProperty(O, Pk);
-			if  ( kPresent === true  ) { 
 			k = k + 1
-		}
-								
-		if (( kPresent === false )){
-			 try{
-				var output = new Array(randominput).reduce( callbackfn  , initialValue  );
-				console.log("Bad Test/Failed Test");
-				 return;
-			}catch(e){
-				assert.strictEqual(true, eval(e instanceof TypeError));
-				console.log("Good Test");
-				return;
 			}
+
 		}
-	}
 
 	while ( k < len ) { 
 		var Pk = ToString(k);
-		var kPresent = HasProperty(O, Pk);
-		if  ( kPresent === true  ) { 
-			var kValue = Get(O, Pk);
-		}
-						
 		k = k + 1
 	}
 
@@ -743,31 +584,13 @@ function test_array_prototype_reduceright(randominput, callbackfn  , initialValu
 		var kPresent = false;
 		while ( kPresent === false && k >=  0 ) { 
 			var Pk = ToString(k);
-			var kPresent = HasProperty(O, Pk);
-			if  ( kPresent === true  ) { 
 			k = k - 1
-		}
-								
-		if (( kPresent === false )){
-			 try{
-				var output = new Array(randominput).reduceRight( callbackfn  , initialValue  );
-				console.log("Bad Test/Failed Test");
-				 return;
-			}catch(e){
-				assert.strictEqual(true, eval(e instanceof TypeError));
-				console.log("Good Test");
-				return;
 			}
+
 		}
-	}
 
 	while ( k >=  0 ) { 
 		var Pk = ToString(k);
-		var kPresent = HasProperty(O, Pk);
-		if  ( kPresent === true  ) { 
-			var kValue = Get(O, Pk);
-		}
-						
 		k = k - 1
 	}
 
@@ -790,12 +613,6 @@ function test_array_prototype_shift(randominput, ){
 	while ( k < len ) { 
 		var from = ToString(k);
 		var to = ToString(k-1);
-		var fromPresent = HasProperty(O, from);
-		if  ( fromPresent === true  ) { 
-			var fromVal = Get(O, from);
-		}
-							
-		else if ( fromPresent === false ) {
 		k = k + 1
 	}
 
@@ -828,18 +645,6 @@ function test_array_prototype_some(randominput, callbackfn  , thisArg  ){
 	var k = 0;
 	while ( k < len ) { 
 		var Pk = ToString(k);
-		var kPresent = HasProperty(O, Pk);
-		if  ( kPresent === true  ) { 
-			var kValue = Get(O, Pk);
-			var testResult = ToBoolean( Call(callbackfn, T, « kValue, k, O »));
-			if (( testResult === true )){
-				var output = new Array(randominput).some( callbackfn  , thisArg  );
-				assert.strictEqual(true, output);
-				console.log("Good Test");
-				return;
-				}
-		}
-								
 		k = k + 1
 	}
 
@@ -867,15 +672,9 @@ function test_array_prototype_unshift(randominput, items ){
 		while ( k > 0 ) { 
 			var from = ToString(k-1);
 			var to = ToString(k+argCount-1);
-			var fromPresent = HasProperty(O, from);
-			if  ( fromPresent === true  ) { 
-				var fromValue = Get(O, from);
-			}
-										
-			else if ( fromPresent === false ) {
 			k = k - 1
 		}
-												
+								
 		var j = 0;
 		while ( items != empty ) { 
 			j = j + 1
@@ -899,7 +698,6 @@ function test_arraybuffer(length){
 			return;
 		}
 	}
-	var byteLength = ToIndex(length);
 		console.log("OK Test")
 }
 
@@ -956,17 +754,6 @@ function test_arraybuffer_prototype_slice(randominput,start,end){
 			return;
 		}
 	}
-	if (( IsDetachedBuffer ( O ) === true )){
-		 try{
-			var output = randominput.slice(start,end);
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof TypeError));
-			console.log("Good Test");
-			return;
-		}
-	}
 	var len = O;
 	var relativeStart = ToInteger(start);
 	if  ( relativeStart < 0  ) { 
@@ -994,94 +781,7 @@ function test_arraybuffer_prototype_slice(randominput,start,end){
 	}
 
 	var newLen = Math.max (final-first, 0);
-	var ctor = SpeciesConstructor(O, %ArrayBuffer%);
-	var new = Construct(ctor, « newLen »);
-	if (( new instanceof ArrayBuffer === false )){
-		 try{
-			var output = randominput.slice(start,end);
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof TypeError));
-			console.log("Good Test");
-			return;
-		}
-	}
-	if (( IsSharedArrayBuffer ( new ) === true )){
-		 try{
-			var output = randominput.slice(start,end);
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof TypeError));
-			console.log("Good Test");
-			return;
-		}
-	}
-	if (( IsDetachedBuffer ( new ) === true )){
-		 try{
-			var output = randominput.slice(start,end);
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof TypeError));
-			console.log("Good Test");
-			return;
-		}
-	}
-	if (( SameValue ( new , O ) === true )){
-		 try{
-			var output = randominput.slice(start,end);
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof TypeError));
-			console.log("Good Test");
-			return;
-		}
-	}
-	if (( IsDetachedBuffer ( O ) === true )){
-		 try{
-			var output = randominput.slice(start,end);
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof TypeError));
-			console.log("Good Test");
-			return;
-		}
-	}
 	var fromBuf = O;
-	var toBuf = new;
-		console.log("OK Test")
-}
-
-
-function test_atomics_wait(typedArray,index,value,timeout){
-	var buffer = ValidateSharedIntegerTypedArray(typedArray, true);
-	var i = ValidateAtomicAccess(typedArray, index);
-	var v = ToInt32(value);
-	var q = ToNumber(timeout);
-		var t = +Infinity;
-	else {
-		var t = Math.max (q, 0);
-	}
-
-	var B = AgentCanSuspend();
-	var block = buffer;
-	var offset = typedArray;
-	var indexedPosition = (i × 4) + offset;
-	var WL = GetWaiterList(block, indexedPosition);
-	var w = AtomicLoad(typedArray, i);
-	var W = AgentSignier();
-	var awoken = Suspend(WL, W, t);
-		if ( W != on list of waiters in WL ) {
-			console.log("Good Test - Assert");
-		}
-		else { 
-			console.log("Bad Test/Failed Test");
-			return;
-		} 
 		console.log("OK Test")
 }
 
@@ -1429,7 +1129,6 @@ function test_date_prototype_todatestring(randominput){
 		console.log("Good Test");
 		return;
 		}
-	var t = LocalTime(tv);
 		console.log("OK Test")
 }
 
@@ -1443,7 +1142,6 @@ function test_date_prototype_totimestring(randominput){
 		console.log("Good Test");
 		return;
 		}
-	var t = LocalTime(tv);
 		console.log("OK Test")
 }
 
@@ -1457,8 +1155,6 @@ function test_date_prototype_toutcstring(randominput){
 		console.log("Good Test");
 		return;
 		}
-	var weekday =Name ofentry in Table 46 withNumber WeekDay(tv);
-	var month =Name ofentry in Table 47 withNumber MonthFromTime(tv);
 		console.log("OK Test")
 }
 
@@ -1488,17 +1184,6 @@ function test_get_arraybuffer_prototype_bytelength(randominput){
 		}
 	}
 	if (( IsSharedArrayBuffer ( O ) === true )){
-		 try{
-			var output = randominput.byteLength;
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof TypeError));
-			console.log("Good Test");
-			return;
-		}
-	}
-	if (( IsDetachedBuffer ( O ) === true )){
 		 try{
 			var output = randominput.byteLength;
 			console.log("Bad Test/Failed Test");
@@ -1561,20 +1246,6 @@ function test_map(randominput,iterable){
 			return;
 		}
 	}
-	var map = OrdinaryCreateFromConstructor(NewTarget, "%MapPrototype%", « [[MapData]] »);
-	var adder = Get(map, "set");
-	if (( IsCallable ( adder ) === false )){
-		 try{
-			var output = randominput.Map(iterable);
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof TypeError));
-			console.log("Good Test");
-			return;
-		}
-	}
-	var iteratorRecord = GetIterator(iterable);
 		console.log("OK Test")
 }
 
@@ -2353,7 +2024,6 @@ function test_math_fround(x){
 		console.log("Good Test");
 		return;
 		}
-	var x64 =converting x32 to a value in IEEE 754-2008 binary64 format;
 		console.log("OK Test")
 }
 
@@ -2804,23 +2474,6 @@ function test_math_trunc(x){
 }
 
 
-function test_number(value){
-		var n = 0;
-	else {
-		var n = ToNumber(value);
-	}
-
-	if (( typeof  NewTarget === 'undefined' )){
-		var output = Number.Number(value);
-		assert.strictEqual(n, output);
-		console.log("Good Test");
-		return;
-		}
-	var O = OrdinaryCreateFromConstructor(NewTarget, "%NumberPrototype%", « [[NumberData]] »);
-		console.log("OK Test")
-}
-
-
 function test_number_isfinite(number){
 	if (( typeof ( number ) != "number" )){
 		var output = Number.isFinite(number);
@@ -2936,11 +2589,6 @@ function test_number_prototype_toexponential(randominput,fractionDigits){
 			return;
 		}
 	}
-	if  ( x = 0  ) { 
-		var m =String value consisting of f+1 occurrences ofcode unit 0x0030 (DIGIT ZERO);
-		var e = 0;
-	}
-
 		console.log("OK Test")
 }
 
@@ -3025,20 +2673,6 @@ function test_set(randominput,iterable){
 			return;
 		}
 	}
-	var set = OrdinaryCreateFromConstructor(NewTarget, "%SetPrototype%", « [[SetData]] »);
-	var adder = Get(set, "add");
-	if (( IsCallable ( adder ) === false )){
-		 try{
-			var output = randominput.Set(iterable);
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof TypeError));
-			console.log("Good Test");
-			return;
-		}
-	}
-	var iteratorRecord = GetIterator(iterable);
 		console.log("OK Test")
 }
 
@@ -3177,28 +2811,6 @@ function test_string_prototype_includes(randominput,searchString,position){
 			return;
 		}
 	}
-	var searchStr = ToString(searchString);
-	var pos = ToInteger(position);
-	var len =length of S;
-	var start = Math.min (Math.max (pos, 0), len);
-	var searchLen =length of searchStr;
-		console.log("OK Test")
-}
-
-
-function test_string_prototype_match(randominput,regexp){
-	var O = RequireObjectCoercible(randominput);
-	if ( typeof  regexp === neither 'undefined' nor null  ) { 
-		var matcher = GetMethod(regexp, @@match);
-		if ( typeof  matcher != 'undefined'  ) { 
-			var output = new String(randominput).match(regexp);
-				assert.strictEqual(? Call ( matcher , regexp , « O » ), output);
-				console.log("Good Test");
-				return;
-	}
-					
-	var S = ToString(O);
-	var rx = RegExpCreate(regexp, undefined);
 		console.log("OK Test")
 }
 
@@ -3245,7 +2857,6 @@ function test_string_prototype_padend(randominput,maxLength,fillString){
 		var filler = ToString(fillString);
 	}
 
-	var fillLen = intMaxLength - stringLength;
 		console.log("OK Test")
 }
 
@@ -3269,7 +2880,6 @@ function test_string_prototype_padstart(randominput,maxLength,fillString){
 		var filler = ToString(fillString);
 	}
 
-	var fillLen = intMaxLength - stringLength;
 		console.log("OK Test")
 }
 
@@ -3300,114 +2910,6 @@ function test_string_prototype_repeat(randominput,count){
 			return;
 		}
 	}
-		console.log("OK Test")
-}
-
-
-function test_string_prototype_replace(randominput,searchValue,replaceValue){
-	var O = RequireObjectCoercible(randominput);
-	if ( typeof  searchValue === neither 'undefined' nor null  ) { 
-		var replacer = GetMethod(searchValue, @@replace);
-		if ( typeof  replacer != 'undefined'  ) { 
-			var output = new String(randominput).replace(searchValue,replaceValue);
-				assert.strictEqual(? Call ( replacer , searchValue , « O , replaceValue » ), output);
-				console.log("Good Test");
-				return;
-			}
-
-		}
-
-	var functionalReplace = IsCallable(replaceValue);
-	if  ( functionalReplace === false  ) { 
-		var replaceValue = ToString(replaceValue);
-	}
-
-	if  ( functionalReplace === true  ) { 
-		var replValue = Call(replaceValue, undefined, « matched, pos, string »);
-		var replStr = ToString(replValue);
-	}
-
-	else {
-		var captures = a new empty List;
-		var replStr = GetSubstitution(matched, string, pos, captures, undefined, replaceValue);
-	}
-
-	var tailPos = pos +matched.length;
-		console.log("OK Test")
-}
-
-
-function test_string_prototype_search(randominput,regexp){
-	var O = RequireObjectCoercible(randominput);
-	if ( typeof  regexp === neither 'undefined' nor null  ) { 
-		var searcher = GetMethod(regexp, @@search);
-		if ( typeof  searcher != 'undefined'  ) { 
-			var output = new String(randominput).search(regexp);
-				assert.strictEqual(? Call ( searcher , regexp , « O » ), output);
-				console.log("Good Test");
-				return;
-			}
-
-		}
-
-	var rx = RegExpCreate(regexp, undefined);
-		console.log("OK Test")
-}
-
-
-function test_string_prototype_split(randominput,separator,limit){
-	var O = RequireObjectCoercible(randominput);
-	if ( typeof  separator === neither 'undefined' nor null  ) { 
-		var splitter = GetMethod(separator, @@split);
-		if ( typeof  splitter != 'undefined'  ) { 
-			var output = new String(randominput).split(separator,limit);
-				assert.strictEqual(? Call ( splitter , separator , « O , limit » ), output);
-				console.log("Good Test");
-				return;
-	}
-					
-	var S = ToString(O);
-	var A = ArrayCreate(0);
-	var lengthA = 0;
-	if ( typeof  limit === 'undefined'  ) { 
-		var lim = 2--EXP0--32--EXP1---1;
-	}
-
-	else {
-		var lim = ToUint32(limit);
-	}
-
-	var s =length of S;
-	var p = 0;
-	var R = ToString(separator);
-	if (( lim = 0 )){
-		var output = new String(randominput).split(separator,limit);
-		assert.strictEqual(A, output);
-		console.log("Good Test");
-		return;
-		}
-	if ( typeof  separator === 'undefined'  ) { 
-		var output = new String(randominput).split(separator,limit);
-			assert.strictEqual(A, output);
-			console.log("Good Test");
-			return;
-	}
-
-	if  ( s = 0  ) { 
-		var z = SplitMatch(S, 0, R);
-		if (( z != false )){
-			var output = new String(randominput).split(separator,limit);
-			assert.strictEqual(A, output);
-			console.log("Good Test");
-			return;
-			}
-		var output = new String(randominput).split(separator,limit);
-			assert.strictEqual(A, output);
-			console.log("Good Test");
-			return;
-	}
-
-	var q = p;
 		console.log("OK Test")
 }
 
@@ -3473,33 +2975,6 @@ function test_typedarray( buffer  , byteOffset  , length   ){
 	}
 	var O = AllocateTypedArray(constructorName, NewTarget, "%TypedArrayPrototype%");
 	var elementSize =Number value ofElement Size value in Table 56 for constructorName;
-	var offset = ToIndex(byteOffset);
-	if (( offset modulo elementSize!= 0 )){
-		 try{
-			var output = new TypedArray ( buffer  , byteOffset  , length   );
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof RangeError));
-			console.log("Good Test");
-			return;
-		}
-	}
-	if ( typeof  length === present && length != 'undefined'  ) { 
-		var newLength = ToIndex(length);
-	}
-
-	if (( IsDetachedBuffer ( buffer ) === true )){
-		 try{
-			var output = new TypedArray ( buffer  , byteOffset  , length   );
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof TypeError));
-			console.log("Good Test");
-			return;
-		}
-	}
 	var bufferByteLength = buffer;
 		if (( bufferByteLength modulo elementSize!= 0 )){
 			 try{
@@ -3512,33 +2987,6 @@ function test_typedarray( buffer  , byteOffset  , length   ){
 				return;
 			}
 		}
-		var newByteLength = bufferByteLength - offset;
-		if (( newByteLength < 0 )){
-			 try{
-				var output = new TypedArray ( buffer  , byteOffset  , length   );
-				console.log("Bad Test/Failed Test");
-				 return;
-			}catch(e){
-				assert.strictEqual(true, eval(e instanceof RangeError));
-				console.log("Good Test");
-				return;
-			}
-		}
-	else {
-		var newByteLength = newLength × elementSize;
-		if (( offset + newByteLength > bufferByteLength )){
-			 try{
-				var output = new TypedArray ( buffer  , byteOffset  , length   );
-				console.log("Bad Test/Failed Test");
-				 return;
-			}catch(e){
-				assert.strictEqual(true, eval(e instanceof RangeError));
-				console.log("Good Test");
-				return;
-			}
-		}
-	}
-
 		console.log("OK Test")
 }
 
@@ -3562,7 +3010,6 @@ function test_typedarray( length ){
 			return;
 		}
 	}
-	var elementLength = ToIndex(length);
 		console.log("OK Test")
 }
 
@@ -3580,38 +3027,12 @@ function test_typedarray( object ){
 		}
 	}
 	var O = AllocateTypedArray(constructorName, NewTarget, "%TypedArrayPrototype%");
-	var usingIterator = GetMethod(object, @@iterator);
-	if ( typeof  usingIterator != 'undefined'  ) { 
-		var values = IterableToList(object, usingIterator);
-		var len = values.length;
-		AllocateTypedArrayBuffer ( O , len )
-		var k = 0;
-		while ( k < len ) { 
-			var Pk = ToString(k);
-			var kValue =first element of values and remove that element from values;
-			k = k + 1
-		}
-										
-		if ( values === now an empty List ) {
-			console.log("Good Test - Assert");
-		}
-		else { 
-			console.log("Bad Test/Failed Test");
-			return;
-		} 
-		var output = new TypedArray ( object );
-			assert.strictEqual(O, output);
-			console.log("Good Test");
-			return;
-	}
-
 	var arrayLike = object;
 	var len = ToLength( Get(arrayLike, "length"));
 	AllocateTypedArrayBuffer ( O , len )
 	var k = 0;
 	while ( k < len ) { 
 		var Pk = ToString(k);
-		var kValue = Get(arrayLike, Pk);
 		k = k + 1
 	}
 
@@ -3641,17 +3062,6 @@ function test_typedarray( typedArray ){
 	var O = AllocateTypedArray(constructorName, NewTarget, "%TypedArrayPrototype%");
 	var srcArray = typedArray;
 	var srcData = srcArray;
-	if (( IsDetachedBuffer ( srcData ) === true )){
-		 try{
-			var output = new TypedArray ( typedArray );
-			console.log("Bad Test/Failed Test");
-			 return;
-		}catch(e){
-			assert.strictEqual(true, eval(e instanceof TypeError));
-			console.log("Good Test");
-			return;
-		}
-	}
 	var elementType =String value ofElement Type value in Table 56 for constructorName;
 	var elementLength = srcArray;
 	var srcName =String value of srcArray;
@@ -3660,47 +3070,11 @@ function test_typedarray( typedArray ){
 	var srcByteOffset = srcArray;
 	var elementSize =Element Size value in Table 56 for constructorName;
 	var byteLength = elementSize × elementLength;
-	if  ( IsSharedArrayBuffer ( srcData ) === false  ) { 
-		var bufferConstructor = SpeciesConstructor(srcData, %ArrayBuffer%);
-	}
-
 	else {
-		var bufferConstructor = %ArrayBuffer%;
-	}
-
-	if  ( SameValue ( elementType , srcType ) === true  ) { 
-		if (( IsDetachedBuffer ( srcData ) === true )){
-			 try{
-				var output = new TypedArray ( typedArray );
-				console.log("Bad Test/Failed Test");
-				 return;
-			}catch(e){
-				assert.strictEqual(true, eval(e instanceof TypeError));
-				console.log("Good Test");
-				return;
-			}
-		}
-		var data = CloneArrayBuffer(srcData, srcByteOffset, byteLength, bufferConstructor);
-	}
-
-	else {
-		var data = AllocateArrayBuffer(bufferConstructor, byteLength);
-		if (( IsDetachedBuffer ( srcData ) === true )){
-			 try{
-				var output = new TypedArray ( typedArray );
-				console.log("Bad Test/Failed Test");
-				 return;
-			}catch(e){
-				assert.strictEqual(true, eval(e instanceof TypeError));
-				console.log("Good Test");
-				return;
-			}
-		}
 		var srcByteIndex = srcByteOffset;
 		var targetByteIndex = 0;
 		var count = elementLength;
 		while ( count > 0 ) { 
-			var value = GetValueFromBuffer(srcData, srcByteIndex, srcType, true, "Unordered");
 			count = count - 1
 			}
 

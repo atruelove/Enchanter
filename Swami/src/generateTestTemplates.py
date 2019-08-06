@@ -67,6 +67,7 @@ class TestTemplate(object):
 		self.compiler = compiler
 		self.nlp = StanfordCoreNLP(r'lib/stanford-corenlp-full-2018-02-27')
 		self.bannedVariables = []
+		self.testableConditions = 0
 
 	# method to check if a statement is an assignment
 	# and if it is then store the variable and its value
@@ -429,22 +430,33 @@ class TestTemplate(object):
 				abstractCheck = value.replace("  ", "").strip()
 				abstractCheck = abstractCheck.replace(" (", "(")
 				abstractCheck = abstractCheck.replace("(", "( ")
+				abstractCheck = abstractCheck.replace(")", " )")
+				abstractCheck = abstractCheck.replace(",", " ")
+				abstractCheck = abstractCheck.replace("  ", " ").strip()
 				if "(" in abstractCheck:
 					abstractSplit = abstractCheck.split()
 					for i in abstractSplit:
 						if "(" in i:
 							# funcName = re.sub(r'\(.*?\)', "", i)
-							funcName = i.replace("(", "").strip()
+							funcName = i.split("(")[0].strip()
 							if funcName in excludedAbstractFunctions:
 								hasAbstractCall = True
 								if var not in self.bannedVariables:
 									self.bannedVariables.append(var)
 									# print(var)
+				for j in abstractCheck.split():
+					if j in self.bannedVariables:
+						# print(j)
+						# print(abstractCheck)
+						hasAbstractCall = True
+						if var not in self.bannedVariables:
+							self.bannedVariables.append(var)
 				# if hasAbstractCall:
-				# 	index += 1
-				# 	continue
+				# 	updatedstatement = ""
+				# else:
 				updatedstatement = "--ASSIGNMENT-- " + str(var) + " = " + str(value)
-				# print(updatedstatement)
+				# if hasAbstractCall:
+				# 	print(updatedstatement)
 				statementAdded = True
 				numvars += 1
 
@@ -455,9 +467,7 @@ class TestTemplate(object):
 					# if POSElements[1] == multiStepIfPatterns[1] or ("newtarget" in statement.lower().split[1]):
 						if POSElements[-1] == multiStepIfPatterns[-1] and POSElements[-2] == multiStepIfPatterns[-2]:
 							isMultiStepIf = True
-			# for m in multiStepIfPatterns:
-			# 	if POS[index].strip() == m:
-			# 		isMultiStepIf = True
+
 			if isMultiStepIf:
 				statementAdded = True
 				# postags = self.nlp.pos_tag(statement)
@@ -622,7 +632,7 @@ class TestTemplate(object):
 							spl = self.checkOperators(tmpStatement)
 							if spl != "":
 								splAssert2 = tmpStatement.split(spl)
-								print(splAssert2)
+								# print(splAssert2)
 							updatedstatement = splAssert2[0] + " " + spl + " " + splAssert2[1] + " && " + splAssert2[1] + " " + spl + " " + splAssert2[-1]
 						else:
 							spl = self.checkOperators(splAssert[1])
@@ -638,6 +648,7 @@ class TestTemplate(object):
 								# 	print(spl2)
 								updatedstatement = splAssert[0] + " " + spl + " " + splAssert2[1]
 				updatedstatement = "--ASSERT--" + updatedstatement
+				self.testableConditions += 1
 				# print(updatedstatement)
 
 			isPerform = False
@@ -667,9 +678,12 @@ class TestTemplate(object):
 
 			if isReturn:
 				statementAdded = True
-				updatedstatement = statement.replace("Return", "")# + "."
+				updatedstatement = statement.replace("Return", "").strip()# + "."
+				if updatedstatement[0] in returnPunct:
+					updatedstatement = updatedstatement[1:]
 				updatedstatement = self.substituteVars(updatedstatement.strip(), sectionid)
 				updatedstatement = "--RETURN--" + updatedstatement
+				self.testableConditions += 1
 				# print(updatedstatement)
 
 			# This entire block seems to be unncessary. The pattern caught here is caught elsewhere, and gives the
@@ -720,6 +734,7 @@ class TestTemplate(object):
 				# 	index += 1
 				# 	continue
 				updatedstatement = self.substituteVars(statement, sectionid)
+				self.testableConditions += 1
 				tmpvars = numvars
 				# while(updatedstatement != self.substituteVars(updatedstatement, sectionid) and tmpvars > 0):
 				# 	updatedstatement = self.substituteVars(updatedstatement, sectionid)
@@ -735,16 +750,27 @@ class TestTemplate(object):
 					updatedstatement = "{"
 
 			usesBannedVar = False
-			# if statementAdded:
-			# 	bannedVarLine = updatedstatement.replace("  ", " ").strip()
-			# 	bannedVarLine = re.sub(r'--.*?--', "", bannedVarLine)
-			# 	# print(bannedVarLine)
-			# 	bannedVarSpl = bannedVarLine.split()
-			# 	for i in bannedVarSpl:
-			# 		if i in self.bannedVariables:
-			# 			usesBannedVar = True
-			if usesBannedVar:
-				print(updatedstatement)
+			if statementAdded:
+				bannedVarLine = updatedstatement.replace("  ", " ").strip()
+				bannedVarLine = re.sub(r'--.*?--', "", bannedVarLine)
+				bannedVarLine = bannedVarLine.replace(" (", "(")
+				bannedVarLine = bannedVarLine.replace(")", " )")
+				bannedVarLine = bannedVarLine.replace("  ", " ")
+				bannedVarLine = bannedVarLine.strip()
+				# print(bannedVarLine)
+				bannedVarSpl = bannedVarLine.split()
+				for i in bannedVarSpl:
+					if "(" in i and i != "if(":
+						# print(bannedVarLine)
+						testFunc = i.split("(")[0]
+						testFunc = re.sub(r'\.\[\[.*?\]\]', "", testFunc)
+						# print(testFunc)
+						if testFunc in excludedAbstractFunctions:
+							usesBannedVar = True
+					if i in self.bannedVariables:
+						usesBannedVar = True
+			if usesBannedVar or hasAbstractCall:
+				# print(updatedstatement)
 				updatedstatement += "--HASABSTRACT--"
 			if statementAdded:
 				# tmpvars = numvars
@@ -771,6 +797,8 @@ class TestTemplate(object):
 	# valid JavaScript symbols and variables 
 	def convertTextToCode(self, text):
 		text = ' '.join(text.split())
+		text = text.replace("«", "[")
+		text = text.replace("»", "]")
 		text = text.replace("this value.", "randominput")
 		text = text.replace("this value", "randominput")
 		text = text.replace("result of ", "")
@@ -935,15 +963,21 @@ class TestTemplate(object):
 				# 	print(tmpLines[0])
 				# 	outLine += newTab + "}"
 				return outLine
-			return ""
+			outLine = ""
+			newEmptyBlock = emptyBlock[1:]
+			newTmpLines = tmpLines[1:]
+			newLevels = levels[1:]
+			outLine += writeCompleteBlocks(newTmpLines, newEmptyBlock, lineTab, newLevels, lastLevel)
+			return outLine
 
-		def notEmptyBlock(emptyBlock, levels):
+		def notEmptyBlock(emptyBlock, levels, newLevel):
 			i = 0
 			while i < len(emptyBlock):
 				if emptyBlock[i] == 0 and levels[i] < levels[-1]:
 					emptyBlock[i] = 1
 				i += 1
-			emptyBlock[-1] = 1
+			if levels[-1] < newLevel:
+				emptyBlock[-1] = 1
 			return emptyBlock
 
 		# testtemplate = self.template_content[header]
@@ -1014,6 +1048,9 @@ class TestTemplate(object):
 		hlst = []
 		levels = []
 		# print(header)
+		foundTestable = 0
+		badBlock = False
+		badLevel = 0
 		for i in range(1, len(testtemplate)):
 			templatecount += 1
 			test = ""
@@ -1029,6 +1066,7 @@ class TestTemplate(object):
 			hasAbstract = False
 			if "--HASABSTRACT--" in testcondition.strip():
 				hasAbstract = True
+				# testcondition = testcondition.replace("--HASABSTRACT--", "")
 
 			lineTab = "\n\t"
 			addTab = 0
@@ -1037,6 +1075,13 @@ class TestTemplate(object):
 				lineTab += "\t"
 				addTab += 1
 
+			if badBlock:
+				if headingNo <= badLevel:
+					# print(badLevel)
+					# print("H: ", headingNo)
+					# print(testcondition)
+					badBlock = False
+					badLevel = 0
 
 			if bracketOpen and headingNo <= hlst[-1]:
 				# print(testcondition)
@@ -1065,19 +1110,68 @@ class TestTemplate(object):
 					emptyBlock = []
 					levels = []
 
+			if "--INCDEC--" in testcondition.strip().split():
+				if "=" in testcondition.strip():
+					isOther = True
+					if hasAbstract or badBlock:
+						hIndex += 1
+						continue
+					test = testcondition.replace("--INCDEC--", "").strip()
+					test = self.convertTextToCode(test)
+					if not bracketOpen:
+						testfunction += lineTab + test
+					elif test.strip() != "":
+						emptyBlock = notEmptyBlock(emptyBlock, levels, headingNo)
+						emptyBlock.append(2)
+						tmpLines.append(lineTab + test)
+						levels.append(headingNo)
+					# isOther = True
+					# toAdd = ""
+					# # if not hasAbstract or :
+					# toAdd = test
+					# if not bracketOpen:
+					# 	testfunction += lineTab + test
+					# elif test.strip() != "":
+					# 	emptyBlock = notEmptyBlock(emptyBlock, levels)
+					# 	emptyBlock.append(2)
+					# 	tmpLines.append(lineTab + toAdd)
+					# 	print(toAdd)
+					# 	levels.append(headingNo)
+
+			if foundTestable >= self.testableConditions and not bracketOpen:
+				hIndex += 1
+				continue
+
 			if testcondition.strip() == "else":
+				if badBlock:
+					hIndex += 1
+					continue
+				elif hasAbstract:
+					badBlock = True
+					badLevel = headingNo
+					hIndex +=1
+					continue
 				bracketOpen = True
 				hlst.append(headingNo)
 				test = "else {"
 				test = lineTab + test
 				# testfunction += lineTab + test
+				# if not hasAbstract and not badBlock:
 				tmpLines.append(test)
 				emptyBlock.append(0)
 				levels.append(headingNo)
 
 			if "while" in testcondition.strip():
-				bracketOpen = True
 				isOther = True
+				if badBlock:
+					hIndex += 1
+					continue
+				elif hasAbstract:
+					badBlock = True
+					badLevel = headingNo
+					hIndex +=1
+					continue
+				bracketOpen = True
 				hlst.append(headingNo)
 				if "while ( true )" in testcondition:
 					test = testcondition.strip()
@@ -1092,8 +1186,16 @@ class TestTemplate(object):
 				levels.append(headingNo)
 
 			if testcondition.strip() == "{":
-				bracketOpen = True
 				isOther = True
+				if badBlock:
+					hIndex += 1
+					continue
+				elif hasAbstract:
+					badBlock = True
+					badLevel = headingNo
+					hIndex +=1
+					continue
+				bracketOpen = True
 				hlst.append(headingNo)
 				test = "{" #self.convertTextToCode(testcondition)
 				# print(test)
@@ -1104,9 +1206,17 @@ class TestTemplate(object):
 				levels.append(headingNo)
 
 			if ".forEach" in testcondition:
+				isOther = True
+				if badBlock:
+					hIndex += 1
+					continue
+				elif hasAbstract:
+					badBlock = True
+					badLevel = headingNo
+					hIndex +=1
+					continue
 				# print(testcondition)
 				bracketOpen = True
-				isOther = True
 				hlst.append(headingNo)
 				test = self.convertTextToCode(testcondition)
 				if "--REVERSE--" in testcondition:
@@ -1119,6 +1229,10 @@ class TestTemplate(object):
 
 			if "--ASSIGNMENT--" in testcondition.strip().split():
 				if "=" in testcondition.strip():
+					isOther = True
+					if hasAbstract or badBlock:
+						hIndex += 1
+						continue
 					# test = testcondition.strip()
 					test = testcondition.replace("--ASSIGNMENT--", "").strip()
 					test = self.convertTextToCode(test)
@@ -1128,32 +1242,22 @@ class TestTemplate(object):
 					# if currVar + " = " not in testfunction:
 					# 	vPrefix = "var "
 					vPrefix = "var "
-					isOther = True
 					if not bracketOpen:
 						testfunction += lineTab + vPrefix + test + ";"
 					elif test.strip() != "":
-						emptyBlock = notEmptyBlock(emptyBlock, levels)
+						emptyBlock = notEmptyBlock(emptyBlock, levels, headingNo)
 						emptyBlock.append(2)
 						tmpLines.append(lineTab + vPrefix + test + ";")
 						levels.append(headingNo)
 
-			if "--INCDEC--" in testcondition.strip().split():
-				if "=" in testcondition.strip():
-					test = testcondition.replace("--INCDEC--", "").strip()
-					test = self.convertTextToCode(test)
-					isOther = True
-					if not bracketOpen:
-						testfunction += lineTab + test
-					elif test.strip() != "":
-						emptyBlock = notEmptyBlock(emptyBlock, levels)
-						emptyBlock.append(2)
-						tmpLines.append(lineTab + test)
-						levels.append(headingNo)
-
 			if "--ASSERT--" in testcondition.strip():
+				isOther = True
+				foundTestable += 1
+				if hasAbstract or badBlock:
+					hIndex += 1
+					continue
 				test = testcondition.replace("--ASSERT--", "").strip()
 				test = self.convertTextToCode(test)
-				isOther = True
 				if self.compiler == "node":
 					test = "if ( " + test + " ) {"
 					test += lineTab + "\t" + "console.log(\"Good Test - Assert\");"
@@ -1177,13 +1281,17 @@ class TestTemplate(object):
 					test = newTest
 				if not bracketOpen:
 					testfunction = testfunction + lineTab + test
-				elif test.strip() != "" and not hasAbstract:
-					emptyBlock = notEmptyBlock(emptyBlock, levels)
+				elif test.strip() != "":
+					emptyBlock = notEmptyBlock(emptyBlock, levels, headingNo)
 					emptyBlock.append(2)
 					tmpLines.append(lineTab + test)
 					levels.append(headingNo)
 
 			if "--PERFORM--" in testcondition.strip():
+				isOther = True
+				if hasAbstract or badBlock:
+					hIndex += 1
+					continue
 				# print(testcondition)
 				test = testcondition.replace("--PERFORM--", "").strip()
 				# test = test.replace("! ", "")
@@ -1191,16 +1299,20 @@ class TestTemplate(object):
 				# test = test.strip()
 				test = self.convertTextToCode(test)
 				# print(test)
-				isOther = True
 				if not bracketOpen:
 					testfunction += lineTab + test
 				elif test.strip() != "":
-					emptyBlock = notEmptyBlock(emptyBlock, levels)
+					emptyBlock = notEmptyBlock(emptyBlock, levels, headingNo)
 					emptyBlock.append(2)
 					tmpLines.append(lineTab + test)
 					levels.append(headingNo)
 
 			if "--RETURN--" in testcondition.strip():
+				isOther = True
+				foundTestable += 1
+				if hasAbstract or badBlock:
+					hIndex += 1
+					continue
 				expectedoutput = testcondition.replace("--RETURN--", "").strip()
 				# print("Var: ", expectedoutput)
 				expectedoutput = self.convertTextToCode(expectedoutput)
@@ -1209,19 +1321,26 @@ class TestTemplate(object):
 				if self.compiler == "rhino":
 					test = vardecl + lineTab + "\t" + "new TestCase(\"" + testname + "\", \"" + testname + "\", " + expectedoutput + ", output);" + lineTab + "\ttest();" + lineTab + "\treturn;"
 				# print(test)
-				isOther = True
 				if headingNo != 0:
 					if not bracketOpen:
 						testfunction += lineTab + test
 					elif test.strip() != "":
-						emptyBlock = notEmptyBlock(emptyBlock, levels)
+						emptyBlock = notEmptyBlock(emptyBlock, levels, headingNo)
 						emptyBlock.append(2)
 						tmpLines.append(lineTab + test)
 						levels.append(headingNo)
 
 			if "--ELSEIF--" in testcondition.strip():
-				bracketOpen = True
 				isOther = True
+				if badBlock:
+					hIndex += 1
+					continue
+				elif hasAbstract:
+					badBlock = True
+					badLevel = headingNo
+					hIndex +=1
+					continue
+				bracketOpen = True
 				hlst.append(headingNo)
 				test = testcondition.replace("--ELSEIF--", "")
 				test = "else if " + self.convertTextToCode(test)
@@ -1248,8 +1367,14 @@ class TestTemplate(object):
 			# 	test = test + "}\n"
 			thenCheck = re.search(r',\s*?,\s*?then\s*?,\s*?,', testcondition)
 			if thenCheck:
-				# print(header)
-				# print(testcondition)
+				if badBlock:
+					hIndex += 1
+					continue
+				elif hasAbstract:
+					badBlock = True
+					badLevel = headingNo
+					hIndex +=1
+					continue
 				bracketOpen = True
 				hlst.append(headingNo)
 				test = self.convertTextToCode(testcondition)
@@ -1263,6 +1388,10 @@ class TestTemplate(object):
 
 
 			if "return" in testcondition and not isOther:
+				foundTestable += 1
+				if hasAbstract or badBlock:
+					hIndex += 1
+					continue
 				# print(testcondition)
 				expectedinput = testcondition.split("return")[0].strip().split("if")[1].strip()
 				expectedinput = self.convertTextToCode(expectedinput)
@@ -1281,12 +1410,16 @@ class TestTemplate(object):
 					continue
 				if not bracketOpen:
 					testfunction = testfunction + lineTab + test
-				elif test.strip() != "":
-					emptyBlock = notEmptyBlock(emptyBlock, levels)
+				elif test.strip() != "":# and not hasAbstract and not badBlock:
+					emptyBlock = notEmptyBlock(emptyBlock, levels, headingNo)
 					emptyBlock.append(2)
 					tmpLines.append(lineTab + test)
 					levels.append(headingNo)
 			if "throw" in testcondition and not isOther:
+				foundTestable += 1
+				if hasAbstract or badBlock:
+					hIndex += 1
+					continue
 				expectedinput = testcondition.split("throw")[0].split("if")[1].strip()
 				expectedinput = self.convertTextToCode(expectedinput)
 				expectedoutput = self.convertTextToCode(testcondition.split("throw")[1].strip())
@@ -1301,13 +1434,19 @@ class TestTemplate(object):
 					continue
 				if not bracketOpen:
 					testfunction = testfunction + lineTab + test
-				elif test.strip() != "":
-					emptyBlock = notEmptyBlock(emptyBlock, levels)
+				elif test.strip() != "":# and not hasAbstract and not badBlock:
+					emptyBlock = notEmptyBlock(emptyBlock, levels, headingNo)
 					emptyBlock.append(2)
 					tmpLines.append(lineTab + test)
 					levels.append(headingNo)
 			# hLast = headingList[hIndex]
 			hIndex += 1
+			# if i == len(testtemplate) and bracketOpen:
+			# 	testfunction += lineTab + "}"
+			# 	bracketOpen = False
+		# if bracketOpen:
+		# 	print("Still Open!")
+		# 	print(header)
 		if self.compiler == "node":
 			testfunction = testfunction + "\n\t\tconsole.log(\"OK Test\")\n}"  
 		elif self.compiler == "rhino":	
@@ -1437,6 +1576,7 @@ class TestTemplate(object):
 		# 			print(functionName)
 		print(excludedAbstractFunctions)
 		for idx, header in enumerate(extracted_sections):
+			self.testableConditions = 0
 			header = header.replace("\xa0", " ")
 			# print(header)
 			body0 = extracted_sections[header]
