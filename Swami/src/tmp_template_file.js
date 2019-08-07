@@ -1,19 +1,11 @@
 function test_typedarray( typedArray ){
-	if ( typeof ( typedArray ) === "object" && typedArray has [[TypedArrayName]] internal slot ) {
-		console.log("Good Test - Assert");
-	}
-	else { 
-		console.log("Bad Test/Failed Test");
-		return;
-	} 
 	if (( typeof  NewTarget === 'undefined' )){
 		 try{
 			var output = new TypedArray ( typedArray );
-			console.log("Bad Test/Failed Test");
 			 return;
 		}catch(e){
-			assert.strictEqual(true, eval(e instanceof TypeError));
-			console.log("Good Test");
+			new TestCase("typedarray", "typedarray", true, eval(e instanceof TypeError));
+			test();
 			return;
 		}
 	}
@@ -27,7 +19,7 @@ function test_typedarray( typedArray ){
 	var srcElementSize =Element Size value in Table 56 for srcName;
 	var srcByteOffset = srcArray;
 	var elementSize =Element Size value in Table 56 for constructorName;
-	var byteLength = elementSize × elementLength;
+	var byteLength = elementSize * elementLength;
 	else {
 		var srcByteIndex = srcByteOffset;
 		var targetByteIndex = 0;
@@ -38,5 +30,4 @@ function test_typedarray( typedArray ){
 
 		}
 
-		console.log("OK Test")
 }

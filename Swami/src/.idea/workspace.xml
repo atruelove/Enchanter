@@ -11,11 +11,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="swami.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="swami.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/swami.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1003">
-              <caret line="50" column="36" selection-start-line="50" selection-start-column="36" selection-end-line="50" selection-end-column="36" />
+            <state relative-caret-position="121">
+              <caret line="346" column="81" selection-start-line="346" selection-start-column="81" selection-end-line="346" selection-end-column="81" />
             </state>
           </provider>
         </entry>
@@ -23,19 +23,19 @@
       <file leaf-file-name="extractRelevantSections.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/extractRelevantSections.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="867">
+            <state relative-caret-position="-3626">
               <caret line="56" column="8" selection-start-line="56" selection-start-column="8" selection-end-line="56" selection-end-column="8" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="generateTestTemplates.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="generateTestTemplates.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/generateTestTemplates.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-612">
-              <caret line="1100" column="60" selection-start-line="1100" selection-start-column="60" selection-end-line="1100" selection-end-column="60" />
+            <state relative-caret-position="765">
+              <caret line="65" column="8" selection-start-line="65" selection-start-column="8" selection-end-line="65" selection-end-column="8" />
               <folding>
-                <marker date="1565112634696" expanded="true" signature="52176:52214" ph="..." />
+                <marker date="1565136956927" expanded="true" signature="56023:56061" ph="..." />
               </folding>
             </state>
           </provider>
@@ -59,7 +59,6 @@
       <find>isAssignment</find>
       <find>resultLet</find>
       <find>ifLetBeginPattern</find>
-      <find>print(</find>
       <find>Bad Test</find>
       <find>this</find>
       <find>NewTarget</find>
@@ -70,6 +69,20 @@
       <find>abstract</find>
       <find>print</find>
       <find>included_abstract_functions</find>
+      <find>random</find>
+      <find>vardecl</find>
+      <find>generateCompilableTemplate</find>
+      <find>extractAssignmentAndConditionals</find>
+      <find>methodsignature</find>
+      <find>methodname</find>
+      <find>testname</find>
+      <find>randomin</find>
+      <find>foundTestable</find>
+      <find>headingList</find>
+      <find>self.testableConditions</find>
+      <find>print(</find>
+      <find>subprocess</find>
+      <find>expFunc</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -192,7 +205,7 @@
         <state relative-caret-position="19040">
           <caret line="1120" column="78" selection-start-line="1120" selection-start-column="78" selection-end-line="1120" selection-end-column="78" />
           <folding>
-            <marker date="1565112634696" expanded="true" signature="52176:52214" ph="..." />
+            <marker date="1565136956927" expanded="true" signature="56023:56061" ph="..." />
           </folding>
         </state>
       </provider>
@@ -223,7 +236,7 @@
         <state relative-caret-position="10863">
           <caret line="639" column="49" selection-start-line="639" selection-start-column="49" selection-end-line="639" selection-end-column="49" />
           <folding>
-            <marker date="1565112634696" expanded="true" signature="52176:52214" ph="..." />
+            <marker date="1565136956927" expanded="true" signature="56023:56061" ph="..." />
           </folding>
         </state>
       </provider>
@@ -247,7 +260,7 @@
         <state relative-caret-position="12835">
           <caret line="755" column="53" selection-start-line="755" selection-start-column="53" selection-end-line="755" selection-end-column="53" />
           <folding>
-            <marker date="1565112634696" expanded="true" signature="52176:52214" ph="..." />
+            <marker date="1565136956927" expanded="true" signature="56023:56061" ph="..." />
           </folding>
         </state>
       </provider>
@@ -271,7 +284,7 @@
         <state relative-caret-position="12835">
           <caret line="755" column="53" selection-start-line="755" selection-start-column="53" selection-end-line="755" selection-end-column="53" />
           <folding>
-            <marker date="1565112634696" expanded="true" signature="52176:52214" ph="..." />
+            <marker date="1565136956927" expanded="true" signature="56023:56061" ph="..." />
           </folding>
         </state>
       </provider>
@@ -295,7 +308,7 @@
         <state relative-caret-position="19057">
           <caret line="1121" column="64" selection-start-line="1121" selection-start-column="64" selection-end-line="1121" selection-end-column="64" />
           <folding>
-            <marker date="1565112634696" expanded="true" signature="52176:52214" ph="..." />
+            <marker date="1565136956927" expanded="true" signature="56023:56061" ph="..." />
           </folding>
         </state>
       </provider>
@@ -319,7 +332,7 @@
         <state relative-caret-position="14688">
           <caret line="864" column="30" lean-forward="true" selection-start-line="864" selection-start-column="30" selection-end-line="864" selection-end-column="30" />
           <folding>
-            <marker date="1565112634696" expanded="true" signature="52176:52214" ph="..." />
+            <marker date="1565136956927" expanded="true" signature="56023:56061" ph="..." />
           </folding>
         </state>
       </provider>
@@ -343,7 +356,7 @@
         <state relative-caret-position="9673">
           <caret line="569" column="33" selection-start-line="569" selection-start-column="33" selection-end-line="569" selection-end-column="33" />
           <folding>
-            <marker date="1565112634696" expanded="true" signature="52176:52214" ph="..." />
+            <marker date="1565136956927" expanded="true" signature="56023:56061" ph="..." />
           </folding>
         </state>
       </provider>
@@ -367,7 +380,7 @@
         <state relative-caret-position="14467">
           <caret line="851" column="20" selection-start-line="851" selection-start-column="22" selection-end-line="852" selection-end-column="60" />
           <folding>
-            <marker date="1565112634696" expanded="true" signature="52176:52214" ph="..." />
+            <marker date="1565136956927" expanded="true" signature="56023:56061" ph="..." />
           </folding>
         </state>
       </provider>
@@ -391,7 +404,7 @@
         <state relative-caret-position="8483">
           <caret line="499" column="42" lean-forward="true" selection-start-line="499" selection-start-column="42" selection-end-line="499" selection-end-column="42" />
           <folding>
-            <marker date="1565112634696" expanded="true" signature="52176:52214" ph="..." />
+            <marker date="1565136956927" expanded="true" signature="56023:56061" ph="..." />
           </folding>
         </state>
       </provider>
@@ -518,13 +531,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/extractRelevantSections.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="867">
-          <caret line="56" column="8" selection-start-line="56" selection-start-column="8" selection-end-line="56" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/generateExecutableTests.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2465">
@@ -532,20 +538,27 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/swami.py">
+    <entry file="file://$PROJECT_DIR$/extractRelevantSections.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1003">
-          <caret line="50" column="36" selection-start-line="50" selection-start-column="36" selection-end-line="50" selection-end-column="36" />
+        <state relative-caret-position="-3626">
+          <caret line="56" column="8" selection-start-line="56" selection-start-column="8" selection-end-line="56" selection-end-column="8" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/generateTestTemplates.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-612">
-          <caret line="1100" column="60" selection-start-line="1100" selection-start-column="60" selection-end-line="1100" selection-end-column="60" />
+        <state relative-caret-position="765">
+          <caret line="65" column="8" selection-start-line="65" selection-start-column="8" selection-end-line="65" selection-end-column="8" />
           <folding>
-            <marker date="1565112634696" expanded="true" signature="52176:52214" ph="..." />
+            <marker date="1565136956927" expanded="true" signature="56023:56061" ph="..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/swami.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="121">
+          <caret line="346" column="81" selection-start-line="346" selection-start-column="81" selection-end-line="346" selection-end-column="81" />
         </state>
       </provider>
     </entry>

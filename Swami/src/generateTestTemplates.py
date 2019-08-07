@@ -57,6 +57,7 @@ punct = ".,"
 returnPunct = "!?"
 splitElements = ["=", "==", "===", "<", ">", "!=", "<=", ">="]
 excludedAbstractFunctions = []
+bannedPhrases = ["zero-origined ", "performing", "implementation", "@@", "«", "either ", "finite ", "atomics_wait", "concatenation", "filler", "searchLength", "-searchStr", " not ", "unit value of", "[["]#, "["]
 
 class TestTemplate(object):
 	def __init__(self, relspecpath, compiler):
@@ -107,19 +108,19 @@ class TestTemplate(object):
 				spl = i
 		return spl
 
+	def expFunc(self, match):
+		newText = match.group()
+		newText = newText.replace("--EXP0--", ", ")
+		newText = newText.replace("--EXP1--", " )")
+		newText = "Math.pow( " + newText
+		# print(newText)
+		return newText
+
 	# method to simplify the conditional statements extracted from the body of
 	# relevant sections by translating English phrases in to syntaxtically valid code
 	# and substituting the assignment variables with their values stored in dictionary  
 	# the order of substitution matters!
 	def substituteVars(self, text, sectionid):
-
-		def expFunc(match):
-			newText = match.group()
-			newText = newText.replace("--EXP0--", ", ")
-			newText = newText.replace("--EXP1--", " )")
-			newText = "Math.pow( " + newText
-			# print(newText)
-			return newText
 
 		if text[0].isdigit() or ". " in text:
 			text = "".join(text.split(". ")[1:])		
@@ -127,7 +128,7 @@ class TestTemplate(object):
 		expSearch = re.search(r'[0-9]*?--EXP0--[0-9]*?--EXP1--', text, re.M|re.I)
 		if expSearch:
 			# print(expSearch.group())
-			text = re.sub(r'[0-9]*?--EXP0--[0-9]*?--EXP1--', expFunc, text)
+			text = re.sub(r'[0-9]*?--EXP0--[0-9]*?--EXP1--', self.expFunc, text)
 		text = text.replace("--EXP0--", "")
 		text = text.replace("--EXP1--", "")
 		text = text.replace("ToNumber", "ToInteger")
@@ -249,7 +250,7 @@ class TestTemplate(object):
 			text = text.replace(" is exactly", " === ");
 		if " is " in text:
 			text = text.replace(" is ", " === ");
-		text = re.sub(r', then$', " ,,then,,", text)
+		# text = re.sub(r', then$', " ,,then,,", text)
 		text = text.replace(" exception", "")
 
 
@@ -402,10 +403,20 @@ class TestTemplate(object):
 				# var = " " + var + " "
 				if "." in value and ".length" not in value:
 					value = value.split(".")[0]
+				expSearch = re.search(r'[0-9]*?--EXP0--[0-9]*?--EXP1--', value, re.M | re.I)
+				if expSearch:
+					# print(expSearch.group())
+					value = re.sub(r'[0-9]*?--EXP0--[0-9]*?--EXP1--', self.expFunc, value)
 				if "the number of elements in" in value:
 					value = value.replace("the number of elements in", "").strip() + ".length"
 				if "the number of arguments passed to this function call" in value:
 					value = "arguments.length"
+				if "number of actual arguments" in value:
+					value = "arguments.length"
+				if "the length of" in value:
+					value = re.sub(r'the length of', "", value).strip() + ".length"
+				if "length of" in value:
+					value = re.sub(r'length of', "", value).strip() + ".length"
 				if "number of code units in" in value:
 					value = value.replace("number of code units in", " ").strip()
 					value += ".length"
@@ -479,7 +490,12 @@ class TestTemplate(object):
 				# if not match:
 				# 	index += 1
 				# 	continue
-				updatedstatement = self.substituteVars(statement, sectionid)
+				print("MULTI: ", statement)
+				updatedstatement = re.sub(r', then', "", statement).strip()
+				updatedstatement = self.substituteVars(updatedstatement, sectionid)
+				if "," not in updatedstatement:
+					updatedstatement = updatedstatement.replace(" or ", " || ")
+				updatedstatement += "--MULTISTEP--"
 				# tmpvars = numvars
 				# while (updatedstatement != self.substituteVars(updatedstatement, sectionid) and tmpvars > 0):
 				# 	updatedstatement = self.substituteVars(updatedstatement, sectionid)
@@ -621,6 +637,13 @@ class TestTemplate(object):
 				updatedstatement = updatedstatement.replace("< =", "<= ")
 				updatedstatement = updatedstatement.replace("> =", ">= ")
 				equalCheck = re.search(r'===', updatedstatement, re.M|re.I)
+				if not equalCheck:
+					if " = " in updatedstatement:
+						updatedstatement = updatedstatement.replace(" = ", " === ")
+						equalCheck = True
+					if " == " in updatedstatement:
+						updatedstatement = updatedstatement.replace(" == ", " === ")
+						equalCheck = True
 				if equalCheck:
 					splAssert = updatedstatement.split("===")
 					if "nonnegative integer" in updatedstatement.lower():
@@ -683,7 +706,8 @@ class TestTemplate(object):
 					updatedstatement = updatedstatement[1:]
 				updatedstatement = self.substituteVars(updatedstatement.strip(), sectionid)
 				updatedstatement = "--RETURN--" + updatedstatement
-				self.testableConditions += 1
+				if headingList[index] > 0:
+					self.testableConditions += 1
 				# print(updatedstatement)
 
 			# This entire block seems to be unncessary. The pattern caught here is caught elsewhere, and gives the
@@ -733,6 +757,7 @@ class TestTemplate(object):
 				# if not match:
 				# 	index += 1
 				# 	continue
+				print("INOUT: ", statement)
 				updatedstatement = self.substituteVars(statement, sectionid)
 				self.testableConditions += 1
 				tmpvars = numvars
@@ -797,6 +822,7 @@ class TestTemplate(object):
 	# valid JavaScript symbols and variables 
 	def convertTextToCode(self, text):
 		text = ' '.join(text.split())
+		text = text.replace("×", "*")
 		text = text.replace("«", "[")
 		text = text.replace("»", "]")
 		text = text.replace("this value.", "randominput")
@@ -831,6 +857,8 @@ class TestTemplate(object):
 		text = text.replace("min(", "Math.min (")
 		text = text.replace("max(", "Math.max (")
 		text = text.replace("abs(", "Math.abs (")
+		text = text.replace("modulo", "%")
+		text = text.replace("either", "")
 		if "undefined" in text.lower():
 			spl = self.checkOperators(text)
 			if spl != "" and spl != "=" and spl != "==":
@@ -860,6 +888,9 @@ class TestTemplate(object):
 		if (len(text) > 1):
 			if text[-1] == ".":
 				text = text[:-1]
+
+		if re.search(r'===\s*?not', text, re.I|re.M):
+			text = re.sub(r'===\s*?not', "!=", text)
 	
 		if "===" in text and ("NaN" in text or "-0" in text or "+ 0" in text):
 			if "&&" in text:
@@ -902,7 +933,7 @@ class TestTemplate(object):
 				lhs = text.split("===")[0].strip()
 				rhs = text.split("===")[1].strip()
 				text = "Object.is" + lhs + "," + rhs
-		text = re.sub(r',\s*?,\s*?then\s*?,\s*?,', " ) { ", text)
+		# text = re.sub(r',\s*?,\s*?then\s*?,\s*?,', " ) { ", text)
 		newSearch = re.search(r'a newly created .*? object', text, re.I | re.M)
 		if newSearch:
 			text = text.replace("a newly created", "")
@@ -985,11 +1016,22 @@ class TestTemplate(object):
 		if testtemplate == None:
 			return
 
+		def checkForBannedPhrase(text):
+			hasBanned = False
+			for i in bannedPhrases:
+				if i in text:
+					hasBanned = True
+			return hasBanned
+
 		methodname = " ".join(header.split()[1:]).split("(")[0].strip()
 		templatecount = 0
 		templates = []
 		testname = methodname.replace(".","_").replace("-","_").replace(" ", "_").lower()
 		vardecl = testtemplate[0]
+		# if "22.1.2.1" in header:
+		# 	print(header)
+		# 	print(testtemplate)
+		# 	print(vardecl)
 
 
 		if "..." in vardecl:
@@ -1110,21 +1152,21 @@ class TestTemplate(object):
 					emptyBlock = []
 					levels = []
 
-			if "--INCDEC--" in testcondition.strip().split():
-				if "=" in testcondition.strip():
-					isOther = True
-					if hasAbstract or badBlock:
-						hIndex += 1
-						continue
-					test = testcondition.replace("--INCDEC--", "").strip()
-					test = self.convertTextToCode(test)
-					if not bracketOpen:
-						testfunction += lineTab + test
-					elif test.strip() != "":
-						emptyBlock = notEmptyBlock(emptyBlock, levels, headingNo)
-						emptyBlock.append(2)
-						tmpLines.append(lineTab + test)
-						levels.append(headingNo)
+			# if "--INCDEC--" in testcondition.strip().split():
+			# 	if "=" in testcondition.strip():
+			# 		isOther = True
+			# 		if hasAbstract or badBlock:
+			# 			hIndex += 1
+			# 			continue
+			# 		test = testcondition.replace("--INCDEC--", "").strip()
+			# 		test = self.convertTextToCode(test)
+			# 		if not bracketOpen:
+			# 			testfunction += lineTab + test
+			# 		elif test.strip() != "":
+			# 			emptyBlock = notEmptyBlock(emptyBlock, levels, headingNo)
+			# 			emptyBlock.append(2)
+			# 			tmpLines.append(lineTab + test)
+			# 			levels.append(headingNo)
 					# isOther = True
 					# toAdd = ""
 					# # if not hasAbstract or :
@@ -1142,6 +1184,22 @@ class TestTemplate(object):
 				hIndex += 1
 				continue
 
+			if "--INCDEC--" in testcondition.strip().split():
+				if "=" in testcondition.strip():
+					isOther = True
+					if hasAbstract or badBlock:
+						hIndex += 1
+						continue
+					test = testcondition.replace("--INCDEC--", "").strip()
+					test = self.convertTextToCode(test)
+					if not bracketOpen:
+						testfunction += lineTab + test
+					elif test.strip() != "":
+						emptyBlock = notEmptyBlock(emptyBlock, levels, headingNo)
+						emptyBlock.append(2)
+						tmpLines.append(lineTab + test)
+						levels.append(headingNo)
+
 			if testcondition.strip() == "else":
 				if badBlock:
 					hIndex += 1
@@ -1157,6 +1215,11 @@ class TestTemplate(object):
 				test = lineTab + test
 				# testfunction += lineTab + test
 				# if not hasAbstract and not badBlock:
+				if test.count("(")!=test.count(")") or checkForBannedPhrase(test):
+					hIndex += 1
+					badBlock = True
+					badLevel = headingNo
+					continue
 				tmpLines.append(test)
 				emptyBlock.append(0)
 				levels.append(headingNo)
@@ -1181,6 +1244,11 @@ class TestTemplate(object):
 					# print(test)
 					# testfunction += lineTab + test + " { "
 					test = lineTab + test + " { "
+				if test.count("(") != test.count(")") or checkForBannedPhrase(test):
+					hIndex += 1
+					badBlock = True
+					badLevel = headingNo
+					continue
 				tmpLines.append(test)
 				emptyBlock.append(0)
 				levels.append(headingNo)
@@ -1200,6 +1268,11 @@ class TestTemplate(object):
 				test = "{" #self.convertTextToCode(testcondition)
 				# print(test)
 				# testfunction += lineTab + test + " { "
+				if test.count("(") != test.count(")") or checkForBannedPhrase(test):
+					hIndex += 1
+					badBlock = True
+					badLevel = headingNo
+					continue
 				test = lineTab + test
 				tmpLines.append(test)
 				emptyBlock.append(0)
@@ -1223,6 +1296,11 @@ class TestTemplate(object):
 					test = test.replace("--REVERSE--", "")
 				# testfunction += lineTab + test + " { "
 				test = lineTab + test + " { "
+				if test.count("(") != test.count(")") or checkForBannedPhrase(test):
+					hIndex += 1
+					badBlock = True
+					badLevel = headingNo
+					continue
 				tmpLines.append(test)
 				emptyBlock.append(0)
 				levels.append(headingNo)
@@ -1236,12 +1314,17 @@ class TestTemplate(object):
 					# test = testcondition.strip()
 					test = testcondition.replace("--ASSIGNMENT--", "").strip()
 					test = self.convertTextToCode(test)
+					if "randominput" in test and "randominput" not in args:
+						test = test.replace("randominput", "null")
 					# testfunction += lineTab + str(headingNo) + " " + test
 					# vPrefix = ""
 					# currVar = test.strip().split()[0]
 					# if currVar + " = " not in testfunction:
 					# 	vPrefix = "var "
 					vPrefix = "var "
+					if test.count("(") != test.count(")") or checkForBannedPhrase(test):
+						hIndex += 1
+						continue
 					if not bracketOpen:
 						testfunction += lineTab + vPrefix + test + ";"
 					elif test.strip() != "":
@@ -1260,10 +1343,11 @@ class TestTemplate(object):
 				test = self.convertTextToCode(test)
 				if self.compiler == "node":
 					test = "if ( " + test + " ) {"
-					test += lineTab + "\t" + "console.log(\"Good Test - Assert\");"
+					# test += lineTab + "\t" + "console.log(\"Assert Passed\");"
+					test += lineTab + "\t" + "console.log(\"\");"
 					test += lineTab + "}"
 					test += lineTab + "else { "
-					test += lineTab + "\t" + "console.log(\"Bad Test/Failed Test\");"
+					test += lineTab + "\t" + "console.log(\"Bad Test/Failed Test - Assert\");"
 					test += lineTab + "\t" + "return;"
 					test += lineTab + "} "
 				elif self.compiler == "rhino":
@@ -1279,6 +1363,9 @@ class TestTemplate(object):
 					newTest  = "new TestCase(\"" + testname + "\", \"" + testname + "\", " + testRefinedSplit[0] + ", " + testRefinedSplit[1] + ");"
 					newTest += lineTab + "\ttest();" + lineTab + "\treturn;"
 					test = newTest
+				if test.count("(") != test.count(")") or checkForBannedPhrase(test):
+					hIndex += 1
+					continue
 				if not bracketOpen:
 					testfunction = testfunction + lineTab + test
 				elif test.strip() != "":
@@ -1299,6 +1386,9 @@ class TestTemplate(object):
 				# test = test.strip()
 				test = self.convertTextToCode(test)
 				# print(test)
+				if test.count("(") != test.count(")") or checkForBannedPhrase(test):
+					hIndex += 1
+					continue
 				if not bracketOpen:
 					testfunction += lineTab + test
 				elif test.strip() != "":
@@ -1321,6 +1411,9 @@ class TestTemplate(object):
 				if self.compiler == "rhino":
 					test = vardecl + lineTab + "\t" + "new TestCase(\"" + testname + "\", \"" + testname + "\", " + expectedoutput + ", output);" + lineTab + "\ttest();" + lineTab + "\treturn;"
 				# print(test)
+				if test.count("(") != test.count(")") or checkForBannedPhrase(test):
+					hIndex += 1
+					continue
 				if headingNo != 0:
 					if not bracketOpen:
 						testfunction += lineTab + test
@@ -1344,6 +1437,11 @@ class TestTemplate(object):
 				hlst.append(headingNo)
 				test = testcondition.replace("--ELSEIF--", "")
 				test = "else if " + self.convertTextToCode(test)
+				if test.count("(") != test.count(")") or checkForBannedPhrase(test):
+					hIndex += 1
+					badBlock = True
+					badLevel = headingNo
+					continue
 				test = lineTab + test
 				tmpLines.append(test)
 				emptyBlock.append(0)
@@ -1365,8 +1463,8 @@ class TestTemplate(object):
 			# test = "" + ("\t" * headingList[hIndex])
 			# if headingList[hIndex] != -1 and headingList[hIndex] < hLast:
 			# 	test = test + "}\n"
-			thenCheck = re.search(r',\s*?,\s*?then\s*?,\s*?,', testcondition)
-			if thenCheck:
+			# thenCheck = re.search(r',\s*?,\s*?then\s*?,\s*?,', testcondition)
+			if "--MULTISTEP--" in testcondition:
 				if badBlock:
 					hIndex += 1
 					continue
@@ -1377,7 +1475,13 @@ class TestTemplate(object):
 					continue
 				bracketOpen = True
 				hlst.append(headingNo)
-				test = self.convertTextToCode(testcondition)
+				test = testcondition.replace("--MULTISTEP--", "")
+				test = self.convertTextToCode(test) + " ) {"
+				if test.count("(") != test.count(")") or checkForBannedPhrase(test):
+					hIndex += 1
+					badBlock = True
+					badLevel = headingNo
+					continue
 				# print(test)
 				# testfunction += lineTab + str(headingNo) + " " + "if " + test
 				# testfunction += lineTab + "if " + test
@@ -1403,8 +1507,8 @@ class TestTemplate(object):
 						test = "if (" + expectedinput + "){" + lineTab + "\t" + vardecl + lineTab + "\t" + "assert.strictEqual(isNaN(output), true);" + lineTab + "\tconsole.log(\"Good Test\");" + lineTab + "\treturn;" + lineTab + "\t}"
 					else:
 						test = "if (" + expectedinput + "){" + lineTab + "\t" + vardecl + "" + lineTab + "\t" + "assert.strictEqual(" + expectedoutput + ", output);" + lineTab + "\tconsole.log(\"Good Test\");" + lineTab + "\treturn;" + lineTab + "\t}"
-				
-				if test.count("(")!=test.count(")") or "performing" in test or "implementtion" in test or "@@" in test or "«" in test or "[" in test or "either " in test or "finite " in test or "atomics_wait" in test or "concatenation" in test or "filler" in test or "searchLength" in test or "-searchStr" in test or " not " in test or "unit value of" in test:
+
+				if test.count("(") != test.count(")") or checkForBannedPhrase(test):
 					# hLast = headingList[hIndex]
 					hIndex += 1
 					continue
@@ -1428,8 +1532,7 @@ class TestTemplate(object):
 				elif self.compiler == "node":
 					usesNode = True
 					test = "if (" + expectedinput + "){" + lineTab + "\t try{" + lineTab + "\t\t" + vardecl + lineTab + "\t\tconsole.log(\"Bad Test/Failed Test\");" + lineTab + "\t\t return;"  + lineTab + "\t}catch(e){" + lineTab + "\t\t" + "assert.strictEqual(true, eval(e instanceof "  + expectedoutput + "));" + lineTab + "\t\tconsole.log(\"Good Test\");" + lineTab + "\t\treturn;" + lineTab + "\t}" + lineTab + "}"
-				if test.count("(")!=test.count(")") or "performing" in test or "implementation" in test or "@@" in test or "«" in test or "[" in test or "either " in test or "finite " in test or  "atomics_wait" in test or "concatenation" in test or "filler" in test or "searchLength" in test or "-searchStr" in test or " not " in test or "unit value of" in test:
-					# hLast = headingList[hIndex]
+				if test.count("(") != test.count(")") or checkForBannedPhrase(test):
 					hIndex += 1
 					continue
 				if not bracketOpen:
@@ -1503,7 +1606,7 @@ class TestTemplate(object):
 		# if len(testtemplate) > 1 and "if" in template and "unknown" not in template.split("){")[0] and  "NewTarget" not in template:
 		if len(testtemplate) > 1 and "if" in template and "unknown" not in template.split("){")[0]:
 			if self.compiler == "node":
-				if "console.log(\"Good Test" in template or "console.log(\"Bad Test/Failed Test\");" in template:
+				if "console.log(\"Good Test" in template or "console.log(\"Bad Test/Failed Test" in template:
 					addTemplate = True
 			elif self.compiler == "rhino":
 				if "new TestCase(" in template and "test();" in template:
@@ -1515,6 +1618,9 @@ class TestTemplate(object):
 			# 	self.test_templates[header] = template
 		if addTemplate:
 			self.test_templates[header] = template
+			# print(header)
+			# print(foundTestable)
+			# print(self.testableConditions)
 
 	# method to filter out sections that do not encode 
 	# testable behavior or that cannot be invoked directly
@@ -1583,7 +1689,8 @@ class TestTemplate(object):
 			bodyPOS = ""
 			body = ""
 			headingList = []
-			self.bannedVariables = []
+			self.bannedVariables = ["newTarget"]
+			# self.bannedVariables = []
 			for l in body0.split('\n'):
 				line2 = l.replace("VAR", "")
 				line2 = line2.replace("FUNC", "")
@@ -1617,6 +1724,9 @@ class TestTemplate(object):
 			# continue
 			if self.isTestable(header, body)==True:
 				method_signature = self.getMethodSignature(header)
+				# if "unknown(unknown)" not in method_signature:
+				# 	print(header)
+				# 	print(method_signature)
 				self.extractAssignmentAndConditionals(header, body, method_signature, bodyPOS, headingList)
 				self.generateCompilableTemplate(header, headingList)
 		return self.test_templates	
