@@ -57,7 +57,9 @@ punct = ".,"
 returnPunct = "!?"
 splitElements = ["=", "==", "===", "<", ">", "!=", "<=", ">="]
 excludedAbstractFunctions = []
-bannedPhrases = ["zero-origined ", "performing", "implementation", "@@", "«", "either ", "finite ", "atomics_wait", "concatenation", "filler", "searchLength", "-searchStr", " not ", "unit value of", "[["]#, "["]
+bannedPhrases = ["zero-origined ", "performing", "implementation", "@@", "«", "either ", "finite ", "atomics_wait", "concatenation", "filler", "searchLength",
+				 "-searchStr", " not ", "unit value of", "[[", "String value of", "Number value", " of ", "Number that", "this Date object", "code unit", ", when", "Shared Data Block",
+				 "one of", "Size value"]
 
 class TestTemplate(object):
 	def __init__(self, relspecpath, compiler):
@@ -490,7 +492,6 @@ class TestTemplate(object):
 				# if not match:
 				# 	index += 1
 				# 	continue
-				print("MULTI: ", statement)
 				updatedstatement = re.sub(r', then', "", statement).strip()
 				updatedstatement = self.substituteVars(updatedstatement, sectionid)
 				if "," not in updatedstatement:
@@ -757,7 +758,6 @@ class TestTemplate(object):
 				# if not match:
 				# 	index += 1
 				# 	continue
-				print("INOUT: ", statement)
 				updatedstatement = self.substituteVars(statement, sectionid)
 				self.testableConditions += 1
 				tmpvars = numvars
@@ -1093,7 +1093,12 @@ class TestTemplate(object):
 		foundTestable = 0
 		badBlock = False
 		badLevel = 0
+		assertAdded = False
+		returnThrowAdded = False
+		openIfs = []
+		# elseWatch = False
 		for i in range(1, len(testtemplate)):
+			elseWatch = False
 			templatecount += 1
 			test = ""
 			testcondition = testtemplate[i]
@@ -1131,6 +1136,15 @@ class TestTemplate(object):
 				# 	del emptyBlock[-1]
 				# 	del tmpLines[-1]
 				del hlst[-1]
+				if openIfs:
+					if openIfs[-1][0] > headingNo:
+						del openIfs[-1]
+					elif openIfs[-1][0] == headingNo:
+						# print(header)
+						# print(openIfs)
+						# print(testcondition)
+						elseWatch = True
+						del openIfs[-1]
 				# 	# tmpLines[-1] += tmpLines + lineTab  + "}" + lineTab
 				# 	transfer = tmpLines[-1] + lineTab + "}" + lineTab
 				# 	if len(tmpLines) > 1:
@@ -1344,10 +1358,11 @@ class TestTemplate(object):
 				if self.compiler == "node":
 					test = "if ( " + test + " ) {"
 					# test += lineTab + "\t" + "console.log(\"Assert Passed\");"
-					test += lineTab + "\t" + "console.log(\"\");"
+					test += lineTab + "\t" + "//console.log(\"\");"
 					test += lineTab + "}"
 					test += lineTab + "else { "
-					test += lineTab + "\t" + "console.log(\"Bad Test/Failed Test - Assert\");"
+					# test += lineTab + "\t" + "console.log(\"Bad Test/Failed Test - Assert\");"
+					test += lineTab + "\t" + "console.log(\"Bad Test/Failed Test\");"
 					test += lineTab + "\t" + "return;"
 					test += lineTab + "} "
 				elif self.compiler == "rhino":
@@ -1359,13 +1374,15 @@ class TestTemplate(object):
 							splitter = s
 					if splitter == "":
 						continue
+					# test = "if ( " + test + " ) {"
 					testRefinedSplit = test.split(splitter)
 					newTest  = "new TestCase(\"" + testname + "\", \"" + testname + "\", " + testRefinedSplit[0] + ", " + testRefinedSplit[1] + ");"
-					newTest += lineTab + "\ttest();" + lineTab + "\treturn;"
+					newTest += lineTab + "\ttest();"# + lineTab + "\treturn;"
 					test = newTest
 				if test.count("(") != test.count(")") or checkForBannedPhrase(test):
 					hIndex += 1
 					continue
+				assertAdded = True
 				if not bracketOpen:
 					testfunction = testfunction + lineTab + test
 				elif test.strip() != "":
@@ -1415,6 +1432,7 @@ class TestTemplate(object):
 					hIndex += 1
 					continue
 				if headingNo != 0:
+					returnThrowAdded = True
 					if not bracketOpen:
 						testfunction += lineTab + test
 					elif test.strip() != "":
@@ -1436,7 +1454,15 @@ class TestTemplate(object):
 				bracketOpen = True
 				hlst.append(headingNo)
 				test = testcondition.replace("--ELSEIF--", "")
-				test = "else if " + self.convertTextToCode(test)
+				# print(elseWatch)
+				# print(self.convertTextToCode(test))
+				# if elseWatch:
+				# 	test = "else if " + self.convertTextToCode(test)
+				# else:
+				# 	test = "if " + self.convertTextToCode(test)
+				# 	openIfs.append([headingNo, test])
+				test = "if " + self.convertTextToCode(test)
+				openIfs.append([headingNo, test])
 				if test.count("(") != test.count(")") or checkForBannedPhrase(test):
 					hIndex += 1
 					badBlock = True
@@ -1486,6 +1512,7 @@ class TestTemplate(object):
 				# testfunction += lineTab + str(headingNo) + " " + "if " + test
 				# testfunction += lineTab + "if " + test
 				test = lineTab + "if " + test
+				openIfs.append([headingNo, test])
 				tmpLines.append(test)
 				emptyBlock.append(0)
 				levels.append(headingNo)
@@ -1512,6 +1539,7 @@ class TestTemplate(object):
 					# hLast = headingList[hIndex]
 					hIndex += 1
 					continue
+				returnThrowAdded = True
 				if not bracketOpen:
 					testfunction = testfunction + lineTab + test
 				elif test.strip() != "":# and not hasAbstract and not badBlock:
@@ -1535,6 +1563,7 @@ class TestTemplate(object):
 				if test.count("(") != test.count(")") or checkForBannedPhrase(test):
 					hIndex += 1
 					continue
+				returnThrowAdded = True
 				if not bracketOpen:
 					testfunction = testfunction + lineTab + test
 				elif test.strip() != "":# and not hasAbstract and not badBlock:
@@ -1551,7 +1580,11 @@ class TestTemplate(object):
 		# 	print("Still Open!")
 		# 	print(header)
 		if self.compiler == "node":
-			testfunction = testfunction + "\n\t\tconsole.log(\"OK Test\")\n}"  
+			addtoTestFunction = "\n\t\tconsole.log(\"OK Test\")\n}"
+			if assertAdded and not returnThrowAdded:
+				addtoTestFunction = "\n\t\tconsole.log(\"Good Test\")\n}"
+			testfunction = testfunction + addtoTestFunction
+			# testfunction = testfunction + "\n\t\tconsole.log(\"OK Test\")\n}"
 		elif self.compiler == "rhino":	
 			testfunction = testfunction + "\n}"
 

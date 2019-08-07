@@ -11,11 +11,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="swami.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="swami.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/swami.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="121">
-              <caret line="346" column="81" selection-start-line="346" selection-start-column="81" selection-end-line="346" selection-end-column="81" />
+            <state relative-caret-position="697">
+              <caret line="363" column="16" selection-start-line="363" selection-start-column="18" selection-end-line="363" selection-end-column="33" />
             </state>
           </provider>
         </entry>
@@ -23,19 +23,20 @@
       <file leaf-file-name="extractRelevantSections.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/extractRelevantSections.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3626">
+            <state relative-caret-position="17">
               <caret line="56" column="8" selection-start-line="56" selection-start-column="8" selection-end-line="56" selection-end-column="8" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="generateTestTemplates.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="generateTestTemplates.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/generateTestTemplates.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="765">
-              <caret line="65" column="8" selection-start-line="65" selection-start-column="8" selection-end-line="65" selection-end-column="8" />
+            <state relative-caret-position="-2737">
+              <caret line="1464" column="49" selection-start-line="1464" selection-start-column="49" selection-end-line="1464" selection-end-column="49" />
               <folding>
-                <marker date="1565136956927" expanded="true" signature="56023:56061" ph="..." />
+                <element signature="e#1188#1199#0" expanded="true" />
+                <marker date="1565213415843" expanded="true" signature="56891:56929" ph="..." />
               </folding>
             </state>
           </provider>
@@ -44,8 +45,8 @@
       <file leaf-file-name="generateExecutableTests.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/generateExecutableTests.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2465">
-              <caret line="147" column="54" selection-start-line="147" selection-start-column="54" selection-end-line="147" selection-end-column="54" />
+            <state relative-caret-position="808">
+              <caret line="174" column="41" selection-start-line="174" selection-start-column="41" selection-end-line="174" selection-end-column="41" />
             </state>
           </provider>
         </entry>
@@ -54,7 +55,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>.get</find>
       <find>variable_dataset</find>
       <find>isAssignment</find>
       <find>resultLet</find>
@@ -83,6 +83,8 @@
       <find>print(</find>
       <find>subprocess</find>
       <find>expFunc</find>
+      <find>assertAdded</find>
+      <find>elseWatch</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -105,7 +107,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -117,6 +118,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -205,7 +207,8 @@
         <state relative-caret-position="19040">
           <caret line="1120" column="78" selection-start-line="1120" selection-start-column="78" selection-end-line="1120" selection-end-column="78" />
           <folding>
-            <marker date="1565136956927" expanded="true" signature="56023:56061" ph="..." />
+            <element signature="e#1188#1199#0" expanded="true" />
+            <marker date="1565213415843" expanded="true" signature="56891:56929" ph="..." />
           </folding>
         </state>
       </provider>
@@ -236,7 +239,8 @@
         <state relative-caret-position="10863">
           <caret line="639" column="49" selection-start-line="639" selection-start-column="49" selection-end-line="639" selection-end-column="49" />
           <folding>
-            <marker date="1565136956927" expanded="true" signature="56023:56061" ph="..." />
+            <element signature="e#1188#1199#0" expanded="true" />
+            <marker date="1565213415843" expanded="true" signature="56891:56929" ph="..." />
           </folding>
         </state>
       </provider>
@@ -260,7 +264,8 @@
         <state relative-caret-position="12835">
           <caret line="755" column="53" selection-start-line="755" selection-start-column="53" selection-end-line="755" selection-end-column="53" />
           <folding>
-            <marker date="1565136956927" expanded="true" signature="56023:56061" ph="..." />
+            <element signature="e#1188#1199#0" expanded="true" />
+            <marker date="1565213415843" expanded="true" signature="56891:56929" ph="..." />
           </folding>
         </state>
       </provider>
@@ -284,7 +289,8 @@
         <state relative-caret-position="12835">
           <caret line="755" column="53" selection-start-line="755" selection-start-column="53" selection-end-line="755" selection-end-column="53" />
           <folding>
-            <marker date="1565136956927" expanded="true" signature="56023:56061" ph="..." />
+            <element signature="e#1188#1199#0" expanded="true" />
+            <marker date="1565213415843" expanded="true" signature="56891:56929" ph="..." />
           </folding>
         </state>
       </provider>
@@ -308,7 +314,8 @@
         <state relative-caret-position="19057">
           <caret line="1121" column="64" selection-start-line="1121" selection-start-column="64" selection-end-line="1121" selection-end-column="64" />
           <folding>
-            <marker date="1565136956927" expanded="true" signature="56023:56061" ph="..." />
+            <element signature="e#1188#1199#0" expanded="true" />
+            <marker date="1565213415843" expanded="true" signature="56891:56929" ph="..." />
           </folding>
         </state>
       </provider>
@@ -332,7 +339,8 @@
         <state relative-caret-position="14688">
           <caret line="864" column="30" lean-forward="true" selection-start-line="864" selection-start-column="30" selection-end-line="864" selection-end-column="30" />
           <folding>
-            <marker date="1565136956927" expanded="true" signature="56023:56061" ph="..." />
+            <element signature="e#1188#1199#0" expanded="true" />
+            <marker date="1565213415843" expanded="true" signature="56891:56929" ph="..." />
           </folding>
         </state>
       </provider>
@@ -356,7 +364,8 @@
         <state relative-caret-position="9673">
           <caret line="569" column="33" selection-start-line="569" selection-start-column="33" selection-end-line="569" selection-end-column="33" />
           <folding>
-            <marker date="1565136956927" expanded="true" signature="56023:56061" ph="..." />
+            <element signature="e#1188#1199#0" expanded="true" />
+            <marker date="1565213415843" expanded="true" signature="56891:56929" ph="..." />
           </folding>
         </state>
       </provider>
@@ -380,7 +389,8 @@
         <state relative-caret-position="14467">
           <caret line="851" column="20" selection-start-line="851" selection-start-column="22" selection-end-line="852" selection-end-column="60" />
           <folding>
-            <marker date="1565136956927" expanded="true" signature="56023:56061" ph="..." />
+            <element signature="e#1188#1199#0" expanded="true" />
+            <marker date="1565213415843" expanded="true" signature="56891:56929" ph="..." />
           </folding>
         </state>
       </provider>
@@ -404,7 +414,8 @@
         <state relative-caret-position="8483">
           <caret line="499" column="42" lean-forward="true" selection-start-line="499" selection-start-column="42" selection-end-line="499" selection-end-column="42" />
           <folding>
-            <marker date="1565136956927" expanded="true" signature="56023:56061" ph="..." />
+            <element signature="e#1188#1199#0" expanded="true" />
+            <marker date="1565213415843" expanded="true" signature="56891:56929" ph="..." />
           </folding>
         </state>
       </provider>
@@ -531,34 +542,35 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/swami.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="697">
+          <caret line="363" column="16" selection-start-line="363" selection-start-column="18" selection-end-line="363" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/generateExecutableTests.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2465">
-          <caret line="147" column="54" selection-start-line="147" selection-start-column="54" selection-end-line="147" selection-end-column="54" />
+        <state relative-caret-position="808">
+          <caret line="174" column="41" selection-start-line="174" selection-start-column="41" selection-end-line="174" selection-end-column="41" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/extractRelevantSections.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3626">
+        <state relative-caret-position="17">
           <caret line="56" column="8" selection-start-line="56" selection-start-column="8" selection-end-line="56" selection-end-column="8" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/generateTestTemplates.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="765">
-          <caret line="65" column="8" selection-start-line="65" selection-start-column="8" selection-end-line="65" selection-end-column="8" />
+        <state relative-caret-position="-2737">
+          <caret line="1464" column="49" selection-start-line="1464" selection-start-column="49" selection-end-line="1464" selection-end-column="49" />
           <folding>
-            <marker date="1565136956927" expanded="true" signature="56023:56061" ph="..." />
+            <element signature="e#1188#1199#0" expanded="true" />
+            <marker date="1565213415843" expanded="true" signature="56891:56929" ph="..." />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/swami.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="121">
-          <caret line="346" column="81" selection-start-line="346" selection-start-column="81" selection-end-line="346" selection-end-column="81" />
         </state>
       </provider>
     </entry>

@@ -361,6 +361,7 @@ class Swami(object):
 					template_file.write("\n")
 					count += 1
 			except:
+				# print(template)
 				continue
 		template_file.close()
 		print("Total number of test templates generated = ", count)
