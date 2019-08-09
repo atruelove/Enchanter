@@ -60,6 +60,7 @@ excludedAbstractFunctions = []
 bannedPhrases = ["zero-origined ", "performing", "implementation", "@@", "«", "either ", "finite ", "atomics_wait", "concatenation", "filler", "searchLength",
 				 "-searchStr", " not ", "unit value of", "[[", "String value of", "Number value", " of ", "Number that", "this Date object", "code unit", ", when", "Shared Data Block",
 				 "one of", "Size value"]
+bannedFunctions = ["TypedArray"]
 
 class TestTemplate(object):
 	def __init__(self, relspecpath, compiler):
@@ -868,8 +869,11 @@ class TestTemplate(object):
 					text = "typeof " + text
 				else:
 					text = "( typeof " + text.strip()[1:]
-		if "typeof" in text.lower() and "===" in text:
-			checkText = text.split("===")[1].split()
+		if "typeof" in text.lower() and ("===" in text or "!=" in text):
+			splitter = "==="
+			if "!=" in text:
+				splitter = "!="
+			checkText = text.split(splitter)[1].split()
 			if "Boolean" in checkText:
 				text = text.replace("Boolean", " \"boolean\" ")
 			if "String" in checkText:
@@ -1669,6 +1673,8 @@ class TestTemplate(object):
 		# 	if body.split("The abstract operation")[1].split()[0].strip() in header:
 		# 		return False
 		if "---ABSTRACT---" in body:
+			return False
+		if header.split()[1].strip() in bannedFunctions:
 			return False
 		return True
 		

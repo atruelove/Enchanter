@@ -1,7 +1,10 @@
-function test_typedarray( typedArray ){
-	if (( typeof  NewTarget === 'undefined' )){
+function test_string_prototype_startswith(randominput,searchString,position){
+	var O = RequireObjectCoercible(randominput);
+	var S = ToString(O);
+	var isRegExp = IsRegExp(searchString);
+	if (( isRegExp === true )){
 		 try{
-			var output = new TypedArray ( typedArray );
+			var output = new String(randominput).startsWith(searchString,position);
 			console.log("Bad Test/Failed Test");
 			 return;
 		}catch(e){
@@ -10,21 +13,9 @@ function test_typedarray( typedArray ){
 			return;
 		}
 	}
-	var O = AllocateTypedArray(constructorName, NewTarget, "%TypedArrayPrototype%");
-	var srcArray = typedArray;
-	var srcData = srcArray;
-	var elementLength = srcArray;
-	var srcByteOffset = srcArray;
-	var byteLength = elementSize * elementLength;
-	else {
-		var srcByteIndex = srcByteOffset;
-		var targetByteIndex = 0;
-		var count = elementLength;
-		while ( count > 0 ) { 
-			count = count - 1
-			}
-
-		}
-
+	var searchStr = ToString(searchString);
+	var pos = ToInteger(position);
+	var len = S.length;
+	var start = Math.min (Math.max (pos, 0), len);
 		console.log("OK Test")
 }

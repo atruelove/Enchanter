@@ -1,0 +1,41 @@
+---../results/Node_ECMA262_Tests/test-arraybuffer-prototype-slice.js       	170
+
+test_arraybuffer_prototype_slice("DOXE", -311, undefined);
+test_arraybuffer_prototype_slice("V9ZSKS", false, +0);
+test_arraybuffer_prototype_slice("H4KWVE1H", "8NUHU", /\r\n|\r|\n/);
+test_arraybuffer_prototype_slice("YYL9J5U", /(\w+)\s(\w+)/, "3H0SALA7");
+test_arraybuffer_prototype_slice("LTD9", -339, true);
+test_arraybuffer_prototype_slice("K3YUJPM5XQ", /yes[^]*day/, /foo/g);
+
+-Failed Tests seem to happen when randominput is a string
+This was one of the three functions that gave bad tests for Swami as well.
+The other two functions didn't have bad tests for us, because we encoded additional lines from the specifications that prevented the bad behavior
+Here, the bad test is called in "If Type(O) is not Object, throw a TypeError exception."
+	I think it's the same overloading problem where the wrong slice() function is called
+	the specification here does not have a check to prevent this
+
+---../results/Node_ECMA262_Tests/test-array(items).js       			1000
+
+in specificaiton function is actually given as "Array ( ...items )"
+	items is actually supposed to be multiple arguments, but it was encoded as one in our template generation
+	failure happens at first assert check, where numberOfArgs >= 2
+		this is also the only thing being tested
+	this might be fixable - make tests have multiple arguments
+
+---../results/Node_ECMA262_Tests/test-array.js       				1000
+
+Only test is an assert that number of arguments === 0
+	all test calls have exactly one argument, meaning we will always get bad test
+	running test with no input gives good test, but you can't do 1000 test cases of this
+	seems like this test isn't contributing anything, should it be removed?
+		should tests for functions with no input be removed?
+
+---../results/Node_ECMA262_Tests/test-createarrayiterator.js       		831
+
+only test is assert typeof ( array ) ===  "object"
+	Good test when array is a regular expression
+	Bad test in every other case
+This is an abstract operation, should have been filtered out anyway
+
+---../results/Node_ECMA262_Tests/test-createstringiterator.js       		806
+Also an abstract operation
