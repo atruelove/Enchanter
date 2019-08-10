@@ -633,7 +633,7 @@ class TestTemplate(object):
 					if assertPattern[2] in POSElements[2] and POSElements[-1] == assertPattern[-1] and "assert" in statement.lower():
 						isAssert = True
 			if isAssert:
-				statementAdded = True
+				# statementAdded = True
 				updatedstatement = statement.replace("Assert:", "").strip()
 				updatedstatement = self.substituteVars(updatedstatement, sectionid)
 				updatedstatement = updatedstatement.replace("< =", "<= ")
@@ -673,7 +673,7 @@ class TestTemplate(object):
 								# 	print(spl2)
 								updatedstatement = splAssert[0] + " " + spl + " " + splAssert2[1]
 				updatedstatement = "--ASSERT--" + updatedstatement
-				self.testableConditions += 1
+				# self.testableConditions += 1
 				# print(updatedstatement)
 
 			isPerform = False
@@ -1543,6 +1543,9 @@ class TestTemplate(object):
 					# hLast = headingList[hIndex]
 					hIndex += 1
 					continue
+				if headingNo == 0:
+					hIndex += 1
+					continue
 				returnThrowAdded = True
 				if not bracketOpen:
 					testfunction = testfunction + lineTab + test
@@ -1565,6 +1568,9 @@ class TestTemplate(object):
 					usesNode = True
 					test = "if (" + expectedinput + "){" + lineTab + "\t try{" + lineTab + "\t\t" + vardecl + lineTab + "\t\tconsole.log(\"Bad Test/Failed Test\");" + lineTab + "\t\t return;"  + lineTab + "\t}catch(e){" + lineTab + "\t\t" + "assert.strictEqual(true, eval(e instanceof "  + expectedoutput + "));" + lineTab + "\t\tconsole.log(\"Good Test\");" + lineTab + "\t\treturn;" + lineTab + "\t}" + lineTab + "}"
 				if test.count("(") != test.count(")") or checkForBannedPhrase(test):
+					hIndex += 1
+					continue
+				if headingNo == 0:
 					hIndex += 1
 					continue
 				returnThrowAdded = True

@@ -42,7 +42,7 @@ class Swami(object):
 		self.input_spec = inputfilepath
 		self.abstractfunc_file_path = abstractfunfilepath
 		self.output_dir = outputdir
-		self.templatefilepath = self.output_dir + "\ecma262_templates.js"
+		self.templatefilepath = self.output_dir + "\ecma262_templates_improved.js"
 		self.rel_sec_extractor = RelevantSection()
 		self.relevant_spec = self.output_dir + "\\" + self.input_spec.split("\\")[-1].split(".")[0] + "_relevant_sections.txt"
 		self.relevant_spec_exists = os.path.isfile(self.relevant_spec)

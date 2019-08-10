@@ -1,11 +1,28 @@
 ﻿../results/Node_ECMA262_Tests/test-arraybuffer-prototype-slice.js       	170
 ../results/Node_ECMA262_Tests/test-array(items).js       			1000
-../results/Node_ECMA262_Tests/test-array.js       				1000
-../results/Node_ECMA262_Tests/test-createarrayiterator.js       		831
-../results/Node_ECMA262_Tests/test-createstringiterator.js       		806
+
+
 
 ../results/Node_ECMA262_Tests/test-date.js       				1000
 ../results/Node_ECMA262_Tests/test-date(randominput,value).js       		1000
 ../results/Node_ECMA262_Tests/test-get-arraybuffer-prototype-bytelength.js      998
 ../results/Node_ECMA262_Tests/test-number-prototype-toexponential.js       	12
 ../results/Node_ECMA262_Tests/test-number-prototype-toprecision.js       	24
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+../results/Node_ECMA262_Tests/test-array.js       				1000
+../results/Node_ECMA262_Tests/test-createarrayiterator.js       		831
+../results/Node_ECMA262_Tests/test-createstringiterator.js       		806
