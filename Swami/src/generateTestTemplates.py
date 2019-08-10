@@ -436,6 +436,8 @@ class TestTemplate(object):
 					if valArr[-1] in punct:
 						valArr = valArr[:-1]
 					value = valArr + "[" + valPos + "].charCodeAt()"
+				if "Date" in header and var.strip() == "now":
+					value = "Date(Date.now())"
 				# if "undefined" in value.lower():
 				# 	value = value.replace("undefined", "'undefined'")
 				# 	value = value.replace("Undefined", "'undefined'")
@@ -1101,6 +1103,10 @@ class TestTemplate(object):
 		returnThrowAdded = False
 		openIfs = []
 		# elseWatch = False
+		missedReturn = False
+		testInBlock = False
+		redefinedVar = False
+		definedVar = []
 		for i in range(1, len(testtemplate)):
 			elseWatch = False
 			templatecount += 1
@@ -1140,15 +1146,15 @@ class TestTemplate(object):
 				# 	del emptyBlock[-1]
 				# 	del tmpLines[-1]
 				del hlst[-1]
-				if openIfs:
-					if openIfs[-1][0] > headingNo:
-						del openIfs[-1]
-					elif openIfs[-1][0] == headingNo:
-						# print(header)
-						# print(openIfs)
-						# print(testcondition)
-						elseWatch = True
-						del openIfs[-1]
+				# if openIfs:
+				# 	if openIfs[-1][0] > headingNo:
+				# 		del openIfs[-1]
+				# 	elif openIfs[-1][0] == headingNo:
+				# 		# print(header)
+				# 		# print(openIfs)
+				# 		# print(testcondition)
+				# 		elseWatch = True
+				# 		del openIfs[-1]
 				# 	# tmpLines[-1] += tmpLines + lineTab  + "}" + lineTab
 				# 	transfer = tmpLines[-1] + lineTab + "}" + lineTab
 				# 	if len(tmpLines) > 1:
@@ -1156,6 +1162,8 @@ class TestTemplate(object):
 				# 	del emptyBlock[-1]
 				# 	del tmpLines[-1]
 				# 	del hlst[-1]
+				if headingNo == 0:
+					hlst = []
 				if not hlst:
 					# print("tmpLines :", len(tmpLines))
 					# print("emptyBlock :",	len(emptyBlock))
@@ -1343,6 +1351,11 @@ class TestTemplate(object):
 					if test.count("(") != test.count(")") or checkForBannedPhrase(test):
 						hIndex += 1
 						continue
+					currVar = test.strip().split()[0].strip()
+					if currVar in definedVar:
+						redefinedVar = True
+					else:
+						definedVar.append(currVar)
 					if not bracketOpen:
 						testfunction += lineTab + vPrefix + test + ";"
 					elif test.strip() != "":
@@ -1437,6 +1450,7 @@ class TestTemplate(object):
 					continue
 				if headingNo != 0:
 					returnThrowAdded = True
+					missedReturn = True
 					if not bracketOpen:
 						testfunction += lineTab + test
 					elif test.strip() != "":
@@ -1543,9 +1557,12 @@ class TestTemplate(object):
 					# hLast = headingList[hIndex]
 					hIndex += 1
 					continue
-				if headingNo == 0:
-					hIndex += 1
-					continue
+				# if headingNo == 0:
+				# 	hIndex += 1
+				# 	continue
+				if headingNo > 0:
+					testInBlock = True
+					print(testcondition)
 				returnThrowAdded = True
 				if not bracketOpen:
 					testfunction = testfunction + lineTab + test
@@ -1554,6 +1571,11 @@ class TestTemplate(object):
 					emptyBlock.append(2)
 					tmpLines.append(lineTab + test)
 					levels.append(headingNo)
+					if headingNo > 0:
+						ii = 0
+						while ii < len(tmpLines):
+							print(tmpLines[ii], " ", levels[ii])
+							ii += 1
 			if "throw" in testcondition and not isOther:
 				foundTestable += 1
 				if hasAbstract or badBlock:
@@ -1570,9 +1592,11 @@ class TestTemplate(object):
 				if test.count("(") != test.count(")") or checkForBannedPhrase(test):
 					hIndex += 1
 					continue
-				if headingNo == 0:
-					hIndex += 1
-					continue
+				# if headingNo == 0:
+				# 	hIndex += 1
+				# 	continue
+				if headingNo > 0:
+					testInBlock = True
 				returnThrowAdded = True
 				if not bracketOpen:
 					testfunction = testfunction + lineTab + test
@@ -1660,7 +1684,10 @@ class TestTemplate(object):
 			# else:
 			# 	self.test_templates[header] = template
 		if addTemplate:
-			self.test_templates[header] = template
+			# self.test_templates[header] = template
+			# if redefinedVar or testInBlock or missedReturn:
+			if testInBlock or missedReturn:
+				self.test_templates[header] = template
 			# print(header)
 			# print(foundTestable)
 			# print(self.testableConditions)

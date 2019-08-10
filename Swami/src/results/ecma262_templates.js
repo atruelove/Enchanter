@@ -108,48 +108,8 @@ function SameValueZero(x,y){
 
 
 
-function test_array( ){
-	var numberOfArgs = arguments.length;
-	if ( numberOfArgs === 0 ) {
-		//console.log("");
-	}
-	else { 
-		console.log("Bad Test/Failed Test");
-		return;
-	} 
-		console.log("Good Test")
-}
-
-
-function test_array( items ){
-	var numberOfArgs = arguments.length;
-	if ( numberOfArgs >= 2 ) {
-		//console.log("");
-	}
-	else { 
-		console.log("Bad Test/Failed Test");
-		return;
-	} 
-	var k = 0;
-	while ( k < numberOfArgs ) { 
-		var Pk = ToString(k);
-		var itemK = items[k];
-		k = k + 1
-	}
-
-		console.log("Good Test")
-}
-
-
 function test_array( len ){
 	var numberOfArgs = arguments.length;
-	if ( numberOfArgs === 1 ) {
-		//console.log("");
-	}
-	else { 
-		console.log("Bad Test/Failed Test");
-		return;
-	} 
 	if  ( typeof ( len ) !=  "number"  ) {
 		var intLen = 1;
 	}
@@ -354,6 +314,25 @@ function test_array_prototype_includes(randominput, searchElement  , fromIndex  
 		var k = n;
 	}
 
+	if ( n < 0 ) {
+		var k = len + n;
+		if  ( k < 0 ) {
+			var k = 0;
+			}
+
+		}
+
+	while ( k < len ) { 
+		var elementK =Get(O, ToString(k));
+		if (( SameValueZero ( searchElement , elementK ) === true )){
+			var output = new Array(randominput).includes( searchElement  , fromIndex  );
+			assert.strictEqual(true, output);
+			console.log("Good Test");
+			return;
+			}
+		k = k + 1
+	}
+
 		console.log("OK Test")
 }
 
@@ -374,6 +353,29 @@ function test_array_prototype_indexof(randominput, searchElement  , fromIndex  )
 		console.log("Good Test");
 		return;
 		}
+	if  ( n >=  0 ) {
+		if  ( n === - 0 ) {
+			var k = 0;
+		}
+				
+		else {
+			var k = n;
+			}
+
+		}
+
+	if ( n < 0 ) {
+		var k = len + n;
+		if  ( k < 0 ) {
+			var k = 0;
+			}
+
+		}
+
+	while ( k < len ) { 
+		k = k + 1
+	}
+
 		console.log("OK Test")
 }
 
@@ -393,6 +395,25 @@ function test_array_prototype_lastindexof(randominput, searchElement  , fromInde
 
 	else {
 		var n = len-1;
+	}
+
+	if  ( n >=  0 ) {
+		if  ( n === - 0 ) {
+			var k = 0;
+		}
+				
+		else {
+			var k = Math.min (n, len - 1);
+			}
+
+		}
+
+	if ( n < 0 ) {
+		var k = len + n;
+	}
+
+	while ( k >=  0 ) { 
+		k = k - 1
 	}
 
 		console.log("OK Test")
@@ -690,18 +711,6 @@ function test_arraybuffer_prototype_slice(randominput,start,end){
 }
 
 
-function test_createarrayiterator( array, kind ){
-	if ( typeof ( array ) ===  "object"  ) {
-		//console.log("");
-	}
-	else { 
-		console.log("Bad Test/Failed Test");
-		return;
-	} 
-		console.log("Good Test")
-}
-
-
 function test_createmapiterator(randominput,map,kind){
 	if (( typeof ( map ) != "object" )){
 		 try{
@@ -745,28 +754,10 @@ function test_createsetiterator(randominput,set,kind){
 }
 
 
-function test_createstringiterator(randominput,string){
-	if ( typeof ( string ) ===  "string"  ) {
-		//console.log("");
-	}
-	else { 
-		console.log("Bad Test/Failed Test");
-		return;
-	} 
-		console.log("Good Test")
-}
-
-
 function test_date(randominput){
 	var numberOfArgs = arguments.length;
-	if ( numberOfArgs === 0 ) {
-		//console.log("");
-	}
-	else { 
-		console.log("Bad Test/Failed Test");
-		return;
-	} 
 	if ( typeof  NewTarget === 'undefined' ) {
+		var now = Date(Date.now());
 		var output = new Date(randominput).Date();
 			assert.strictEqual(ToDateString ( now ), output);
 			console.log("Good Test");
@@ -779,14 +770,8 @@ function test_date(randominput){
 
 function test_date(randominput,value){
 	var numberOfArgs = arguments.length;
-	if ( numberOfArgs === 1 ) {
-		//console.log("");
-	}
-	else { 
-		console.log("Bad Test/Failed Test");
-		return;
-	} 
 	if ( typeof  NewTarget === 'undefined' ) {
+		var now = Date(Date.now());
 		var output = new Date(randominput).Date(value);
 			assert.strictEqual(ToDateString ( now ), output);
 			console.log("Good Test");
@@ -799,14 +784,8 @@ function test_date(randominput,value){
 
 function test_date(randominput,year,month,date,hours,minutes,seconds,ms){
 	var numberOfArgs = arguments.length;
-	if ( numberOfArgs >= 2 ) {
-		//console.log("");
-	}
-	else { 
-		console.log("Bad Test/Failed Test");
-		return;
-	} 
 	if ( typeof  NewTarget === 'undefined' ) {
+		var now = Date(Date.now());
 		var output = new Date(randominput).Date(year,month,date,hours,minutes,seconds,ms);
 			assert.strictEqual(ToDateString ( now ), output);
 			console.log("Good Test");
@@ -1287,10 +1266,6 @@ function test_map_prototype_set(randominput,key,value){
 			return;
 		}
 	}
-	if  ( key === - 0 ) {
-		var key = 0;
-	}
-
 		console.log("OK Test")
 }
 
@@ -2382,13 +2357,6 @@ function test_number_prototype_toprecision(randominput,precision){
 
 	if ( x!= 0 ) {
 		if  ( e < - 6 || e >=  p ) {
-			if ( e!= 0 ) {
-				//console.log("");
-			}
-			else { 
-				console.log("Bad Test/Failed Test");
-				return;
-			} 
 			if ( e < 0 ) {
 				var e = -e;
 						}

@@ -166,6 +166,43 @@ function test_array_from(items,mapfn,thisArg){
 }
 
 
+function test_array_prototype_includes(randominput, searchElement  , fromIndex  ){
+	var O = ToObject(randominput);
+	var len = ToLength( Get(O, "length"));
+	if (( len === 0 )){
+		var output = new Array(randominput).includes( searchElement  , fromIndex  );
+		assert.strictEqual(false, output);
+		console.log("Good Test");
+		return;
+		}
+	var n = ToInteger(fromIndex);
+	if  ( n >=  0 ) {
+		var k = n;
+	}
+
+	if ( n < 0 ) {
+		var k = len + n;
+		if  ( k < 0 ) {
+			var k = 0;
+			}
+
+		}
+
+	while ( k < len ) { 
+		var elementK =Get(O, ToString(k));
+		if (( SameValueZero ( searchElement , elementK ) === true )){
+			var output = new Array(randominput).includes( searchElement  , fromIndex  );
+			assert.strictEqual(true, output);
+			console.log("Good Test");
+			return;
+			}
+		k = k + 1
+	}
+
+		console.log("OK Test")
+}
+
+
 function test_array_prototype_pop(randominput, ){
 	var O = ToObject(randominput);
 	var len = ToLength( Get(O, "length"));
@@ -231,6 +268,7 @@ function test_array_prototype_unshift(randominput, items ){
 function test_date(randominput){
 	var numberOfArgs = arguments.length;
 	if ( typeof  NewTarget === 'undefined' ) {
+		var now = Date(Date.now());
 		var output = new Date(randominput).Date();
 			assert.strictEqual(ToDateString ( now ), output);
 			console.log("Good Test");
@@ -244,6 +282,7 @@ function test_date(randominput){
 function test_date(randominput,value){
 	var numberOfArgs = arguments.length;
 	if ( typeof  NewTarget === 'undefined' ) {
+		var now = Date(Date.now());
 		var output = new Date(randominput).Date(value);
 			assert.strictEqual(ToDateString ( now ), output);
 			console.log("Good Test");
@@ -257,6 +296,7 @@ function test_date(randominput,value){
 function test_date(randominput,year,month,date,hours,minutes,seconds,ms){
 	var numberOfArgs = arguments.length;
 	if ( typeof  NewTarget === 'undefined' ) {
+		var now = Date(Date.now());
 		var output = new Date(randominput).Date(year,month,date,hours,minutes,seconds,ms);
 			assert.strictEqual(ToDateString ( now ), output);
 			console.log("Good Test");
