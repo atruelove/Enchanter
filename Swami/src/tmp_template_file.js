@@ -3,8 +3,8 @@ function test_string(randominput,value){
 	else {
 		if (( typeof  NewTarget === 'undefined' && typeof ( value ) === Symbol )){
 			var output = new String(randominput).String(value);
-			assert.strictEqual(SymbolDescriptiveString ( value ), output);
-			console.log("Good Test");
+			new TestCase("string", "string", SymbolDescriptiveString ( value ), output);
+			test();
 			return;
 			}
 		var s = ToString(value);
@@ -12,9 +12,8 @@ function test_string(randominput,value){
 
 	if (( typeof  NewTarget === 'undefined' )){
 		var output = new String(randominput).String(value);
-		assert.strictEqual(s, output);
-		console.log("Good Test");
+		new TestCase("string", "string", s, output);
+		test();
 		return;
 		}
-		console.log("OK Test")
 }
